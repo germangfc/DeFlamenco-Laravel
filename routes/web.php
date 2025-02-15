@@ -2,15 +2,11 @@
 
 use App\Http\Controllers\Api\ClienteController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\StripeController;
 
 Route::get('/', function () {
-    return view('welcome');
-});
-/*
-Route::get('/clientes', [ClienteController::class, 'getAll']);
-Route::get('/clientes/{id}', [ClienteController::class, 'getById']);
-Route::post('/clientes',[ClienteController::class,'store']);
-Route::put('/clientes/{id}', [ClienteController::class, 'update']);
-Route::delete('/clientes/{id}', [ClienteController::class, 'delete']);
-*/
+    return view('main');
+})->name('main');
 
+Route::post('/checkout', [StripeController::class, "checkout"])->name('checkout');
+Route::get('/success', [StripeController::class, 'success'])->name('success');
