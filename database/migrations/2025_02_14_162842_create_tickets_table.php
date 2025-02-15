@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tickets', function (Blueprint $table) {
-            $table->id();
+            $table->id()->primary();
             $table->string("idEvent");
             $table->string("idClient");
             $table->decimal('price', 8, 2);
-            $table->dateTime("createdAt");
+            $table->timestamps();
             $table->boolean("isReturned");
         });
     }
