@@ -63,15 +63,12 @@ return [
         ],
 
         'mongodb' => [
-            'driver'   => 'mongodb',
-            'host'     => env('MONGO_DB_HOST', 'mongodb'),
-            'port'     => env('MONGO_DB_PORT', 27017),
+            'driver' => 'mongodb',
+            'host' => env('MONGO_DB_HOST', 'mongodb'),
+            'port' => env('MONGO_DB_PORT', '27017'),
             'database' => env('MONGO_DB_DATABASE', 'tablao'),
             'username' => env('MONGO_DB_USERNAME', 'user'),
             'password' => env('MONGO_DB_PASSWORD', 'pass'),
-            'options'  => [
-                'database' => env('MONGO_DB_DATABASE', 'admin')
-            ]
         ],
 
         'mariadb' => [
