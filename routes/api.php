@@ -12,3 +12,4 @@ Route::put('/clientes/{id}', [ClienteController::class, 'update']);
 Route::delete('/clientes/{id}', [ClienteController::class, 'destroy']);
 */
 Route::apiResource('clientes', ClienteController::class);
+Route::apiResource('usuarios',\App\Http\Controllers\Api\UserController::class);

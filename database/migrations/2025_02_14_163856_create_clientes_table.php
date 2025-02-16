@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('clientes', function (Blueprint $table) {
             $table->id()->primary();
             $table->string('user_id');
-            $table->string('nombre');
             $table->string('dni')->unique();
             $table->string('foto_dni')->nullable();
             $table->json('lista_entradas')->nullable();
