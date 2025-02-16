@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cliente;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class ClienteController extends Controller
 {
@@ -28,19 +31,44 @@ class ClienteController extends Controller
 
     public function store(Request $request)
     {
+        try {
+            $validatedUserData = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|unique:users,email',
+                'password' => 'required|string|min:8'
+            ]);
 
-        $request->validate([
-            "user_id"=>"required",
-            'nombre' => 'required|string|max:255',
-            'dni' => 'required|string|max:20|unique:clientes,dni',
-            'foto_dni' => 'nullable|string',
-            'lista_entradas' => 'nullable|array',
-            'lista_entradas.*' => 'string'
-        ]);
+            $validatedClientData = $request->validate([
+                'dni' => 'required|string|max:20|unique:clientes,dni',
+                'foto_dni' => 'nullable|string',
+                'lista_entradas' => 'nullable|array',
+                'lista_entradas.*' => 'string'
+            ]);
 
-        $cliente = Cliente::create($request->all(['user_id','nombre','dni','foto_dni','lista_entradas']));
+            $user = User::create([
+                'name' => $validatedUserData['name'],
+                'email' => $validatedUserData['email'],
+                'password' => Hash::make($validatedUserData['password']),
+            ]);
 
-        return response()->json($cliente, 201);
+            $cliente = Cliente::create([
+                'user_id' => $user->id,
+                'dni' => $validatedClientData['dni'],
+                'foto_dni' => $validatedClientData['foto_dni'],
+                'lista_entradas' => $validatedClientData['lista_entradas']
+            ]);
+
+            return response()->json([
+                'user' => $user,
+                'cliente' => $cliente
+            ], 201);
+
+        } catch (ValidationException $e) {
+
+            return response()->json([
+                'errors' => $e->errors()
+            ], 422);
+        }
     }
 
 
