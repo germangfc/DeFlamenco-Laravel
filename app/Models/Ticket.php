@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Ticket extends Model
 {
+    protected $connection = 'mongodb';
 
     protected $fillable = [
         "idEvent",
