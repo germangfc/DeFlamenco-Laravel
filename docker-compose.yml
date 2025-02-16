@@ -77,11 +77,12 @@ services:
         ports:
             - '27017:27017'
         environment:
-            MONGO_INITDB_ROOT_USERNAME: '${MONGO_DB_USERNAME}'  # Usamos las variables del .env
+            MONGO_INITDB_ROOT_USERNAME: '${MONGO_DB_USERNAME}'
             MONGO_INITDB_ROOT_PASSWORD: '${MONGO_DB_PASSWORD}'
             MONGO_INITDB_DATABASE: '${MONGO_DB_DATABASE}'
         volumes:
             - 'sail-mongo:/data/db'
+            -  ./initMongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
         networks:
             - sail
         healthcheck:

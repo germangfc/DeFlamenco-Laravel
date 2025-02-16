@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'sqlite'),
+    'default' => env('DB_CONNECTION', 'pgsql'),
 
     /*
     |--------------------------------------------------------------------------
@@ -64,11 +64,11 @@ return [
 
         'mongodb' => [
             'driver'   => 'mongodb',
-            'host'     => env('MONGO_DB_HOST', '127.0.0.1'),
+            'host'     => env('MONGO_DB_HOST', 'mongodb'),
             'port'     => env('MONGO_DB_PORT', 27017),
-            'database' => env('MONGO_DB_DATABASE', 'mongoDb'),
-            'username' => env('MONGO_DB_USERNAME', 'usuario'),
-            'password' => env('MONGO_DB_PASSWORD', 'password'),
+            'database' => env('MONGO_DB_DATABASE', 'tablao'),
+            'username' => env('MONGO_DB_USERNAME', 'user'),
+            'password' => env('MONGO_DB_PASSWORD', 'pass'),
             'options'  => [
                 'database' => env('MONGO_DB_DATABASE', 'admin')
             ]
@@ -96,16 +96,14 @@ return [
 
         'pgsql' => [
             'driver' => 'pgsql',
-            'url' => env('DB_URL'),
-            'host' => env('DB_HOST', '127.0.0.1'),
+            'host' => env('DB_HOST', 'pgsql'),
             'port' => env('DB_PORT', '5432'),
             'database' => env('DB_DATABASE', 'laravel'),
-            'username' => env('DB_USERNAME', 'root'),
-            'password' => env('DB_PASSWORD', ''),
-            'charset' => env('DB_CHARSET', 'utf8'),
+            'username' => env('DB_USERNAME', 'sail'),
+            'password' => env('DB_PASSWORD', 'password'),
+            'charset' => 'utf8',
             'prefix' => '',
-            'prefix_indexes' => true,
-            'search_path' => 'public',
+            'schema' => 'public',
             'sslmode' => 'prefer',
         ],
 

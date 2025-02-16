@@ -2,17 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use MongoDB\Laravel\Eloquent\Model;
 
 class Ticket extends Model
 {
-    protected $connection = 'mongodb';
-
     protected $fillable = [
         "idEvent",
         "idClient",
         "price",
         "isReturned"
     ];
-
 }
