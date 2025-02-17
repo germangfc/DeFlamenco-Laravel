@@ -46,6 +46,10 @@ class EmpresaController extends Controller
    {
        $empresa = Empresa::find($id);
 
+       if (!$empresa) {
+           return redirect()->route('empresas.index')->with('error', 'Empresa no encontrada');
+       }
+
        return view('empresas.show')->with('empresa', $empresa);
    }
 
