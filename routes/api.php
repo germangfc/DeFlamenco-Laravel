@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ClienteController;
 use App\Http\Controllers\Api\EventosApiController;
 use App\Http\Controllers\Api\TicketController;
 use Illuminate\Http\Request;
@@ -11,6 +12,8 @@ Route::get('/user', function (Request $request) {
 
 Route::apiResource('/ticket', TicketController::class);
 Route::apiResource('clientes', ClienteController::class);
+Route::get('clientes/dni/{dni}', [ClienteController::class, 'searchByDni']);
+Route::post('/clientes/email', [ClienteController::class, 'searchByEmail']);
 Route::apiResource('usuarios',\App\Http\Controllers\Api\UserController::class);
 
 Route::apiResource('eventos', EventosApiController::class);

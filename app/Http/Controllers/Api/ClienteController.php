@@ -29,6 +29,41 @@ class ClienteController extends Controller
         return response()->json($cliente, 200);
     }
 
+    public function searchByDni($dni)
+    {
+        $cliente = Cliente::findByDni($dni)->first();
+
+        if (!$cliente) {
+            return response()->json(['message' => 'Cliente no encontrado'], 404);
+        }
+
+        $user = User::find($cliente->user_id);
+        return response()->json(new ClienteResponse($user, $cliente), 200);
+    }
+
+    public function searchByEmail(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|string|email'
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json(['message' => 'Usuario no encontrado'], 404);
+        }
+
+        $cliente = Cliente::where('user_id', $user->id)->first();
+
+        if (!$cliente) {
+            return response()->json(['message' => 'Cliente no encontrado para este usuario'], 404);
+        }
+
+        return response()->json([
+            new ClienteResponse($user,$cliente)
+        ], 200);
+    }
+
 
     public function store(Request $request)
     {
@@ -82,14 +117,42 @@ class ClienteController extends Controller
             return response()->json(['message' => 'Cliente no encontrado'], 404);
         }
 
-        $request->validate([
-            'dni' => 'required|string|max:20|unique:clientes,dni',
-            'foto_dni' => 'nullable|string'
+        $validatedData = $request->validate([
+            'dni' => 'nullable|string|max:20|unique:clientes,dni,' . $cliente->id,
+            'foto_dni' => 'nullable|string',
+            'name' => 'nullable|string|max:255',
+            'email' => 'nullable|string|email|unique:users,email,' . $cliente->user_id,
+            'password' => 'nullable|string|min:8',
         ]);
 
-        $cliente->update($request->only(['dni','foto_dni']));
+        if ($request->has('dni')) {
+            $cliente->dni = $validatedData['dni'];
+        }
+        if ($request->has('foto_dni')) {
+            $cliente->foto_dni = $validatedData['foto_dni'];
+        }
+        $cliente->save();
+
         $user = User::find($cliente->user_id);
-        return response()->json(new ClienteResponse($user,$cliente), 200);
+
+        if (!$user) {
+            return response()->json(['message' => 'User no encontrado'], 404);
+        }
+
+        if ($request->has('name')) {
+            $user->name = $validatedData['name'];
+        }
+        if ($request->has('email')) {
+            $user->email = $validatedData['email'];
+        }
+        if ($request->has('password')) {
+            $user->password = Hash::make($validatedData['password']);
+        }
+
+        $user->save();
+
+
+        return response()->json(new ClienteResponse($user, $cliente), 200);
     }
 
 
@@ -101,7 +164,22 @@ class ClienteController extends Controller
             return response()->json(['message' => 'Cliente no encontrado'], 404);
         }
 
-        $cliente->delete();
-        return response()->json(['message' => 'Cliente eliminado'], 200);
+        $user = User::find($cliente->user_id);
+
+        $cliente->is_deleted = true;
+        $cliente->save();
+
+        /*
+        $user = User::find($cliente->user_id);
+
+        if (!$user) {
+            return response()->json(['message' => 'User no encontrado'], 404);
+        }
+
+        $user->is_deleted = true;
+        $user->save();
+        */
+        return response()->json(['message' => 'Cliente marcado como eliminado'], 200);
     }
+
 }
