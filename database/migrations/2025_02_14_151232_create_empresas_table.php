@@ -21,9 +21,9 @@ return new class extends Migration
             $table->string('email');
             $table->string('cuenta');
             $table->unsignedInteger('usuario_id');
-            $table->foreign('usuario_id')->references('id')->on('usuarios')->onDelete('cascade');
+            //$table->foreign('usuario_id')->references('id')->on('usuarios')->onDelete('cascade');
             $table->unsignedInteger('evento_id');
-            $table->foreign('evento_id')->references('id')->on('eventos');
+            //$table->foreign('evento_id')->references('id')->on('eventos');
             $table->boolean('isdeleted');
             $table->timestamps();
         });
