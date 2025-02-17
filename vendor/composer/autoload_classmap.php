@@ -6,10 +6,15 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Http\\Controllers\\Api\\EventosApiController' => $baseDir . '/app/Http/Controllers/Api/EventosApiController.php',
     'App\\Http\\Controllers\\Api\\TicketController' => $baseDir . '/app/Http/Controllers/Api/TicketController.php',
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
+    'App\\Http\\Controllers\\EmpresaControllerApi' => $baseDir . '/app/Http/Controllers/EmpresaControllerApi.php',
+    'App\\Http\\Controllers\\EmpresaControllerView' => $baseDir . '/app/Http/Controllers/EmpresaControllerView.php',
+    'App\\Http\\Controllers\\EventosController' => $baseDir . '/app/Http/Controllers/EventosController.php',
     'App\\Http\\Controllers\\StripeController' => $baseDir . '/app/Http/Controllers/StripeController.php',
-    'App\\Http\\Controllers\\TicketController' => $baseDir . '/app/Http/Controllers/TicketController.php',
+    'App\\Models\\Empresa' => $baseDir . '/app/Models/Empresa.php',
+    'App\\Models\\Evento' => $baseDir . '/app/Models/Evento.php',
     'App\\Models\\Ticket' => $baseDir . '/app/Models/Ticket.php',
     'App\\Models\\User' => $baseDir . '/app/Models/User.php',
     'App\\Providers\\AppServiceProvider' => $baseDir . '/app/Providers/AppServiceProvider.php',
@@ -131,8 +136,11 @@ return array(
     'Cron\\HoursField' => $vendorDir . '/dragonmantank/cron-expression/src/Cron/HoursField.php',
     'Cron\\MinutesField' => $vendorDir . '/dragonmantank/cron-expression/src/Cron/MinutesField.php',
     'Cron\\MonthField' => $vendorDir . '/dragonmantank/cron-expression/src/Cron/MonthField.php',
+    'Database\\Factories\\TicketFactory' => $baseDir . '/database/factories/TicketFactory.php',
     'Database\\Factories\\UserFactory' => $baseDir . '/database/factories/UserFactory.php',
     'Database\\Seeders\\DatabaseSeeder' => $baseDir . '/database/seeders/DatabaseSeeder.php',
+    'Database\\Seeders\\EmpresasTableSeeder' => $baseDir . '/database/seeders/EmpresasTableSeeder.php',
+    'Database\\Seeders\\EventosSeeder' => $baseDir . '/database/seeders/EventosSeeder.php',
     'DateError' => $vendorDir . '/symfony/polyfill-php83/Resources/stubs/DateError.php',
     'DateException' => $vendorDir . '/symfony/polyfill-php83/Resources/stubs/DateException.php',
     'DateInvalidOperationException' => $vendorDir . '/symfony/polyfill-php83/Resources/stubs/DateInvalidOperationException.php',
