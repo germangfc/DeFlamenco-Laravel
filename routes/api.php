@@ -10,8 +10,8 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::apiResource('/ticket', TicketController::class);
+Route::apiResource('clientes', ClienteController::class);
+Route::apiResource('usuarios',\App\Http\Controllers\Api\UserController::class);
 
 Route::apiResource('eventos', EventosApiController::class);
 Route::get('eventos/nombre/{nombre}', [EventosApiController::class, 'getByNombre']);
-
-
