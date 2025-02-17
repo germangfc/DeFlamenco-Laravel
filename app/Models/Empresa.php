@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Empresa extends Model
 {
-    protected $table = "productos";
+    protected $table = "empresas";
     // Los campos requeridos
     protected $fillable = [
         'cif', 'nombre', 'direccion','imagen' ,'telefono', 'email','cuentaBancaria', 'usuario_id', 'lista_eventos','isDeleted'
