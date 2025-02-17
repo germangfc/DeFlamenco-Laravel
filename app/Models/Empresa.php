@@ -9,7 +9,7 @@ class Empresa extends Model
     protected $table = "productos";
     // Los campos requeridos
     protected $fillable = [
-        'cif', 'nombre', 'direccion','imagen' ,'telefono', 'email','cuentaBancaria', 'usuario_id', 'lista_eventos','isdeleted'
+        'cif', 'nombre', 'direccion','imagen' ,'telefono', 'email','cuentaBancaria', 'usuario_id', 'lista_eventos','isDeleted'
     ];
     // scope para el buscador de empresa
     public function scopeSearch($query, $name)

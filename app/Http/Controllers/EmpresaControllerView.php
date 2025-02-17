@@ -28,14 +28,7 @@ class EmpresaControllerView extends Controller
            'telefono'=> 'required|regex:/^(\+34|0034)?[679]\d{8}$/',
            'email'=> 'required|email|max:255'
        ]);
-       $validatedUserData = $request->validate([
-           'name' => 'required|string|max:255',
-           'email' => 'required|string|email|unique:users,email',
-           'password' => 'required|string|min:8'
-       ]);
-
        try {
-           $user = User::create($validatedUserData);
            $empresa = new Empresa($request->all());
 
            $empresa->imagen = $request->file('imagen')->store('storage');

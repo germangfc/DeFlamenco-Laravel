@@ -24,7 +24,7 @@ return new class extends Migration
            // $table->foreign('usuario_id')->references('id')->on('usuarios')->onDelete('cascade');
             $table->json('lista_eventos').nullable();
            // $table->foreign('evento_id')->references('id')->on('eventos');
-            $table->boolean('isdeleted');
+            $table->boolean('isDeleted');
             $table->timestamps();
         });
     }
