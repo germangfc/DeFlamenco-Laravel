@@ -9,12 +9,17 @@ class Empresa extends Model
     protected $table = "productos";
     // Los campos requeridos
     protected $fillable = [
-        'cif', 'nombre', 'direccion', 'cuentaBancaria', 'telefono', 'correo'
+        'cif', 'nombre', 'direccion','imagen' ,'telefono', 'email','cuentaBancaria', 'usuario_id', 'lista_eventos','isdeleted'
     ];
     // scope para el buscador de empresa
     public function scopeSearch($query, $name)
     {
         return $query->where('nombre', 'LIKE', "%$name%");
     }
+
+    protected $casts = [
+        'lista_eventos'=>'array'
+    ];
+
 
 }

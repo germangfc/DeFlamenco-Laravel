@@ -26,8 +26,8 @@ class EmpresaControllerView extends Controller
            'direccion'=> 'required|max:255',
            'cuentaBancaria'=>'required|regex:/^ES\d{2}\s?\d{4}\s?\d{4}\s?\d{2}\s?\d{10}$/',
            'telefono'=> 'required|regex:/^(\+34|0034)?[679]\d{8}$/',
-           'correo'=> 'required|email|max:255'
-   ]);
+           'email'=> 'required|email|max:255'
+       ]);
 
        try {
            $empresa = new Empresa($request->all());
