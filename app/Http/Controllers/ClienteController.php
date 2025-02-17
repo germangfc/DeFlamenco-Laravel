@@ -7,12 +7,15 @@ use Illuminate\Http\Request;
 
 class ClienteController extends Controller
 {
-    /*
+
+
     public function getAll()
     {
-        return response()->json(Cliente::all(), 200);
-    }
+        $clientes = Cliente::all();
 
+        return view('card', compact('clientes'));
+    }
+/*
     public function getById($id)
     {
         $cliente = Cliente::find($id);
@@ -76,4 +79,5 @@ class ClienteController extends Controller
         return response()->json(['message' => 'Cliente eliminado'], 200);
     }
     */
+
 }

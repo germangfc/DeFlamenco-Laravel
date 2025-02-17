@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\Api\ClienteController;
+use App\Http\Controllers\ClienteController;
+use App\Models\Cliente;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StripeController;
 
@@ -10,3 +11,5 @@ Route::get('/', function () {
 
 Route::post('/checkout', [StripeController::class, "checkout"])->name('checkout');
 Route::get('/success', [StripeController::class, 'success'])->name('success');
+
+Route::get('/card', [ClienteController::class, 'getAll'] )->name('card');

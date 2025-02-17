@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ClienteController;
 use App\Http\Controllers\Api\EventosApiController;
 use App\Http\Controllers\Api\TicketController;
 use Illuminate\Http\Request;
