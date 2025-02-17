@@ -17,6 +17,12 @@ services:
             XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
             XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
             IGNITION_LOCAL_SITES_PATH: '${PWD}'
+            MONGO_DB_CONNECTION: '${MONGO_DB_CONNECTION}'
+            MONGO_DB_HOST: '${MONGO_DB_HOST}'
+            MONGO_DB_PORT: '${MONGO_DB_PORT}'
+            MONGO_DB_DATABASE: '${MONGO_DB_DATABASE}'
+            MONGO_DB_USERNAME: '${MONGO_DB_USERNAME}'
+            MONGO_DB_PASSWORD: '${MONGO_DB_PASSWORD}'
         volumes:
             - '.:/var/www/html'
         networks:
@@ -24,6 +30,7 @@ services:
         depends_on:
             - pgsql
             - redis
+            - mongodb  # MongoDB debe estar disponible antes de Laravel
     pgsql:
         image: 'postgres:17'
         ports:
@@ -64,11 +71,37 @@ services:
                 - ping
             retries: 3
             timeout: 5s
+    mongodb:  # Contenedor MongoDB
+        image: 'mongo:latest'
+        container_name: 'mongodb'
+        ports:
+            - '27017:27017'
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: '${MONGO_DB_USERNAME}'
+            MONGO_INITDB_ROOT_PASSWORD: '${MONGO_DB_PASSWORD}'
+            MONGO_INITDB_DATABASE: '${MONGO_DB_DATABASE}'
+        volumes:
+            - 'sail-mongo:/data/db'
+            -  ./initMongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+        networks:
+            - sail
+        healthcheck:
+            test:
+                - CMD
+                - mongo
+                - --eval
+                - 'db.runCommand({ connectionStatus: 1 })'
+            retries: 3
+            timeout: 5s
+
 networks:
     sail:
         driver: bridge
+
 volumes:
     sail-pgsql:
         driver: local
     sail-redis:
+        driver: local
+    sail-mongo:  # Volumen persistente para MongoDB
         driver: local

@@ -1,15 +1,10 @@
-<?php
-
 use App\Http\Controllers\Api\ClienteController;
+use App\Http\Controllers\Api\TicketController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
-/*
-Route::get('/clientes', [ClienteController::class, 'index']);
-Route::get('/clientes/{id}', [ClienteController::class, 'show']);
-Route::post('/clientes',[ClienteController::class,'store']);
-Route::put('/clientes/{id}', [ClienteController::class, 'update']);
-Route::delete('/clientes/{id}', [ClienteController::class, 'destroy']);
-*/
+Route::get('/user', function (Request $request) {
+    return $request->user();
+})->middleware('auth:sanctum');
+Route::apiResource('/ticket', TicketController::class);
 Route::apiResource('clientes', ClienteController::class);
 Route::apiResource('usuarios',\App\Http\Controllers\Api\UserController::class);
