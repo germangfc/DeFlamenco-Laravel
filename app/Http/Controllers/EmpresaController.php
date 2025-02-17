@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Empresa;
 use Illuminate\Http\Request;
 
-class EmpresaControllerView extends Controller
+class EmpresaController extends Controller
 {
    public function index(Request $request)
    {
-       $empresas = Empresa::search($request->name)->orderBy('id', 'ASC')->paginate(5);
+       $empresas = Empresa::search($request->nombre)->orderBy('id', 'ASC')->paginate(5);
 
        return view('empresas.index')->with('empresas', $empresas);
    }
@@ -44,6 +45,10 @@ class EmpresaControllerView extends Controller
    public function show($id)
    {
        $empresa = Empresa::find($id);
+
+       if (!$empresa) {
+           return redirect()->route('empresas.index')->with('error', 'Empresa no encontrada');
+       }
 
        return view('empresas.show')->with('empresa', $empresa);
    }
