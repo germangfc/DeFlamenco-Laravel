@@ -19,12 +19,12 @@ return new class extends Migration
             $table->string('imagen');
             $table->string('telefono');
             $table->string('email');
-            $table->string('cuenta');
+            $table->string('cuentaBancaria');
             $table->unsignedInteger('usuario_id');
            // $table->foreign('usuario_id')->references('id')->on('usuarios')->onDelete('cascade');
-            $table->unsignedInteger('evento_id');
+            $table->json('lista_eventos').nullable();
            // $table->foreign('evento_id')->references('id')->on('eventos');
-            $table->boolean('isdeleted');
+            $table->boolean('isDeleted');
             $table->timestamps();
         });
     }
