@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Dto\Cliente\ClienteResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Cliente;
 use App\Models\User;
@@ -59,8 +60,7 @@ class ClienteController extends Controller
             ]);
 
             return response()->json([
-                'user' => $user,
-                'cliente' => $cliente
+                new ClienteResponse($user,$cliente)
             ], 201);
 
         } catch (ValidationException $e) {
@@ -83,14 +83,13 @@ class ClienteController extends Controller
         }
 
         $request->validate([
-            'nombre' => 'required|string|max:255',
             'dni' => 'required|string|max:20|unique:clientes,dni',
             'foto_dni' => 'nullable|string'
         ]);
 
-        $cliente->update($request->all(['nombre','dni','foto_dni']));
-
-        return response()->json($cliente, 200);
+        $cliente->update($request->only(['dni','foto_dni']));
+        $user = User::find($cliente->user_id);
+        return response()->json(new ClienteResponse($user,$cliente), 200);
     }
 
 

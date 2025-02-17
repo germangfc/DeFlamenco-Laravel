@@ -17,7 +17,7 @@ class ClienteFactory extends Factory
     {
         return [
             'user_id' => self::$userId++,
-            'dni' => $this->faker->unique()->numerify('##########'),
+            'dni' => $this->faker->unique()->regexify('[0-9]{10}'),
             'foto_dni' => $this->faker->imageUrl(200, 200, 'people'),
             'lista_entradas' => [$this->faker->word(), $this->faker->word()],
             'is_deleted' => false
