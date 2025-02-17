@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class EmpresasTableSeeder extends Seeder
 {
@@ -12,24 +14,36 @@ class EmpresasTableSeeder extends Seeder
      */
     public function run(): void
     {
-        $faker = Faker::create('es_ES');
-
-        foreach (range(1, 10) as $index) {
-            DB::table('empresas')->insert([
-                'cif' => $this->generarCIF(),
-                'nombre' => $faker->company,
-                'direccion' => $faker->address,
-                'imagen' => 'storage/empresa' . $index . '.jpg',
-                'telefono' => $faker->numerify('+34 6########'),
-                'email' => $faker->unique()->safeEmail,
-                'cuenta' => 'ES' . $faker->numerify('## #### #### ## ########'),
-                'usuario_id' => rand(1, 10), // Ajusta según los IDs de usuarios disponibles
-                'evento_id' => rand(1, 5), // Ajusta según los IDs de eventos disponibles
-                'isdeleted' => false,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
+        DB::table('empresas')->insert([
+            [
+                'cif' => 'B12345678',
+                'nombre' => 'Empresa Ejemplo 1',
+                'direccion' => 'Calle Falsa 123, Madrid',
+                'imagen' => 'storage/empresa1.jpg',
+                'telefono' => '+34 612345678',
+                'email' => 'empresa1@example.com',
+                'cuentaBancaria' => 'ES12 3456 7890 1234 5678 9012',
+                'usuario_id' => 1,
+                'lista_eventos' => json_encode([]),
+                'isDeleted' => false,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'cif' => 'B87654321',
+                'nombre' => 'Empresa Ejemplo 2',
+                'direccion' => 'Avenida Siempre Viva 742, Barcelona',
+                'imagen' => 'storage/empresa2.jpg',
+                'telefono' => '+34 698765432',
+                'email' => 'empresa2@example.com',
+                'cuentaBancaria' => 'ES98 7654 3210 9876 5432 1098',
+                'usuario_id' => 2,
+                'lista_eventos' => json_encode([]),
+                'isDeleted' => false,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ]
+        ]);
     }
 
     /**
