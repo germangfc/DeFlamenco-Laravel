@@ -25,4 +25,4 @@ Route::get('empresas/nombre/{nombre}', [EmpresaControllerApi::class, 'getByNombr
 Route::get('empresas/cif/{cif}', [EmpresaControllerApi::class,'getByCif']);
 Route::post('empresas',[EmpresaControllerApi::class, 'create']);
 Route::put('empresas/{id}', [EmpresaControllerApi::class, 'update']);
-Route::delete('empresas/{id}', [EmpresaControllerApi::class, 'delete']);
+Route::delete('empresas/{id}', [EmpresaControllerApi::class, 'destroy']);

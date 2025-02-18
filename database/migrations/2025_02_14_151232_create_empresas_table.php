@@ -16,15 +16,15 @@ return new class extends Migration
             $table->string('cif');
             $table->string('nombre');
             $table->string('direccion');
-            $table->string('imagen');
+            $table->string('imagen')->default('storage/empresa1.jpg');
             $table->string('telefono');
             $table->string('email');
             $table->string('cuentaBancaria');
             $table->unsignedInteger('usuario_id');
            // $table->foreign('usuario_id')->references('id')->on('usuarios')->onDelete('cascade');
-            $table->json('lista_eventos')->nullable();
-           // $table->foreign('evento_id')->references('id')->on('eventos');
-            $table->boolean('isDeleted');
+            $table->json('lista_eventos')->default(json_encode([]));
+            // $table->foreign('evento_id')->references('id')->on('eventos');
+            $table->boolean('isDeleted')->default(false);
             $table->timestamps();
         });
     }
