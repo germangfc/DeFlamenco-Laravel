@@ -6,15 +6,13 @@ use App\Models\Empresa;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Psy\Util\Json;
 
 class EmpresaControllerApi extends Controller
 {
     public function getAll(Request $request){
-        $query = Empresa::query();
-        if($request->has('nombre')){
-            $query->where('nombre', 'LIKE', '%'. $request->nombre. '%');
-        }
-        $empresas = $query->paginate(5);
+        $empresas = Empresa::search($request->name)->orderBy('id', 'ASC')->paginate(5);
+
         return response()->json($empresas, status: 200);
     }
 
