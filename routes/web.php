@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\ClienteController;
+use App\Http\Controllers\Api\ClienteApiController;
 use App\Http\Controllers\EmpresaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StripeController;

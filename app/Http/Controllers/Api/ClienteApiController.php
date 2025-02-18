@@ -9,8 +9,10 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Cache;
 
-class ClienteController extends Controller
+
+class ClienteApiController extends Controller
 {
 
     public function index()
@@ -18,16 +20,26 @@ class ClienteController extends Controller
         return response()->json(Cliente::all(), 200);
     }
 
+
     public function show($id)
     {
-        $cliente = Cliente::find($id);
+        $cacheKey = "cliente_{$id}";
+
+        $cliente = Cache::get($cacheKey);
 
         if (!$cliente) {
-            return response()->json(['message' => 'Cliente no encontrado'], 404);
+            $cliente = Cliente::find($id);
+
+            if (!$cliente) {
+                return response()->json(['message' => 'Client not found'], 404);
+            }
+
+            Cache::put($cacheKey, $cliente, 20);
         }
 
         return response()->json($cliente, 200);
     }
+
 
 
     public function store(Request $request)
@@ -72,8 +84,6 @@ class ClienteController extends Controller
     }
 
 
-
-
     public function update(Request $request, $id)
     {
         $cliente = Cliente::find($id);
@@ -87,10 +97,18 @@ class ClienteController extends Controller
             'foto_dni' => 'nullable|string'
         ]);
 
-        $cliente->update($request->only(['dni','foto_dni']));
+        $cliente->update($request->only(['dni', 'foto_dni']));
+
         $user = User::find($cliente->user_id);
-        return response()->json(new ClienteResponse($user,$cliente), 200);
+
+        $cacheKey = "cliente_{$cliente->id}_response";
+        $response = new ClienteResponse($user, $cliente);
+
+        Cache::put($cacheKey, $response, 20);
+
+        return response()->json($response, 200);
     }
+
 
 
     public function destroy($id)
@@ -102,6 +120,10 @@ class ClienteController extends Controller
         }
 
         $cliente->delete();
+
+        $cacheKey = "cliente_{$id}_response";
+        Cache::forget($cacheKey);
+
         return response()->json(['message' => 'Cliente eliminado'], 200);
     }
 }

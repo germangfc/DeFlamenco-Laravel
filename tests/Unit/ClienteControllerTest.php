@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Http\Controllers\Api\ClienteController;
+use App\Http\Controllers\Api\ClienteApiController;
 use App\Models\Cliente;
 use Illuminate\Http\JsonResponse;
 use Mockery;
@@ -18,7 +18,7 @@ class ClienteControllerTest extends TestCase
         $clienteMock->shouldReceive('delete')->once()->andReturn(true);
 
         // Creamos una instancia del controlador
-        $controller = new ClienteController();
+        $controller = new ClienteApiController();
 
         // Llamamos al método destroy y verificamos la respuesta
         $response = $controller->destroy(1);
@@ -35,7 +35,7 @@ class ClienteControllerTest extends TestCase
         $clienteMock = Mockery::mock(Cliente::class);
         $clienteMock->shouldReceive('find')->with(999)->andReturn(null);
 
-        $controller = new ClienteController();
+        $controller = new ClienteApiController();
         $response = $controller->destroy(999);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
