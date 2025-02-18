@@ -104,7 +104,7 @@
                     <li><a>Settings</a></li>
                     <li><form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" >Cerrar Sesión</button>
+                            <a type="submit" >Cerrar Sesión</a>
                         </form>
                     </li>
                 </ul>
