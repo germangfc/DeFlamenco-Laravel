@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Controllers\ClienteController;
-use App\Models\Cliente;
+use App\Http\Controllers\EmpresaController;
+use App\Http\Controllers\ClienteControllerView;
+use App\Http\Controllers\Api\ClienteController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StripeController;
 
@@ -23,4 +24,12 @@ Route::prefix('empresa')->group(function () {
     Route::get('/{id}', [EmpresaController::class, 'show'])->name('empresas.show'); // Debe ir al final
 });
 
-Route::get('/card', [ClienteController::class, 'getAll'] )->name('card');
+Route::prefix('clientes')->group(function () {
+    Route::get('/', [ClienteControllerView::class, 'index'])->name('clientes.index');
+    Route::get('/crear', [ClienteControllerView::class, 'create'])->name('clientes.create');
+    Route::post('/', [ClienteControllerView::class, 'store'])->name('clientes.store');
+    Route::get('/{id}', [ClienteControllerView::class, 'show'])->name('clientes.show');
+    Route::get('/{id}/editar', [ClienteControllerView::class, 'edit'])->name('clientes.edit');
+    Route::put('/{id}', [ClienteControllerView::class, 'update'])->name('clientes.update');
+});
+    Route::delete('/{id}', [ClienteControllerView::class, 'destroy'])->name('clientes.destroy');
