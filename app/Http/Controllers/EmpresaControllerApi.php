@@ -86,25 +86,26 @@ class EmpresaControllerApi extends Controller
 
 
     public function update($id, Request $request){
-        $request->validate([
-            'cif'=> 'nullable|regex:/^[A-HJNP-SUVW][0-9]{7}[0-9A-J]$/',
-            'nombre'=> 'nullable|max:255',
-            'direccion'=> 'nullable|max:255',
-            'cuentaBancaria'=>'nullable|regex:/^ES\d{2}\s?\d{4}\s?\d{4}\s?\d{2}\s?\d{10}$/',
-            'telefono'=> 'nullable|regex:/^(\+34|0034)?[679]\d{8}$/',
-        ]);
-        $validatedUserData = $request->validate([
-            'name' => 'nullable|string|max:255',
-            'email' => 'nullable|string|email|unique:users,email',
-            'password' => 'nullable|string|min:8'
-        ]);
+        try {
+            $validatedData = $request->validate([
+                'cif'            => ['nullable', 'regex:/^[A-HJNP-SUVW][0-9]{7}[0-9A-J]$/'],
+                'nombre'         => 'nullable|max:255',
+                'direccion'      => 'nullable|max:255',
+                'cuentaBancaria' => ['nullable', 'regex:/^ES\d{2}\s?\d{4}\s?\d{4}\s?\d{2}\s?\d{10}$/'],
+                'telefono'       => ['nullable', 'regex:/^(\+34|0034)?[679]\d{8}$/'],
+                'email'          => 'nullable|string|email|email',
+                'password'       => 'nullable|string|min:8',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['error' => 'Error de validación', 'detalles' => $e->errors()], 422);
+        }
         try {
             $empresa = Empresa::find($id);
-            if($empresa->isEmpty()){
+            if($empresa == null){
                 return response()->json(['message' => 'Empresa no encontrada'], status: 404);
             }
             $user = User::find($empresa->usuario_id);
-            if($user->isEmpty()){
+            if($user == null){
                 return response()->json(['message' => 'Usuario asociado a la empresa no encontrado'], status: 404);
             }
             $empresa->update($request->all());
