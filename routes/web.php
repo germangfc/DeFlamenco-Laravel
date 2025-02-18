@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Controllers\ClienteController;
-use App\Models\Cliente;
+
+use App\Http\Controllers\EmpresaController;
+use App\Http\Controllers\EventosController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StripeController;
 
@@ -23,4 +24,4 @@ Route::prefix('empresa')->group(function () {
     Route::get('/{id}', [EmpresaController::class, 'show'])->name('empresas.show'); // Debe ir al final
 });
 
-Route::get('/card', [ClienteController::class, 'getAll'] )->name('card');
+Route::get('/card', [EventosController::class, 'getAll'] )->name('eventos');

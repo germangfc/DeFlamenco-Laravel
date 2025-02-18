@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cliente;
 use App\Models\Evento;
 use Illuminate\Http\Request;
 
 class EventosController extends Controller
 {
-
-    public function index(Request $request)
+    public function getAll()
     {
-        $eventos = Evento::search($request->nombre)->OrderBy('id', 'ASC')->paginate(5);
-        return view('eventos.index')->with('eventos', $eventos);
+        $eventos = Evento::all();
+
+        return view('card', compact('eventos'));
     }
 
     public function create()

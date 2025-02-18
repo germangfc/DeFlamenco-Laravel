@@ -1,22 +1,21 @@
 @extends('main')
 
 @section("content")
-    @foreach($clientes as $cliente)
-    <div class="container mx-auto p-6 flex justify-center">
-        <div class="flex justify-center gap-16 mt-10">
-            <div class="card bg-base-100 image-full w-96 shadow-xl">
-                <figure>
-                    <img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="Shoes" />
-                </figure>
-                <div class="card-body">
-                    <h2 class="card-title">Shoes!</h2>
-                    <p>{{$cliente->dni}}</p>
-                    <div class="card-actions justify-end">
-                        <button class="btn btn-primary">Buy Now</button>
+    <div class="flex flex-wrap justify-center gap-4">
+        @foreach($eventos as $index => $evento)
+            <div class="w-1/4 p-2">
+                <div class="card bg-base-100 image-full w-full shadow-xl">
+                    <figure>
+                        <img class="object-cover h-40 w-full" src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="Evento" />
+                    </figure>
+                    <div class="card-body">
+                        <h2 class="card-title">{{$evento->nombre}}</h2>
+                        <div class="card-actions justify-end">
+                            <button class="btn btn-primary">Información</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @endforeach
     </div>
-    @endforeach
 @endsection

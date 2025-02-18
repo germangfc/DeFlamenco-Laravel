@@ -18,4 +18,9 @@ class Evento extends Model
         'precio',
     ];
     protected $primarykey = 'id';
+
+    public function scopeSearch($query, $name)
+    {
+        return $query->where('nombre', 'LIKE', "%$name%");
+    }
 }
