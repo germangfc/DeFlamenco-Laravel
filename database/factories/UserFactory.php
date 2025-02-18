@@ -30,7 +30,7 @@ class UserFactory extends Factory
             'password' => static::$password ??= Hash::make('password'),
             'tipo' => 'cliente',
             'remember_token' => Str::random(10),
-            'is_Deleted' => false,
+            'isDeleted' => false,
             ];
     }
 
