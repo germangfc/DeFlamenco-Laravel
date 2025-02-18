@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->enum('tipo', ['cliente','admin','empresa'])->default('cliente');
-            $table->boolean('is_Deleted');
+            $table->boolean('is_Deleted')->default(false);
             $table->timestamps();
         });
 
