@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
     {
         User::factory()->count(50)->create();
         Cliente::factory()->count(50)->create();
-        Ticket::factory(10)->create();
+        //Ticket::factory(10)->create();
         $this->call([
             EmpresasTableSeeder::class
         ]);

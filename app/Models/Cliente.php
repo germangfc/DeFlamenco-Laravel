@@ -26,4 +26,9 @@ class Cliente extends Model
         return $query->where('dni', $dni);
     }
 
+    public function scopeFindByUserId($query, $userid)
+    {
+        return $query->where('user_id', $userid);
+    }
+
 }
