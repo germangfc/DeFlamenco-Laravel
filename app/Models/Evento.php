@@ -23,4 +23,9 @@ class Evento extends Model
     {
         return $query->where('nombre', 'LIKE', "%$name%");
     }
+
+    public function scopeFindById($query, $id)
+    {
+        return $query->where('id', $id);
+    }
 }

@@ -24,4 +24,6 @@ Route::prefix('empresa')->group(function () {
     Route::get('/{id}', [EmpresaController::class, 'show'])->name('empresas.show'); // Debe ir al final
 });
 
-Route::get('/card', [EventosController::class, 'getAll'] )->name('eventos');
+Route::get('/card', [EventosController::class, 'getAll'])->name('eventos');
+Route::get('/card/{id}', [EventosController::class, 'show'])->name('eventos.show');
+

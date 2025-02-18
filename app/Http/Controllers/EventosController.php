@@ -42,8 +42,8 @@ class EventosController extends Controller
 
     public function show($id)
     {
-        $evento = Evento::find($id);
-        return view('eventos.show', compact('evento'));
+        $evento = Evento::findById($id)->first();
+        return view('eventos.informacion', compact('evento'));
     }
 
     public function edit($id)
