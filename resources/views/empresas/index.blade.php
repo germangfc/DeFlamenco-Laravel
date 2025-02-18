@@ -7,7 +7,7 @@
         <table class="table table-striped">
             <thead>
             <tr>
-                <th>ID</th>
+                <th>CIF</th>
                 <th>Nombre</th>
                 <th>Email</th>
                 <th>Teléfono</th>
@@ -17,7 +17,7 @@
             <tbody>
             @foreach ($empresas as $empresa)
                 <tr>
-                    <td>{{ $empresa->id }}</td>
+                    <td>{{ $empresa->cif }}</td>
                     <td>{{ $empresa->nombre }}</td>
                     <td>{{ $empresa->email }}</td>
                     <td>{{ $empresa->telefono }}</td>
