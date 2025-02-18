@@ -8,6 +8,7 @@ use App\Models\Cliente;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
 class ClienteController extends Controller
@@ -47,13 +48,13 @@ class ClienteController extends Controller
             'email' => 'required|string|email'
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::findByEmail($request->email)->first();
 
         if (!$user) {
             return response()->json(['message' => 'Usuario no encontrado'], 404);
         }
 
-        $cliente = Cliente::where('user_id', $user->id)->first();
+        $cliente = Cliente::findByUserId($user->id)->first();
 
         if (!$cliente) {
             return response()->json(['message' => 'Cliente no encontrado para este usuario'], 404);
@@ -68,6 +69,7 @@ class ClienteController extends Controller
     public function store(Request $request)
     {
         try {
+            // Validación de los datos del usuario
             $validatedUserData = $request->validate([
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|unique:users,email',
@@ -75,10 +77,7 @@ class ClienteController extends Controller
             ]);
 
             $validatedClientData = $request->validate([
-                'dni' => 'required|string|max:20|unique:clientes,dni',
-                'foto_dni' => 'nullable|string',
-                'lista_entradas' => 'nullable|array',
-                'lista_entradas.*' => 'string'
+                'dni' => 'required|string|max:20|unique:clientes,dni'
             ]);
 
             $user = User::create([
@@ -89,22 +88,20 @@ class ClienteController extends Controller
 
             $cliente = Cliente::create([
                 'user_id' => $user->id,
-                'dni' => $validatedClientData['dni'],
-                'foto_dni' => $validatedClientData['foto_dni'],
-                'lista_entradas' => $validatedClientData['lista_entradas']
+                'dni' => $validatedClientData['dni']
             ]);
 
             return response()->json([
-                new ClienteResponse($user,$cliente)
+                new ClienteResponse($user,$cliente),
             ], 201);
 
         } catch (ValidationException $e) {
-
             return response()->json([
                 'errors' => $e->errors()
             ], 422);
         }
     }
+
 
 
 
@@ -169,7 +166,7 @@ class ClienteController extends Controller
         $cliente->is_deleted = true;
         $cliente->save();
 
-        /*
+
         $user = User::find($cliente->user_id);
 
         if (!$user) {
@@ -178,8 +175,42 @@ class ClienteController extends Controller
 
         $user->is_deleted = true;
         $user->save();
-        */
+
         return response()->json(['message' => 'Cliente marcado como eliminado'], 200);
     }
+
+    public function uploadDni(Request $request, $clienteId)
+    {
+        $request->validate([
+            'foto_dni' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $cliente = Cliente::findOrFail($clienteId);
+
+        if (!empty($cliente->foto_dni)) {
+            Storage::disk('public')->delete('images/' . $cliente->foto_dni);
+        }
+
+
+        if ($request->hasFile('foto_dni')) {
+            $image = $request->file('foto_dni');
+
+            $customName = 'dni_' . $cliente->dni . '.' . $image->getClientOriginalExtension();
+
+            $image->storeAs('images', $customName, 'public');
+
+            $cliente->foto_dni = $customName;
+            $cliente->save();
+
+            return response()->json([
+                'message' => 'Imagen subida correctamente',
+                'path' => $customName
+            ]);
+        }
+
+        return response()->json(['message' => 'No se ha enviado ningún archivo'], 400);
+    }
+
+
 
 }
