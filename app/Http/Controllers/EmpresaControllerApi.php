@@ -103,7 +103,7 @@ class EmpresaControllerApi extends Controller
             if($empresa->isEmpty()){
                 return response()->json(['message' => 'Empresa no encontrada'], status: 404);
             }
-            $user = User::find($empresa->user_id);
+            $user = User::find($empresa->usuario_id);
             if($user->isEmpty()){
                 return response()->json(['message' => 'Usuario asociado a la empresa no encontrado'], status: 404);
             }
@@ -122,16 +122,13 @@ class EmpresaControllerApi extends Controller
         if($empresa == null){
             return response()->json(['message' => 'Empresa no encontrada'], status: 404);
         }
-        $user = User::find($empresa->user_id);
+        $user = User::find($empresa->usuario_id );
         if($user == null){
             return response()->json(['message' => 'Usuario asociado a la empresa no encontrado'], status: 404);
         }
-        $empresa->Update(
-        ('isDeleted')->true
-        );
-        $user->Update(
-            ('isDeleted')->true
-        );
+        $empresa->update(['isDeleted' => true]);
+        $user->update(['isDeleted' => true]);
+
         $empresa->save();
         $user->save();
         return response()->json(['message' => 'Empresa y usuario eliminados correctamente'], status: 204);
