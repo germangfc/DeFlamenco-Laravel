@@ -16,6 +16,7 @@ class Evento extends Model
         'direccion',
         'ciudad',
         'precio',
+        'foto',
     ];
     protected $primarykey = 'id';
 
