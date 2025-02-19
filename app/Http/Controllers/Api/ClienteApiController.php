@@ -10,8 +10,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Cache;
 
-class ClienteController extends Controller
+
+class ClienteApiController extends Controller
 {
 
     public function index()
@@ -19,12 +21,21 @@ class ClienteController extends Controller
         return response()->json(Cliente::all(), 200);
     }
 
+
     public function show($id)
     {
-        $cliente = Cliente::find($id);
+        $cacheKey = "cliente_{$id}";
+
+        $cliente = Cache::get($cacheKey);
 
         if (!$cliente) {
-            return response()->json(['message' => 'Cliente no encontrado'], 404);
+            $cliente = Cliente::find($id);
+
+            if (!$cliente) {
+                return response()->json(['message' => 'Client not found'], 404);
+            }
+
+            Cache::put($cacheKey, $cliente, 20);
         }
 
         return response()->json($cliente, 200);
@@ -151,6 +162,7 @@ class ClienteController extends Controller
 
         return response()->json(new ClienteResponse($user, $cliente), 200);
     }
+
 
 
     public function destroy($id)
