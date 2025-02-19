@@ -16,6 +16,17 @@ class Evento extends Model
         'direccion',
         'ciudad',
         'precio',
+        'foto',
     ];
     protected $primarykey = 'id';
+
+    public function scopeSearch($query, $name)
+    {
+        return $query->where('nombre', 'LIKE', "%$name%");
+    }
+
+    public function scopeFindById($query, $id)
+    {
+        return $query->where('id', $id);
+    }
 }

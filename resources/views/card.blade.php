@@ -1,22 +1,44 @@
 @extends('main')
 
 @section("content")
-    @foreach($clientes as $cliente)
-    <div class="container mx-auto p-6 flex justify-center">
-        <div class="flex justify-center gap-16 mt-10">
-            <div class="card bg-base-100 image-full w-96 shadow-xl">
-                <figure>
-                    <img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="Shoes" />
-                </figure>
-                <div class="card-body">
-                    <h2 class="card-title">Shoes!</h2>
-                    <p>{{$cliente->dni}}</p>
-                    <div class="card-actions justify-end">
-                        <button class="btn btn-primary">Buy Now</button>
+    <div class="grid grid-cols-2 gap-x-12 gap-y-24 p-8">
+        @foreach($eventos as $evento)
+            <div class="flex justify-center p-4 my-6 mb-8">
+                <div class="card bg-gray-800 shadow-lg rounded-2xl overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-xl">
+                    <figure>
+                        <img class="object-cover h-70 w-full" src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="Evento" />
+                    </figure>
+                    <div class="card-body p-6">
+                        <h2 class="card-title text-xl font-semibold text-white-200">{{$evento->nombre}}</h2>
+                        <div class="card-actions justify-end mt-4">
+                            <button onclick="window.location.href='{{ route('eventos.show', $evento->id) }}'"
+                                    class="btn bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-900 transition shadow-md">
+                                Información
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @endforeach
     </div>
-    @endforeach
+
+    <div class="flex justify-center mt-8 space-x-2">
+        @if ($eventos->onFirstPage())
+            <span class="btn btn-disabled">«</span>
+        @else
+            <a href="{{ $eventos->previousPageUrl() }}" class="btn btn-square">«</a>
+        @endif
+
+        @foreach ($eventos->getUrlRange(1, $eventos->lastPage()) as $page => $url)
+            <a href="{{ $url }}" class="btn btn-square {{ $page == $eventos->currentPage() ? 'btn-active' : '' }}">
+                {{ $page }}
+            </a>
+        @endforeach
+
+        @if ($eventos->hasMorePages())
+            <a href="{{ $eventos->nextPageUrl() }}" class="btn btn-square">»</a>
+        @else
+            <span class="btn btn-disabled">»</span>
+        @endif
+    </div>
 @endsection

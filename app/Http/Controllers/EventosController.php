@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cliente;
 use App\Models\Evento;
 use Exception;
 use Illuminate\Http\Request;
@@ -9,11 +10,11 @@ use Illuminate\Support\Facades\Cache;
 
 class EventosController extends Controller
 {
-
-    public function index(Request $request)
+    public function getAll(Request $request)
     {
-        $eventos = Evento::search($request->nombre)->OrderBy('id', 'ASC')->paginate(5);
-        return view('eventos.index')->with('eventos', $eventos);
+        $eventos = Evento::search($request->nombre)->orderBy('id', 'ASC')->paginate(2);
+
+        return view('card', compact('eventos'));
     }
 
     public function create()
