@@ -43,7 +43,7 @@
                     <!-- Menú escritorio (se muestra en pantallas grandes) -->
                     <div class="navbar-center hidden lg:flex">
                         <ul class="menu menu-horizontal px-1">
-                            <li><a class="{{ Request::is('*') ? 'bg-primary' : '' }}">Eventos</a></li>
+                            <li><a class="{{ Request::is('*') ? 'bg-secondary' : '' }}">Eventos</a></li>
                             <li><a>Empresas</a></li>
 
                         </ul>
