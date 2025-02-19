@@ -110,32 +110,30 @@
                 </ul>
                 @endcan
                 @can("cliente")
-                <ul
-                    tabindex="0"
-                    class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                    <li>
-                        <a class="justify-between">
-                            Profile
-                            <span class="badge">New</span>
-                        </a>
-                    </li>
-                    <li><a>Settings</a></li>
-                    <li><a>Logout</a></li>
-                </ul>
+                    <ul
+                        tabindex="0"
+                        class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                        <li><a href="{{ route('profile.edit') }}">Perfil</a></li>
+                        <li><a>Settings</a></li>
+                        <li><form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" >Cerrar Sesión</button>
+                            </form>
+                        </li>
+                    </ul>
                 @endcan
                 @can("empresa")
-                <ul
-                    tabindex="0"
-                    class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                    <li>
-                        <a class="justify-between">
-                            Profile
-                            <span class="badge">New</span>
-                        </a>
-                    </li>
-                    <li><a>Settings</a></li>
-                    <li><a>Logout</a></li>
-                </ul>
+                    <ul
+                        tabindex="0"
+                        class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                        <li><a href="{{ route('profile.edit') }}">Perfil</a></li>
+                        <li><a>Settings</a></li>
+                        <li><form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" >Cerrar Sesión</button>
+                            </form>
+                        </li>
+                    </ul>
                 @endcan
             </div>
             @endguest
