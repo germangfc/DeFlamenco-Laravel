@@ -8,7 +8,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
-class VentasController extends Controller
+class VentasApiController extends Controller
 {
     public function index()
     {

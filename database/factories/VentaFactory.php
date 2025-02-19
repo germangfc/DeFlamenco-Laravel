@@ -27,13 +27,33 @@ class VentaFactory extends Factory
         $ticketIds = Ticket::pluck('id')->toArray();
 
         return [
-            'guid' => Str::uuid(),
-            'lineas_venta' => collect(range(1, rand(1, 5)))->map(function () use ($ticketIds) {
+            'guid' => (string) Str::uuid(),  // Asegurar que el GUID se almacene correctamente como string
+            'lineas_venta' => collect(range(1, rand(1, 5)))->map(function () use (&$ticketIds) {
+                // Verificamos que queden tickets disponibles
+                if (count($ticketIds) > 0) {
+                    // Seleccionamos un ticket aleatorio y lo eliminamos de la lista
+                    $randomKey = array_rand($ticketIds);
+                    $idTicket = $ticketIds[$randomKey];
+                    // Eliminamos el ticket de la lista para que no se repita
+                    array_splice($ticketIds, $randomKey, 1);
+                } else {
+                    // Si no hay más tickets disponibles, asignamos null
+                    $idTicket = null;
+                }
+
                 return [
-                    'idTicket' => !empty($ticketIds) ? $ticketIds[array_rand($ticketIds)] : null, // Ticket aleatorio
+                    'idTicket' => $idTicket,
                     'precio_unitario' => fake()->randomFloat(2, 1, 100),
                 ];
             })->toArray(),
+ /*           'guid' => (string) Str::uuid(),
+            'lineas_venta' => collect(range(1, rand(1, 5)))->map(function () use ($ticketIds) {
+                return [
+                    //'idTicket' => !empty($ticketIds) ? $ticketIds[array_rand($ticketIds)] : null, // Ticket aleatorio
+                    'idTicket' => !empty($ticketIds) ? array_pop($ticketIds) : null, // Tomar un ticket aleatorio y eliminarlo del array para evitar repeticiones
+                    'precio_unitario' => fake()->randomFloat(2, 1, 100),
+                ];
+            })->toArray(),*/
         ];
     }
 }
