@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Evento;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\ValidationException;
 
 class EventosApiController extends Controller
@@ -33,26 +34,47 @@ class EventosApiController extends Controller
         }
     }
 
-    public function show($id){
-        $eventos = Evento::find($id);
-        if($eventos){
-            return response()->json($eventos);
-        }else{
-            return response()->json(['error' => 'Evento no encontrado'], 404);
+    public function show($id)
+    {
+        $cacheKey = "evento_{$id}";
+
+        $eventos = Cache::get($cacheKey);
+
+        if (!$eventos) {
+            $eventos = Evento::find($id);
+
+            if (!$eventos) {
+                return response()->json(['error' => 'Event not found'], 404);
+            }
+
+            Cache::put($cacheKey, $eventos, 20);
         }
+
+        return response()->json($eventos, 200);
     }
 
-    public function getByNombre($nombre){
-        $eventos = Evento::where('nombre', 'like', '%'.$nombre.'%')->get();
-        if($eventos){
-            return response()->json($eventos);
-        }else{
-            return response()->json(['error' => 'Evento no encontrado'], 404);
+    public function getByNombre($nombre)
+    {
+        $cacheKey = "eventos_nombre_";
+
+        $eventos = Cache::get($cacheKey);
+
+        if (!$eventos) {
+            $eventos = Evento::where('nombre', 'like', '%' . $nombre . '%')->get();
+
+            if ($eventos->isEmpty()) {
+                return response()->json(['error' => 'Event not found'], 404);
+            }
+
+            Cache::put($cacheKey, $eventos, 20);
         }
+
+        return response()->json($eventos, 200);
     }
 
-    public function update(Request $request, $id){
-        try{
+    public function update(Request $request, $id)
+    {
+        try {
             $validatedData = $request->validate([
                 'nombre' => 'required|string|max:255',
                 'stock' => 'required|integer',
@@ -64,24 +86,35 @@ class EventosApiController extends Controller
             ]);
 
             $eventos = Evento::find($id);
-            if($eventos){
+
+            if ($eventos) {
                 $eventos->update($validatedData);
+
+                $cacheKey = "evento_{$id}";
+                Cache::forget($cacheKey);
+
                 return response()->json($eventos, 200);
-            }else{
-                return response()->json(['error' => 'Evento no encontrado'], 404);
+            } else {
+                return response()->json(['error' => 'Event not found'], 404);
             }
         } catch (ValidationException $e) {
             return response()->json(['error' => $e->errors()], 422);
         }
     }
 
-    public function destroy($id){
+    public function destroy($id)
+    {
         $eventos = Evento::find($id);
-        if($eventos){
+
+        if ($eventos) {
             $eventos->delete();
-            return response()->json(['message' => 'Evento eliminado'], 200);
-        }else{
-            return response()->json(['error' => 'Evento no encontrado'], 404);
+
+            $cacheKey = "evento_{$id}";
+            Cache::forget($cacheKey);
+
+            return response()->json(['message' => 'Event deleted'], 200);
+        } else {
+            return response()->json(['error' => 'Event not found'], 404);
         }
     }
 }
