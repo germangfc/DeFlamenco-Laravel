@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
-class UserController extends Controller
+class UserApiController extends Controller
 {
     public function index()
     {
@@ -42,12 +43,20 @@ class UserController extends Controller
     }
 
 
-        public function show(string $id)
+    public function show(string $id)
     {
-        $user = User::find($id);
+        $cacheKey = "user_{$id}";
+
+        $user = Cache::get($cacheKey);
 
         if (!$user) {
-            return response()->json(['message' => 'Usuario no encontrado'], 404);
+            $user = User::find($id);
+
+            if (!$user) {
+                return response()->json(['message' => 'User not found'], 404);
+            }
+
+            Cache::put($cacheKey, $user, 20);
         }
 
         return response()->json($user);
@@ -59,7 +68,7 @@ class UserController extends Controller
         $user = User::find($id);
 
         if (!$user) {
-            return response()->json(['message' => 'Usuario no encontrado'], 404);
+            return response()->json(['message' => 'User not found'], 404);
         }
 
         $validatedData = $request->validate([
@@ -74,6 +83,9 @@ class UserController extends Controller
 
         $user->update($validatedData);
 
+        $cacheKey = "user_{$id}";
+        Cache::put($cacheKey, $user, 20);
+
         return response()->json($user);
     }
 
@@ -83,10 +95,14 @@ class UserController extends Controller
         $user = User::find($id);
 
         if (!$user) {
-            return response()->json(['message' => 'Usuario no encontrado'], 404);
+            return response()->json(['message' => 'User not found'], 404);
         }
 
         $user->delete();
-        return response()->json(['message' => 'Usuario eliminado con éxito']);
+
+        $cacheKey = "user_{$id}";
+        Cache::forget($cacheKey);
+
+        return response()->json(['message' => 'User deleted']);
     }
 }
