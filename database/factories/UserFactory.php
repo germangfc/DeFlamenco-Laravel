@@ -32,7 +32,6 @@ class UserFactory extends Factory
             'tipo' => 'cliente',
             'isDeleted' => false,
             'remember_token' => Str::random(10),
-            'is_Deleted' => false,
             ];
     }
 

@@ -14,9 +14,19 @@ class EmpresaControllerTest extends TestCase
 {
     use RefreshDatabase; // Reinicia la base de datos en cada test
 
+    protected function setUp(): void
+    {
+        parent::setUp(); // Inicializa Laravel
+
+        // Aquí puedes usar Eloquent
+        User::factory()->create(['id' => 1]);
+        User::factory()->create(['id' => 2]);
+    }
+
     /** @test */
     public function index()
     {
+
         Artisan::call('db:seed', ['--class' => 'EmpresasTableSeeder']); // Ejecuta solo EmpresasTableSeeder
 
         $response = $this->get(route('empresas.index'));
@@ -30,6 +40,7 @@ class EmpresaControllerTest extends TestCase
 
     public function testShow()
     {
+
         // Ejecuta el seeder para cargar las empresas
         Artisan::call('db:seed', ['--class' => 'EmpresasTableSeeder']);
 
@@ -55,6 +66,7 @@ class EmpresaControllerTest extends TestCase
 
     public function testShowByCif()
     {
+
         // Ejecuta el seeder para cargar las empresas
         Artisan::call('db:seed', ['--class' => 'EmpresasTableSeeder']);
 
@@ -77,7 +89,8 @@ class EmpresaControllerTest extends TestCase
 
     public function testShowByNombre()
     {
-// Ejecuta el seeder para cargar las empresas
+
+        // Ejecuta el seeder para cargar las empresas
         Artisan::call('db:seed', ['--class' => 'EmpresasTableSeeder']);
 
         // Recupera la empresa por su nombre
@@ -97,20 +110,13 @@ class EmpresaControllerTest extends TestCase
             ->assertSessionHas('error', 'Empresa no encontrada');
     }
 
-    public function testCreate()
-    {
-
-    }
-
     public function testStore()
     {
         Storage::fake('public'); // Fake para simular el almacenamiento
 
         $file = UploadedFile::fake()->image('empresa.jpg');
 
-
-        $user = User::factory()->create();
-
+        $user = User::factory()->create(['id' => 3]);
 
         $data = [
             'usuario_id' => $user->id,
@@ -147,7 +153,8 @@ class EmpresaControllerTest extends TestCase
 
     public function testUpdate()
     {
-// Ejecuta el seeder para cargar las empresas
+
+        // Ejecuta el seeder para cargar las empresas
         Artisan::call('db:seed', ['--class' => 'EmpresasTableSeeder']);
 
         // Recupera una empresa existente desde la base de datos
@@ -169,19 +176,15 @@ class EmpresaControllerTest extends TestCase
         $this->assertDatabaseHas('empresas', ['id' => $empresa->id, 'nombre' => 'Nuevo Nombre']);
     }
 
-    public function testEdit()
-    {
-
-    }
-
     public function testDestroy()
     {
+
         Storage::fake('public');
 
         // Ejecuta el seeder para cargar las empresas
         Artisan::call('db:seed', ['--class' => 'EmpresasTableSeeder']);
 
-        $user = User::factory()->create();
+        $user = User::factory()->create(['id' => 3]);
 
         $empresa = Empresa::create([
             'usuario_id' => $user->id,
