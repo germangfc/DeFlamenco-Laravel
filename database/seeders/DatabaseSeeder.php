@@ -7,6 +7,7 @@ use App\Models\Ticket;
 use App\Models\Cliente;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Venta;
 use Grpc\Call;
 use Illuminate\Database\Seeder;
 
@@ -23,5 +24,6 @@ class DatabaseSeeder extends Seeder
         ]);
         Cliente::factory()->count(25)->create();
         Empresa::factory()->count(25)->create();
+        Venta::factory()->count(5)->create();
     }
 }
