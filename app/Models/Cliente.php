@@ -21,4 +21,19 @@ class Cliente extends Model
         'lista_entradas' => 'array'
     ];
 
+    public function scopeFindByDni($query, $dni)
+    {
+        return $query->where('dni', $dni);
+    }
+
+    public function scopeFindByUserId($query, $userid)
+    {
+        return $query->where('user_id', $userid);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }
