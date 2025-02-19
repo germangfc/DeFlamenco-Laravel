@@ -1,0 +1,46 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+    content: [
+        "./resources/**/*.blade.php",
+        "./resources/**/*.js",
+        "./resources/**/*.vue",
+    ],
+    theme: {
+        extend: {},
+    },
+    plugins: [
+        require('daisyui'),
+        require('@tailwindcss/forms'),
+    ],
+    daisyui: {
+        themes: [
+            {
+                flamencoLight: {
+                    "primary": "#d97706",      // Naranja flamenco
+                    "secondary": "#b91c1c",    // Rojo intenso
+                    "accent": "#facc15",       // Amarillo dorado
+                    "neutral": "#7c2d12",      // Marrón oscuro
+                    "base-100": "#fff7ed",     // Crema claro
+                    "info": "#2563eb",         // Azul vibrante
+                    "success": "#16a34a",      // Verde oscuro
+                    "warning": "#eab308",      // Amarillo cálido
+                    "error": "#dc2626",        // Rojo vibrante
+                },
+            },
+            {
+                flamencoDark: {
+                    "primary": "#f59e0b",      // Naranja cálido
+                    "secondary": "#991b1b",    // Rojo oscuro
+                    "accent": "#fde047",       // Amarillo dorado
+                    "neutral": "#581c87",      // Morado profundo
+                    "base-100": "#1e293b",     // Azul grisáceo oscuro
+                    "info": "#3b82f6",         // Azul eléctrico
+                    "success": "#10b981",      // Verde esmeralda
+                    "warning": "#fbbf24",      // Amarillo anaranjado
+                    "error": "#ef4444",        // Rojo fuerte
+                },
+            },
+        ],
+    }
+
+}
