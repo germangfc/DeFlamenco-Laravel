@@ -23,14 +23,13 @@ class VentasController extends Controller
     }
     public function store(Request $request){
         try {
-            $request->lineasVenta->validate([
-                'guid' => "required|unique:ventas,guid,{$id}",
-                'idTicket' => "required|unique|exists:Ticket,{$id}",
-                'precioVentaTicket'=> 'required|numeric'
-            ]);
             $request->validate([
                 'guid' => 'required|unique:ventas',
                 'lineasVenta' => 'array|min:1'
+            ]);
+            $request->lineasVenta->validate([
+                'idTicket' => "required|unique|exists:Ticket",
+                'precioVentaTicket'=> 'required|numeric'
             ]);
 
             $venta = new Venta($request->all());
@@ -38,25 +37,42 @@ class VentasController extends Controller
             return response()->json($venta, 201);
         } catch (ValidationException $e) {
             return response()->json(['error' => $e->errors()], 422);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Error al guardar la venta'], 400);
         }
 
     }
     public function update(Request $request, $id){
         try {
-            $request->lineasVenta->validate([
-                'guid' => "required|unique:ventas,guid,{$id}",
-                'idTicket' => "required|unique|exists:Ticket,{$id}",
-                'precioVentaTicket'=> 'required|numeric'
-            ]);
             $request->validate([
                 'guid' => "required|unique:ventas,guid,{$id}",
                 'lineasVenta' => 'array|min:1'
             ]);
+            $request->lineasVenta->validate([
+                'idTicket' => "required|unique|exists:tickets,{$id}",
+                'precioVentaTicket'=> 'required|numeric'
+            ]);
             $venta = Venta::find($id);
+            if (!$venta) {
+                return response()->json(['message' => 'Venta not Found'], 404);
+            }
+            $venta->update($request->all());
 
+            return response()->json($venta, 201);
         } catch (ValidationException $e) {
             return response()->json(['error' => $e->errors()], 422);
 
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Error al guardar la venta'], 400);
         }
+    }
+
+    public function destroy($id){
+        $venta = Venta::find($id);
+        if (!$venta) {
+            return response()->json(['message' => 'Venta not Found'], 404);
+        }
+        $venta->delete();
+        return response()->json(['message' => 'Venta eliminada'], 204);
     }
 }
