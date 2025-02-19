@@ -105,7 +105,7 @@
 
         <p><strong>¿Estás listo para vivir el flamenco como nunca antes?</strong> Te esperamos en nuestros eventos más exclusivos, donde podrás sumergirte en la cultura, la música y el baile más emocionantes de la temporada.</p>
 
-        <a href="https://youtu.be/4a_thK5EdAU?si=3YJ4H8idVDoKqriG" class="cta-button">Descubre nuestros eventos exclusivos</a>
+        <a href="https://youtu.be/4a_thK5EdAU?si=3YJ4H8idVDoKqriG" class="cta-button">Descubre  nuestros eventos exclusivos</a>
     </div>
 
     <div class="business-section">
