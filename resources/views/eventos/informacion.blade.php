@@ -4,7 +4,6 @@
     <div class="flex justify-center items-center min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 px-6">
         <div class="bg-white shadow-2xl rounded-3xl overflow-hidden max-w-3xl w-full transform transition-all duration-500 hover:scale-[1.03] hover:shadow-4xl">
 
-            <!-- Imagen con overlay -->
             <div class="relative group">
                 <img class="object-cover h-80 w-full rounded-t-3xl transition-transform duration-500 group-hover:scale-110"
                      src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="Evento" />
@@ -15,7 +14,6 @@
             </div>
 
             <div class="p-8 text-gray-800">
-                <!-- Detalles del evento con iconos y efectos -->
                 <div class="text-lg space-y-6 leading-relaxed">
                     <p class="flex items-center gap-2 transition-transform duration-300 hover:translate-x-2">
                         <span class="text-indigo-600 text-2xl">📅</span>
@@ -47,7 +45,6 @@
                     </p>
                 </div>
 
-                <!-- Botones de acción con efectos -->
                 <div class="flex justify-between items-center mt-10">
                     <a href="{{ route('eventos') }}" class="px-6 py-3 rounded-full bg-gray-600 text-white text-lg font-semibold
                         hover:bg-gray-700 transition-all duration-300 transform hover:scale-105 shadow-md flex items-center gap-2">
