@@ -17,7 +17,7 @@ class EventosApiController extends Controller
     public function store(Request $request){
         try{
             $validatedData = $request->validate([
-                'nombre' => 'required|string|max:255|unique:eventos',
+                'nombre' => 'required|string|max:255|unique:eventos|min:3',
                 'stock' => 'required|integer',
                 'fecha' => 'required|date',
                 'hora' => 'required|date_format:H:i:s',
@@ -44,17 +44,17 @@ class EventosApiController extends Controller
 
     public function getByNombre($nombre){
         $eventos = Evento::where('nombre', 'like', '%'.$nombre.'%')->get();
-        if($eventos){
-            return response()->json($eventos);
-        }else{
+        if($eventos->isEmpty()){
             return response()->json(['error' => 'Evento no encontrado'], 404);
+        } else {
+            return response()->json($eventos);
         }
     }
 
     public function update(Request $request, $id){
         try{
             $validatedData = $request->validate([
-                'nombre' => 'required|string|max:255',
+                'nombre' => 'required|string|max:255|min:3',
                 'stock' => 'required|integer',
                 'fecha' => 'required|date',
                 'hora' => 'required|date_format:H:i:s',
