@@ -4,10 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Dto\Cliente\ClienteResponse;
 use App\Http\Controllers\Controller;
+use App\Mail\ActualizacionDatos;
+use App\Mail\ClienteBienvenido;
+use App\Mail\EliminacionCuenta;
 use App\Models\Cliente;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
@@ -69,7 +73,6 @@ class ClienteController extends Controller
     public function store(Request $request)
     {
         try {
-            // Validación de los datos del usuario
             $validatedUserData = $request->validate([
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|unique:users,email',
@@ -90,6 +93,9 @@ class ClienteController extends Controller
                 'user_id' => $user->id,
                 'dni' => $validatedClientData['dni']
             ]);
+
+            Mail::to($user->email)->send(new ClienteBienvenido($cliente, $user));
+
 
             return response()->json([
                 new ClienteResponse($user,$cliente),
@@ -148,6 +154,8 @@ class ClienteController extends Controller
 
         $user->save();
 
+        Mail::to($user->email)->send(new ActualizacionDatos($user));
+
 
         return response()->json(new ClienteResponse($user, $cliente), 200);
     }
@@ -163,18 +171,19 @@ class ClienteController extends Controller
 
         $user = User::find($cliente->user_id);
 
-        $cliente->is_deleted = true;
-        $cliente->save();
-
-
-        $user = User::find($cliente->user_id);
-
         if (!$user) {
             return response()->json(['message' => 'User no encontrado'], 404);
         }
 
-        $user->is_deleted = true;
+
+
+        $cliente->is_deleted = true;
+        $cliente->save();
+
+        $user->is_Deleted = true;
         $user->save();
+
+        Mail::to($user->email)->send(new EliminacionCuenta($user));
 
         return response()->json(['message' => 'Cliente marcado como eliminado'], 200);
     }
