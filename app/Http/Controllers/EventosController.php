@@ -8,9 +8,9 @@ use Illuminate\Http\Request;
 
 class EventosController extends Controller
 {
-    public function getAll()
+    public function getAll(Request $request)
     {
-        $eventos = Evento::all();
+        $eventos = Evento::search($request->nombre)->orderBy('id', 'ASC')->paginate(2);
 
         return view('card', compact('eventos'));
     }
