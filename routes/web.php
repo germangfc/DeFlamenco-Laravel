@@ -5,9 +5,6 @@ use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StripeController;
-use Illuminate\Support\Facades\Auth;
-use \Illuminate\Auth\Middleware\Authorize;
-
 
 Route::get('/', function () {
     return view('main');
