@@ -12,7 +12,7 @@ class EventosController extends Controller
 {
     public function getAll(Request $request)
     {
-        $eventos = Evento::search($request->nombre)->orderBy('id', 'ASC')->paginate(2);
+        $eventos = Evento::search($request->nombre)->orderBy('id', 'ASC')->paginate(4);
 
         return view('card', compact('eventos'));
     }
