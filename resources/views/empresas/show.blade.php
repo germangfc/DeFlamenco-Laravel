@@ -7,6 +7,7 @@
         <div class="card">
             <div class="card-body">
                 <h2>{{ $empresa->nombre }}</h2>
+                <p><strong>CIF:</strong> {{ $empresa->cif }}</p>
                 <p><strong>Email:</strong> {{ $empresa->email }}</p>
                 <p><strong>Teléfono:</strong> {{ $empresa->telefono }}</p>
                 <p><strong>Dirección:</strong> {{ $empresa->direccion }}</p>

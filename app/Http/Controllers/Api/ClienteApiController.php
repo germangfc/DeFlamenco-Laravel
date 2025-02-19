@@ -14,8 +14,10 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Cache;
 
-class ClienteController extends Controller
+
+class ClienteApiController extends Controller
 {
 
     public function index()
@@ -23,12 +25,21 @@ class ClienteController extends Controller
         return response()->json(Cliente::all(), 200);
     }
 
+
     public function show($id)
     {
-        $cliente = Cliente::find($id);
+        $cacheKey = "cliente_{$id}";
+
+        $cliente = Cache::get($cacheKey);
 
         if (!$cliente) {
-            return response()->json(['message' => 'Cliente no encontrado'], 404);
+            $cliente = Cliente::find($id);
+
+            if (!$cliente) {
+                return response()->json(['message' => 'Client not found'], 404);
+            }
+
+            Cache::put($cacheKey, $cliente, 20);
         }
 
         return response()->json($cliente, 200);
@@ -36,15 +47,32 @@ class ClienteController extends Controller
 
     public function searchByDni($dni)
     {
-        $cliente = Cliente::findByDni($dni)->first();
+        $clienteCacheKey = "cliente_dni_{$dni}";
+        $cliente = Cache::get($clienteCacheKey);
 
         if (!$cliente) {
-            return response()->json(['message' => 'Cliente no encontrado'], 404);
+            $cliente = Cliente::findByDni($dni)->first();
+
+            if (!$cliente) {
+                return response()->json(['message' => 'Cliente no encontrado'], 404);
+            }
+
+            Cache::put($clienteCacheKey, $cliente, 60);
         }
 
-        $user = User::find($cliente->user_id);
+        $userCacheKey = "user_{$cliente->user_id}";
+        $user = Cache::get($userCacheKey);
+
+        if (!$user) {
+            $user = User::find($cliente->user_id);
+            if ($user) {
+                Cache::put($userCacheKey, $user, 60);
+            }
+        }
+
         return response()->json(new ClienteResponse($user, $cliente), 200);
     }
+
 
     public function searchByEmail(Request $request)
     {
@@ -52,22 +80,38 @@ class ClienteController extends Controller
             'email' => 'required|string|email'
         ]);
 
-        $user = User::findByEmail($request->email)->first();
+        // Definir las claves de caché para el usuario y el cliente
+        $userCacheKey = "user_email_{$request->email}";
+        $clienteCacheKey = "cliente_user_{$request->email}";
+
+        // Buscar en la caché el usuario
+        $user = Cache::get($userCacheKey);
 
         if (!$user) {
-            return response()->json(['message' => 'Usuario no encontrado'], 404);
+            $user = User::findByEmail($request->email)->first();
+
+            if (!$user) {
+                return response()->json(['message' => 'Usuario no encontrado'], 404);
+            }
+
+            Cache::put($userCacheKey, $user, 60);
         }
 
-        $cliente = Cliente::findByUserId($user->id)->first();
+        $cliente = Cache::get($clienteCacheKey);
 
         if (!$cliente) {
-            return response()->json(['message' => 'Cliente no encontrado para este usuario'], 404);
+            $cliente = Cliente::findByUserId($user->id)->first();
+
+            if (!$cliente) {
+                return response()->json(['message' => 'Cliente no encontrado para este usuario'], 404);
+            }
+
+            Cache::put($clienteCacheKey, $cliente, 60);
         }
 
-        return response()->json([
-            new ClienteResponse($user,$cliente)
-        ], 200);
+        return response()->json([new ClienteResponse($user, $cliente)], 200);
     }
+
 
 
     public function store(Request $request)
@@ -109,15 +153,21 @@ class ClienteController extends Controller
     }
 
 
-
-
-
     public function update(Request $request, $id)
     {
-        $cliente = Cliente::find($id);
+        $clienteCacheKey = "cliente_{$id}";
+        $userCacheKey = "user_{$id}";
+
+        $cliente = Cache::get($clienteCacheKey);
 
         if (!$cliente) {
-            return response()->json(['message' => 'Cliente no encontrado'], 404);
+            $cliente = Cliente::find($id);
+
+            if (!$cliente) {
+                return response()->json(['message' => 'Cliente no encontrado'], 404);
+            }
+
+            Cache::put($clienteCacheKey, $cliente, 20);
         }
 
         $validatedData = $request->validate([
@@ -134,12 +184,20 @@ class ClienteController extends Controller
         if ($request->has('foto_dni')) {
             $cliente->foto_dni = $validatedData['foto_dni'];
         }
-        $cliente->save();
 
-        $user = User::find($cliente->user_id);
+        $cliente->save();
+        Cache::put($clienteCacheKey, $cliente, 20);
+
+        $user = Cache::get($userCacheKey);
 
         if (!$user) {
-            return response()->json(['message' => 'User no encontrado'], 404);
+            $user = User::find($cliente->user_id);
+
+            if (!$user) {
+                return response()->json(['message' => 'Usuario no encontrado'], 404);
+            }
+
+            Cache::put($userCacheKey, $user, 20);
         }
 
         if ($request->has('name')) {
@@ -153,37 +211,38 @@ class ClienteController extends Controller
         }
 
         $user->save();
+        Cache::put($userCacheKey, $user, 20);
 
         Mail::to($user->email)->send(new ActualizacionDatos($user));
-
-
         return response()->json(new ClienteResponse($user, $cliente), 200);
     }
 
 
     public function destroy($id)
     {
-        $cliente = Cliente::find($id);
+        $clienteCacheKey = "cliente_{$id}";
+        $userCacheKey = "user_{$id}";
+
+        $cliente = Cache::get($clienteCacheKey);
 
         if (!$cliente) {
-            return response()->json(['message' => 'Cliente no encontrado'], 404);
-        }
+            $cliente = Cliente::find($id);
 
-        $user = User::find($cliente->user_id);
-
-        if (!$user) {
-            return response()->json(['message' => 'User no encontrado'], 404);
-        }
-
-
+            if (!$cliente) {
+                return response()->json(['message' => 'Cliente no encontrado'], 404);
+            }
 
         $cliente->is_deleted = true;
         $cliente->save();
 
-        $user->is_Deleted = true;
-        $user->save();
 
-        Mail::to($user->email)->send(new EliminacionCuenta($user));
+        $user = User::find($cliente->user_id);
+
+        if (!$user) {
+            $user = User::find($cliente->user_id);
+
+        $user->is_deleted = true;
+        $user->save();
 
         return response()->json(['message' => 'Cliente marcado como eliminado'], 200);
     }
@@ -200,26 +259,17 @@ class ClienteController extends Controller
             Storage::disk('public')->delete('images/' . $cliente->foto_dni);
         }
 
+        $cliente->is_deleted = true;
+        $cliente->save();
 
-        if ($request->hasFile('foto_dni')) {
-            $image = $request->file('foto_dni');
+        $user->is_deleted = true;
+        $user->save();
 
-            $customName = 'dni_' . $cliente->dni . '.' . $image->getClientOriginalExtension();
+        Cache::forget($clienteCacheKey);
+        Cache::forget($userCacheKey);
 
-            $image->storeAs('images', $customName, 'public');
-
-            $cliente->foto_dni = $customName;
-            $cliente->save();
-
-            return response()->json([
-                'message' => 'Imagen subida correctamente',
-                'path' => $customName
-            ]);
-        }
-
-        return response()->json(['message' => 'No se ha enviado ningún archivo'], 400);
+        return response()->json(['message' => 'Cliente marcado como eliminado'], 200);
     }
-
 
 
 }

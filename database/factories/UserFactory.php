@@ -30,6 +30,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
             'tipo' => 'cliente',
+            'isDeleted' => false,
             'remember_token' => Str::random(10),
             'is_Deleted' => false,
             ];

@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Cliente;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,10 +17,18 @@ class ClienteFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => self::$userId++,
+            'user_id' => User::factory(),
             'dni' => fake()->unique()->randomNumber(8, true),
             'foto_dni' => 'https://example.com/images/test.jpg',
             'is_deleted' => false
         ];
+    }
+
+    public function configure()
+    {
+        return $this->afterCreating(function (Cliente $cliente) {
+            $user = User::find($cliente->user_id);
+            $user->assignRole('cliente');
+        });
     }
 }
