@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Cliente;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
-class ClienteControllerView extends Controller
+class ClienteController extends Controller
 {
 
     public function index()
@@ -19,14 +20,23 @@ class ClienteControllerView extends Controller
 
     public function show($id)
     {
-        $cliente = Cliente::find($id);
+        $cacheKey = "cliente_{$id}";
+
+        $cliente = Cache::get($cacheKey);
 
         if (!$cliente) {
-            return redirect()->route('clientes.index')->with('error', 'Cliente no encontrado');
+            $cliente = Cliente::find($id);
+
+            if (!$cliente) {
+                return redirect()->route('clientes.index')->with('error', 'Cliente no encontrado');
+            }
+
+            Cache::put($cacheKey, $cliente, 60);
         }
 
         return view('clientes.show', compact('cliente'));
     }
+
 
     public function create()
     {
@@ -67,18 +77,37 @@ class ClienteControllerView extends Controller
 
     public function edit($id)
     {
-        $cliente = Cliente::find($id);
+        $cacheKey = "cliente_{$id}";
+
+        $cliente = Cache::get($cacheKey);
+
         if (!$cliente) {
-            return redirect()->route('clientes.index')->with('error', 'Cliente no encontrado');
+            $cliente = Cliente::find($id);
+
+            if (!$cliente) {
+                return redirect()->route('clientes.index')->with('error', 'Cliente no encontrado');
+            }
+
+            Cache::put($cacheKey, $cliente, 60);
         }
+
         return view('clientes.edit', compact('cliente'));
     }
 
+
     public function update(Request $request, $id)
     {
-        $cliente = Cliente::find($id);
+        $clienteCacheKey = "cliente_{$id}";
+
+        $cliente = Cache::get($clienteCacheKey);
+
         if (!$cliente) {
-            return redirect()->route('clientes.index')->with('error', 'Cliente no encontrado');
+            $cliente = Cliente::find($id);
+            if (!$cliente) {
+                return redirect()->route('clientes.index')->with('error', 'Cliente no encontrado');
+            }
+
+            Cache::put($clienteCacheKey, $cliente, 20);
         }
 
         $validatedData = $request->validate([
@@ -103,18 +132,36 @@ class ClienteControllerView extends Controller
             ]);
         }
 
+        Cache::forget($clienteCacheKey);
+
+        Cache::put($clienteCacheKey, $cliente, 20);
+
         return redirect()->route('clientes.index')->with('success', 'Cliente actualizado con éxito');
     }
 
+
     public function destroy($id)
     {
-        $cliente = Cliente::find($id);
+        $clienteCacheKey = "cliente_{$id}";
+        $cliente = Cache::get($clienteCacheKey);
 
         if (!$cliente) {
-            return redirect()->route('clientes.index')->with('error', 'Cliente no encontrado');
+            $cliente = Cliente::find($id);
+            if (!$cliente) {
+                return redirect()->route('clientes.index')->with('error', 'Cliente no encontrado');
+            }
+            Cache::put($clienteCacheKey, $cliente, 20);
         }
 
-        $user = User::find($cliente->user_id);
+        $userCacheKey = "user_{$cliente->user_id}";
+        $user = Cache::get($userCacheKey);
+
+        if (!$user) {
+            $user = User::find($cliente->user_id);
+            if ($user) {
+                Cache::put($userCacheKey, $user, 20);
+            }
+        }
 
         $cliente->is_deleted = true;
         $cliente->save();
@@ -124,6 +171,10 @@ class ClienteControllerView extends Controller
             $user->save();
         }
 
+        Cache::forget($clienteCacheKey);
+        Cache::forget($userCacheKey);
+
         return redirect()->route('clientes.index')->with('success', 'Cliente marcado como eliminado');
     }
+
 }
