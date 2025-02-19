@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Empresa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 class EmpresaController extends Controller
 {
@@ -42,68 +44,109 @@ class EmpresaController extends Controller
        }
    }
 
-   public function show($id)
-   {
-       $empresa = Empresa::find($id);
+    public function show($id)
+    {
+        $cacheKey = "empresa_{$id}";
 
-       if (!$empresa) {
-           return redirect()->route('empresas.index')->with('error', 'Empresa no encontrada');
-       }
+        $html = Cache::get($cacheKey);
 
-       return view('empresas.show')->with('empresa', $empresa);
-   }
+        if (!$html) {
+            $empresa = Empresa::find($id);
+
+            if (!$empresa) {
+                return redirect()->route('empresas.index')->with('error', 'Empresa no encontrada');
+            }
+
+            $html = view('empresas.show', compact('empresa'))->render();
+
+            Cache::put($cacheKey, $html, 60);
+        }
+
+        return response($html);
+    }
 
 
-   public function edit($id)
-       {
-           $empresa = Empresa::find($id);
+    public function edit($id)
+    {
+        $cacheKey = "empresa_{$id}_edit";
 
-           return view('empresas.edit')->with('empresa', $empresa);
-       }
+        $empresa = Cache::get($cacheKey);
 
-   public function update(Request $request, $id)
-   {
-       $request->validate([
-           'cif'=> 'required|regex:/^[A-HJNP-SUVW][0-9]{7}[0-9A-J]$/',
-           'nombre'=> 'required|max:255',
-           'direccion'=> 'required|max:255',
-           'cuentaBancaria'=>'required|regex:/^ES\d{2}\s?\d{4}\s?\d{4}\s?\d{2}\s?\d{10}$/',
-           'telefono'=> 'required|regex:/^(\+34|0034)?[679]\d{8}$/',
-           'correo'=> 'required|email|max:255'
-           ]);
+        if (!$empresa) {
+            $empresa = Empresa::find($id);
 
-       try{
-           $empresa = Empresa::find($id);
+            if (!$empresa) {
+                return redirect()->route('empresas.index')->with('error', 'Empresa no encontrada');
+            }
 
-           $empresa->fill($request->all());
+            Cache::put($cacheKey, $empresa, 20);
+        }
 
-           if($request->hasFile('imagen')){
-               if(Storage::exists($empresa->imagen)){
-                   Storage::delete($empresa->imagen);
-               }
-               $empresa->imagen = $request->file('imagen')->store('storage');
-           }
-           $empresa->save();
+        return view('empresas.edit')->with('empresa', $empresa);
+    }
 
-           return redirect()->route('empresas.index')->with('status', 'Empresa actualizada correctamente');
-       }catch (\Exception $e) {
-    return redirect()->route('empresas.edit', $id)->with('error', 'Error al actualizar la empresa: '.$e->getMessage());
-       }
-   }
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'cif'=> 'required|regex:/^[A-HJNP-SUVW][0-9]{7}[0-9A-J]$/',
+            'nombre'=> 'required|max:255',
+            'direccion'=> 'required|max:255',
+            'cuentaBancaria'=>'required|regex:/^ES\d{2}\s?\d{4}\s?\d{4}\s?\d{2}\s?\d{10}$/',
+            'telefono'=> 'required|regex:/^(\+34|0034)?[679]\d{8}$/',
+            'correo'=> 'required|email|max:255'
+        ]);
 
-   public function destroy($id)
-   {
-       $empresa = Empresa::find($id);
+        try {
+            $empresa = Empresa::find($id);
 
-       if($empresa){
-           if(Storage::exists($empresa->imagen)){
-               Storage::delete($empresa->imagen);
-           }
-           $empresa->delete();
+            if (!$empresa) {
+                return redirect()->route('empresas.index')->with('error', 'Empresa no encontrada');
+            }
 
-           return redirect()->route('empresas.index')->with('status', 'Empresa eliminada correctamente');
-       }
+            $empresa->fill($request->all());
 
-       return redirect()->route('empresas.index')->with('error', 'No se ha encontrado la empresa');
-   }
+            if($request->hasFile('imagen')) {
+                if (Storage::exists($empresa->imagen)) {
+                    Storage::delete($empresa->imagen);
+                }
+                $empresa->imagen = $request->file('imagen')->store('storage');
+            }
+
+            $empresa->save();
+
+            Cache::forget("empresa_{$id}");
+
+            $html = view('empresas.show', compact('empresa'))->render();
+            Cache::put("empresa_{$id}", $html, 60);
+
+            return redirect()->route('empresas.index')->with('status', 'Empresa actualizada correctamente');
+        } catch (\Exception $e) {
+            return redirect()->route('empresas.edit', $id)->with('error', 'Error al actualizar la empresa: '.$e->getMessage());
+        }
+    }
+    public function destroy($id)
+    {
+        $cacheKey = "empresa_{$id}";
+        $empresa = Cache::get($cacheKey);
+
+        if (!$empresa) {
+            $empresa = Empresa::find($id);
+        }
+
+        if ($empresa) {
+            Cache::forget($cacheKey);
+
+            if (Storage::exists($empresa->imagen)) {
+                Storage::delete($empresa->imagen);
+            }
+
+            $empresa->delete();
+
+            return redirect()->route('empresas.index')->with('status', 'Empresa eliminada correctamente');
+        }
+
+        return redirect()->route('empresas.index')->with('error', 'No se ha encontrado la empresa');
+    }
+
+
 }

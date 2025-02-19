@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Evento;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class EventosController extends Controller
 {
@@ -41,15 +43,43 @@ class EventosController extends Controller
 
     public function show($id)
     {
-        $evento = Evento::find($id);
+        $cacheKey = "evento_{$id}";
+
+        $evento = Cache::get($cacheKey);
+
+        if (!$evento) {
+            $evento = Evento::find($id);
+
+            if (!$evento) {
+                return response()->json(['message' => 'Evento no encontrado'], 404);
+            }
+
+            Cache::put($cacheKey, $evento, 60);
+        }
+
         return view('eventos.show', compact('evento'));
     }
 
+
     public function edit($id)
     {
-        $eventos = Evento::find($id);
-        return view('eventos.edit')->with('eventos', $eventos);
+        $cacheKey = "evento_{$id}";
+
+        $evento = Cache::get($cacheKey);
+
+        if (!$evento) {
+            $evento = Evento::find($id);
+
+            if (!$evento) {
+                return response()->json(['message' => 'Evento no encontrado'], 404);
+            }
+
+            Cache::put($cacheKey, $evento, 60);
+        }
+
+        return view('eventos.edit', compact('evento'));
     }
+
 
 
     public function update(Request $request, $id)
@@ -65,6 +95,11 @@ class EventosController extends Controller
         ]);
 
         $evento = Evento::find($id);
+
+        if (!$evento) {
+            return response()->json(['message' => 'Evento no encontrado'], 404);
+        }
+
         $evento->nombre = $request->nombre;
         $evento->stock = $request->stock;
         $evento->fecha = $request->fecha;
@@ -74,18 +109,34 @@ class EventosController extends Controller
         $evento->precio = $request->precio;
         $evento->save();
 
+        $cacheKey = "evento_{$id}";
+        Cache::forget($cacheKey);
+
+        Cache::put($cacheKey, $evento, 60);
+
         return redirect()->route('eventos.index');
     }
 
 
+
     public function destroy($id)
     {
-        try{
+        try {
             $evento = Evento::find($id);
+
+            if (!$evento) {
+                return redirect()->route('eventos.index')->with('error', 'Evento no encontrado');
+            }
+
             $evento->delete();
+
+            $cacheKey = "evento_{$id}";
+            Cache::forget($cacheKey);
+
             return redirect()->route('eventos.index');
         } catch (Exception $e) {
             return redirect()->route('eventos.index')->with('error', 'No se puede eliminar el evento');
         }
     }
+
 }
