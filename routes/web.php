@@ -1,7 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\ClienteController;
-use App\Http\Controllers\ClienteControllerView;
+use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -45,13 +44,13 @@ Route::prefix('empresa')->group(function () {
 });
 
 Route::prefix('clientes')->group(function () {
-    Route::get('/', [ClienteControllerView::class, 'index'])->name('clientes.index');
-    Route::get('/crear', [ClienteControllerView::class, 'create'])->name('clientes.create');
-    Route::post('/', [ClienteControllerView::class, 'store'])->name('clientes.store');
-    Route::get('/{id}', [ClienteControllerView::class, 'show'])->name('clientes.show');
-    Route::get('/{id}/editar', [ClienteControllerView::class, 'edit'])->name('clientes.edit');
-    Route::put('/{id}', [ClienteControllerView::class, 'update'])->name('clientes.update');
-    Route::delete('/{id}', [ClienteControllerView::class, 'destroy'])->name('clientes.destroy');
+    Route::get('/', [ClienteController::class, 'index'])->name('clientes.index');
+    Route::get('/crear', [ClienteController::class, 'create'])->name('clientes.create');
+    Route::post('/', [ClienteController::class, 'store'])->name('clientes.store');
+    Route::get('/{id}', [ClienteController::class, 'show'])->name('clientes.show');
+    Route::get('/{id}/editar', [ClienteController::class, 'edit'])->name('clientes.edit');
+    Route::put('/{id}', [ClienteController::class, 'update'])->name('clientes.update');
+    Route::delete('/{id}', [ClienteController::class, 'destroy'])->name('clientes.destroy');
 });
 
 Route::middleware('auth')->group(function () {
