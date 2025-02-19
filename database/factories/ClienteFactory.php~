@@ -29,7 +29,6 @@ class ClienteFactory extends Factory
     {
         return $this->afterCreating(function (Cliente $cliente) {
             $user = User::find($cliente->user_id);
-            $user->assignRole('cliente');
         });
     }
 }

@@ -21,4 +21,9 @@ class Cliente extends Model
         'lista_entradas' => 'array'
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }
