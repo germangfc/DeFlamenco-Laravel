@@ -7,10 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Empresa extends Model
 {
-    /**
-     * @var int|mixed|string|null
-     */
-    public mixed $usuario_id;
+
     use HasFactory;
     protected $table = "empresas";
     // Los campos requeridos
