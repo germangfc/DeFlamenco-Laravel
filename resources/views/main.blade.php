@@ -1,5 +1,5 @@
 <!doctype html>
-<html data-theme="cupcake">
+<html data-theme="flamencoLight">
 <head>
     <title>@yield('title')</title>
     <meta charset="utf-8">
