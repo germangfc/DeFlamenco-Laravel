@@ -18,7 +18,6 @@ Route::apiResource('usuarios',\App\Http\Controllers\Api\UserController::class);
 Route::apiResource('eventos', EventosApiController::class);
 Route::get('eventos/nombre/{nombre}', [EventosApiController::class, 'getByNombre']);
 
-Route::apiResource('empresas',EmpresaControllerApi::Class);
 Route::get('empresas',[EmpresaControllerApi::class, 'getAll']);
 Route::get('empresas/{id}', [EmpresaControllerApi::class, 'getById']);
 Route::get('empresas/nombre/{nombre}', [EmpresaControllerApi::class, 'getByNombre']);
