@@ -1,13 +1,23 @@
 <?php
-use Illuminate\Database\Eloquent\Factories\Factory;
+
+namespace Database\Factories;
+
 use App\Models\Empresa;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Random\RandomException;
+
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Empresa>
+ */
 class EmpresaFactory extends Factory
 {
-
-    protected $model = Empresa::class;
-    protected static $empresaId = 1;
-
-    public function definition()
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
     {
         return [
             'cif' => $this->generateValidCIF(),
@@ -23,7 +33,18 @@ class EmpresaFactory extends Factory
         ];
     }
 
-    private function generateValidCIF()
+    public function configure()
+    {
+        return $this->afterCreating(function (Empresa $empresa) {
+            $user = User::find($empresa->usuario_id);
+            $user->assignRole('empresa');
+        });
+    }
+
+    /**
+     * @throws RandomException
+     */
+    private function generateValidCIF(): string
     {
         $letrasValidas = 'ABCDEFGHJKLMNPQRSUVW';
         $primerCaracter = $letrasValidas[random_int(0, strlen($letrasValidas) - 1)];
@@ -37,6 +58,4 @@ class EmpresaFactory extends Factory
 
         return $primerCaracter . $numeros . $ultimoCaracter;
     }
-
-
 }

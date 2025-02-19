@@ -30,17 +30,8 @@
                             <ul
                                 tabindex="0"
                                 class="menu menu-sm dropdown-content mt-3 z-[1] w-52 rounded-box bg-base-100 p-2 shadow">
-                                <li><a>Item 1</a></li>
-                                <li tabindex="0">
-                                    <details>
-                                        <summary>Parent</summary>
-                                        <ul class="p-2">
-                                            <li><a>Submenu 1</a></li>
-                                            <li><a>Submenu 2</a></li>
-                                        </ul>
-                                    </details>
-                                </li>
-                                <li><a>Item 3</a></li>
+                                <li><a>Eventos</a></li>
+                                <li><a>Empresas</a></li>
                             </ul>
                         </div>
                     </div>
@@ -48,23 +39,15 @@
                     <!-- Menú escritorio (se muestra en pantallas grandes) -->
                     <div class="navbar-center hidden lg:flex">
                         <ul class="menu menu-horizontal px-1">
-                            <li><a>Item 1</a></li>
-                            <li tabindex="0">
-                                <details>
-                                    <summary>Parent</summary>
-                                    <ul class="p-2">
-                                        <li><a>Submenu 1</a></li>
-                                        <li><a>Submenu 2</a></li>
-                                    </ul>
-                                </details>
-                            </li>
-                            <li><a>Item 3</a></li>
+                            <li><a>Eventos</a></li>
+                            <li><a>Empresas</a></li>
                         </ul>
                     </div>
                 </div>
 
             </div>
             {{--carrito--}}
+            @can("cliente")
             <div class="dropdown dropdown-end">
                 <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
                     <div class="indicator">
@@ -95,15 +78,38 @@
                     </div>
                 </div>
             </div>
+            @endcan
             {{--Perfil--}}
+            @guest
+                <div class="navbar-center hidden lg:flex">
+                    <ul class="menu menu-horizontal px-1">
+                        <li><a href="{{ route('login') }}">Iniciar Sesión</a></li>
+                        <li><a href="{{ route('register') }}">Registrarse</a></li>
+                    </ul>
+                </div>
+            @else
             <div class="dropdown dropdown-end">
                 <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
                     <div class="w-10 rounded-full">
                         <img
-                            alt="Tailwind CSS Navbar component"
-                            src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                            alt="User avatar"
+                            src="{{ Auth::user()->getProfilePhotoUrl() }}" />
                     </div>
                 </div>
+                @can("admin")
+                <ul
+                    tabindex="0"
+                    class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                    <li><a href="{{ route('profile.edit') }}">Perfil</a></li>
+                    <li><a>Settings</a></li>
+                    <li><form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" >Cerrar Sesión</button>
+                        </form>
+                    </li>
+                </ul>
+                @endcan
+                @can("cliente")
                 <ul
                     tabindex="0"
                     class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
@@ -116,7 +122,25 @@
                     <li><a>Settings</a></li>
                     <li><a>Logout</a></li>
                 </ul>
+                @endcan
+                @can("empresa")
+                <ul
+                    tabindex="0"
+                    class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                    <li>
+                        <a class="justify-between">
+                            Profile
+                            <span class="badge">New</span>
+                        </a>
+                    </li>
+                    <li><a>Settings</a></li>
+                    <li><a>Logout</a></li>
+                </ul>
+                @endcan
             </div>
+            @endguest
+
+
             {{--   icono de tema     --}}
             <label class="swap swap-rotate">
                 <!-- this hidden checkbox controls the state -->
