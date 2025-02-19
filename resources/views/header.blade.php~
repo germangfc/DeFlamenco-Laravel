@@ -11,7 +11,7 @@
                     <div class="navbar-start">
                         <div class="dropdown">
                             <!-- Botón hamburguesa (visible en lg:hidden) -->
-                            <label tabindex="0" class="btn btn-ghost lg:hidden">
+                            <label id="hamburguer" tabindex="0" class="btn btn-ghost lg:hidden">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     class="h-5 w-5"
@@ -32,6 +32,10 @@
                                 class="menu menu-sm dropdown-content mt-3 z-[1] w-52 rounded-box bg-base-100 p-2 shadow">
                                 <li><a>Eventos</a></li>
                                 <li><a>Empresas</a></li>
+                                @guest
+                                    <li><a id="loginhamburger" href="{{ route('login') }}">Iniciar Sesión</a></li>
+                                    <li><a id="registerhamburger" href="{{ route('register') }}">Registrarse</a></li>
+                                @endguest
                             </ul>
                         </div>
                     </div>
@@ -39,8 +43,9 @@
                     <!-- Menú escritorio (se muestra en pantallas grandes) -->
                     <div class="navbar-center hidden lg:flex">
                         <ul class="menu menu-horizontal px-1">
-                            <li><a>Eventos</a></li>
+                            <li><a class="{{ Request::is('*') ? 'bg-secondary' : '' }}">Eventos</a></li>
                             <li><a>Empresas</a></li>
+
                         </ul>
                     </div>
                 </div>
@@ -83,8 +88,8 @@
             @guest
                 <div class="navbar-center hidden lg:flex">
                     <ul class="menu menu-horizontal px-1">
-                        <li><a href="{{ route('login') }}">Iniciar Sesión</a></li>
-                        <li><a href="{{ route('register') }}">Registrarse</a></li>
+                        <li><a id="login" href="{{ route('login') }}">Iniciar Sesión</a></li>
+                        <li><a id="register" href="{{ route('register') }}">Registrarse</a></li>
                     </ul>
                 </div>
             @else
@@ -104,38 +109,36 @@
                     <li><a>Settings</a></li>
                     <li><form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <a type="submit" >Cerrar Sesión</a>
+                            <button type="submit" >Cerrar Sesión</button>
                         </form>
                     </li>
                 </ul>
                 @endcan
                 @can("cliente")
-                <ul
-                    tabindex="0"
-                    class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                    <li>
-                        <a class="justify-between">
-                            Profile
-                            <span class="badge">New</span>
-                        </a>
-                    </li>
-                    <li><a>Settings</a></li>
-                    <li><a>Logout</a></li>
-                </ul>
+                    <ul
+                        tabindex="0"
+                        class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                        <li><a href="{{ route('profile.edit') }}">Perfil</a></li>
+                        <li><a>Settings</a></li>
+                        <li><form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" >Cerrar Sesión</button>
+                            </form>
+                        </li>
+                    </ul>
                 @endcan
                 @can("empresa")
-                <ul
-                    tabindex="0"
-                    class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                    <li>
-                        <a class="justify-between">
-                            Profile
-                            <span class="badge">New</span>
-                        </a>
-                    </li>
-                    <li><a>Settings</a></li>
-                    <li><a>Logout</a></li>
-                </ul>
+                    <ul
+                        tabindex="0"
+                        class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                        <li><a href="{{ route('profile.edit') }}">Perfil</a></li>
+                        <li><a>Settings</a></li>
+                        <li><form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" >Cerrar Sesión</button>
+                            </form>
+                        </li>
+                    </ul>
                 @endcan
             </div>
             @endguest
@@ -144,7 +147,7 @@
             {{--   icono de tema     --}}
             <label class="swap swap-rotate">
                 <!-- this hidden checkbox controls the state -->
-                <input id="theme-toggle" type="checkbox" class="theme-controller" value="synthwave" />
+                <input id="theme-toggle" type="checkbox" class="theme-controller appearance-none hidden" value="synthwave" />
 
                 <!-- sun icon -->
                 <svg
@@ -171,13 +174,13 @@
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const themeToggle = document.getElementById("theme-toggle");
-        const currentTheme = localStorage.getItem("theme") || "autumn"; // Tema por defecto
+        const currentTheme = localStorage.getItem("theme") || "flamencoLight"; // Tema por defecto
 
         document.documentElement.setAttribute("data-theme", currentTheme);
-        themeToggle.checked = currentTheme === "coffee"; // Activa el checkbox si el tema es oscuro
+        themeToggle.checked = currentTheme === "flamencoDark"; // Activa el checkbox si el tema es oscuro
 
         themeToggle.addEventListener("change", function () {
-            const newTheme = themeToggle.checked ? "coffee" : "autumn";
+            const newTheme = themeToggle.checked ? "flamencoDark" : "flamencoLight";
             document.documentElement.setAttribute("data-theme", newTheme);
             localStorage.setItem("theme", newTheme);
         });

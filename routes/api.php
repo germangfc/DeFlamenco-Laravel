@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\ImagenController;
 use App\Http\Controllers\Api\TicketController;
 use App\Http\Controllers\Api\VentasController;
 use App\Http\Controllers\EmpresaControllerApi;
+use App\Http\Controllers\MailController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -37,3 +38,5 @@ Route::delete('empresas/{id}', [EmpresaApiController::class, 'delete']);
 Route::post('/upload-image', [ImagenController::class, 'uploadImage']);
 Route::delete('/delete-image/{filePath}', [ImagenController::class, 'deleteImage']);
 Route::get('/show-image/{filePath}', [ImagenController::class, 'showImage']);
+
+Route::post('/admin/send-email', [MailController::class, 'sendEmail']);
