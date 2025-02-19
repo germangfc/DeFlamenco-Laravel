@@ -208,7 +208,7 @@ class ClienteApiController extends Controller
 
         return response()->json(new ClienteResponse($user, $cliente), 200);
     }
-    
+
 
     public function destroy($id)
     {
