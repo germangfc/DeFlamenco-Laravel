@@ -17,12 +17,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->count(50)->create();
-        Cliente::factory()->count(50)->create();
         Ticket::factory(10)->create();
         $this->call([
+            UserSeeder::class
             EmpresasTableSeeder::class,
             EventosSeeder::class,
         ]);
+        Cliente::factory()->count(25)->create();
+        Empresa::factory()->count(25)->create();
     }
 }

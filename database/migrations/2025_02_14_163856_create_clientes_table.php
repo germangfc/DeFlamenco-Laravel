@@ -11,12 +11,14 @@ return new class extends Migration
     {
         Schema::create('clientes', function (Blueprint $table) {
             $table->id()->primary();
-            $table->string('user_id');
+            $table->unsignedBigInteger('user_id');
             $table->string('dni')->unique();
             $table->string('foto_dni')->nullable();
             $table->json('lista_entradas')->nullable();
             $table->timestamps();
             $table->boolean('is_deleted')->default(false);
+
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
