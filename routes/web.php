@@ -3,15 +3,24 @@
 use App\Http\Controllers\Api\ClienteController;
 use App\Http\Controllers\ClienteControllerView;
 use App\Http\Controllers\EmpresaController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StripeController;
+use Illuminate\Support\Facades\Auth;
+use \Illuminate\Auth\Middleware\Authorize;
+
 
 Route::get('/', function () {
     return view('main');
 })->name('main');
 
+
 Route::post('/checkout', [StripeController::class, "checkout"])->name('checkout');
 Route::get('/success', [StripeController::class, 'success'])->name('success');
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::prefix('empresa')->group(function () {
     Route::get('/create', [EmpresaController::class, 'create'])->name('empresas.create');
@@ -44,3 +53,11 @@ Route::prefix('clientes')->group(function () {
     Route::put('/{id}', [ClienteControllerView::class, 'update'])->name('clientes.update');
     Route::delete('/{id}', [ClienteControllerView::class, 'destroy'])->name('clientes.destroy');
 });
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';

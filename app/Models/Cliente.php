@@ -31,4 +31,9 @@ class Cliente extends Model
         return $query->where('user_id', $userid);
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }

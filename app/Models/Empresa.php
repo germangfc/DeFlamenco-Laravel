@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Empresa extends Model
@@ -10,6 +11,7 @@ class Empresa extends Model
      * @var int|mixed|string|null
      */
     public mixed $usuario_id;
+    use HasFactory;
     protected $table = "empresas";
     // Los campos requeridos
     protected $fillable = [
@@ -24,6 +26,11 @@ class Empresa extends Model
     protected $casts = [
         'lista_eventos'=>'array'
     ];
+
+    public function usuario()
+    {
+        return $this->belongsTo(User::class);
+    }
 
 
 }
