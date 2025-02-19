@@ -24,7 +24,7 @@ class VentaFactory extends Factory
     public function definition(): array
     {
         // Obtener todos los IDs de la colección Ticket
-        $ticketIds = Ticket::pluck('_id')->toArray();
+        $ticketIds = Ticket::pluck('id')->toArray();
 
         return [
             'guid' => Str::uuid(),
