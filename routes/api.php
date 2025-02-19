@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\EmpresaApiController;
 use App\Http\Controllers\Api\EventosApiController;
 use App\Http\Controllers\Api\ImagenController;
 use App\Http\Controllers\Api\TicketController;
+use App\Http\Controllers\Api\VentasController;
 use App\Http\Controllers\EmpresaControllerApi;
 use App\Http\Controllers\MailController;
 use Illuminate\Http\Request;
@@ -14,6 +15,7 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+Route::apiResource('ventas', VentasController::class);
 Route::apiResource('/ticket', TicketController::class);
 Route::apiResource('clientes', ClienteController::class);
 Route::get('clientes/dni/{dni}', [ClienteController::class, 'searchByDni']);
