@@ -4,10 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Dto\Cliente\ClienteResponse;
 use App\Http\Controllers\Controller;
+use App\Mail\ActualizacionDatos;
+use App\Mail\ClienteBienvenido;
+use App\Mail\EliminacionCuenta;
 use App\Models\Cliente;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Cache;
@@ -134,6 +138,9 @@ class ClienteApiController extends Controller
                 'dni' => $validatedClientData['dni']
             ]);
 
+            Mail::to($user->email)->send(new ClienteBienvenido($cliente, $user));
+
+
             return response()->json([
                 new ClienteResponse($user,$cliente),
             ], 201);
@@ -206,6 +213,7 @@ class ClienteApiController extends Controller
         $user->save();
         Cache::put($userCacheKey, $user, 20);
 
+        Mail::to($user->email)->send(new ActualizacionDatos($user));
         return response()->json(new ClienteResponse($user, $cliente), 200);
     }
 
@@ -224,19 +232,31 @@ class ClienteApiController extends Controller
                 return response()->json(['message' => 'Cliente no encontrado'], 404);
             }
 
-            Cache::put($clienteCacheKey, $cliente, 20);
-        }
+        $cliente->is_deleted = true;
+        $cliente->save();
 
-        $user = Cache::get($userCacheKey);
+
+        $user = User::find($cliente->user_id);
 
         if (!$user) {
             $user = User::find($cliente->user_id);
 
-            if (!$user) {
-                return response()->json(['message' => 'Usuario no encontrado'], 404);
-            }
+        $user->is_deleted = true;
+        $user->save();
 
-            Cache::put($userCacheKey, $user, 20);
+        return response()->json(['message' => 'Cliente marcado como eliminado'], 200);
+    }
+
+    public function uploadDni(Request $request, $clienteId)
+    {
+        $request->validate([
+            'foto_dni' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $cliente = Cliente::findOrFail($clienteId);
+
+        if (!empty($cliente->foto_dni)) {
+            Storage::disk('public')->delete('images/' . $cliente->foto_dni);
         }
 
         $cliente->is_deleted = true;
