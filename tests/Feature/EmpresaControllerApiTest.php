@@ -4,6 +4,11 @@ namespace Tests\Feature;
 
 use App\Models\Empresa;
 use App\Models\User;
+use Database\Seeders\EmpresasTableSeeder;
+use Database\Seeders\UserSeeder;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
+use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -13,22 +18,58 @@ class EmpresaControllerApiTest extends TestCase
 
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->seed(UserSeeder::class);
+
+        User::factory()->create();
+        User::factory()->create();
+        Empresa::factory(5)->create();
+    }
     #[Test]
     public function test_puede_obtener_todas_las_empresas()
     {
-        Empresa::factory()->count(3)->create();
 
         $response = $this->getJson('/api/empresas');
 
         $response->assertStatus(200)
-            ->assertJsonPath('data', fn ($data) => count($data) === 3);
+            ->assertJsonPath('data', fn ($data) => count($data) === 5);
     }
 
-
-    #[Test]
-    public function test_puede_obtener_una_empresa_por_id()
+    public function test_empresa_en_cache()
     {
         $empresa = Empresa::factory()->create();
+
+        Cache::shouldReceive('get')
+            ->once()
+            ->with("empresa_{$empresa->id}")
+            ->andReturn($empresa);
+
+        $response = $this->getJson("/api/empresas/{$empresa->id}");
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'id' => $empresa->id,
+                'nombre' => $empresa->nombre,
+            ]);
+    }
+    public function test_empresa_no_en_cache()
+    {
+        $empresa = Empresa::factory()->create();
+
+        Cache::shouldReceive('get')
+            ->once()
+            ->with("empresa_{$empresa->id}")
+            ->andReturnNull();
+
+
+        Cache::shouldReceive('put')
+            ->once()
+            ->with("empresa_{$empresa->id}", Mockery::on(function ($arg) use ($empresa) {
+                return $arg instanceof Empresa && $arg->id === $empresa->id;
+            }), 20);
 
         $response = $this->getJson("/api/empresas/{$empresa->id}");
 
@@ -39,27 +80,113 @@ class EmpresaControllerApiTest extends TestCase
             ]);
     }
 
-    #[Test]
-    public function test_devuelve_404_si_la_empresa_no_existe()
-    {
-        $response = $this->getJson('/api/empresas/999');
 
-        $response->assertStatus(404);
+    #[Test]
+    public function test_puede_obtener_una_empresa_por_id()
+    {
+        $empresa = Empresa::first();
+
+        $this->assertNotNull($empresa, 'No se encontró ninguna empresa en la base de datos.');
+
+        $response = $this->getJson("/api/empresas/{$empresa->id}");
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'id' => $empresa->id,
+                'nombre' => $empresa->nombre,
+            ]);
     }
+
+
+    public function test_empresa_not_found()
+    {
+        Cache::shouldReceive('get')
+            ->once()
+            ->with("empresa_999")
+            ->andReturnNull();
+
+
+        $response = $this->getJson("/api/empresas/999");
+
+        $response->assertStatus(404)
+            ->assertJson([
+                'message' => 'Empresa no encontrada',
+            ]);
+    }
+
+    #[Test]
+    public function test_get_by_nombre_en_cache(){
+        $empresa = Empresa::factory()->create();
+
+        Cache::shouldReceive('get')
+            ->once()
+            ->with("empresa_nombre_{$empresa->nombre}")
+            ->andReturn($empresa);
+
+        $response = $this->getJson("/api/empresas/nombre/{$empresa->nombre}");
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'id' => $empresa->id,
+                'nombre' => $empresa->nombre,
+            ]);
+    }
+
+    #[Test]
+    public function test_get_by_nombre_no_en_cache(){
+        $empresa = Empresa::factory()->create();
+
+        Cache::shouldReceive('get')
+            ->once()
+            ->with("empresa_nombre_{$empresa->nombre}")
+            ->andReturnNull();
+
+
+        Cache::shouldReceive('put')
+            ->once()
+            ->with("empresa_nombre_{$empresa->nombre}", Mockery::on(function ($arg) use ($empresa) {
+                return $arg instanceof Empresa && $arg->nombre === $empresa->nombre;
+            }), 20);
+
+
+        $response = $this->getJson("/api/empresas/nombre/{$empresa->nombre}");
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'id' => $empresa->id,
+                'nombre' => $empresa->nombre,
+            ]);
+    }
+
+    public function test_get_by_name_not_found()
+    {
+        Cache::shouldReceive('get')
+            ->once()
+            ->with('empresa_nombre_lalala')
+            ->andReturn(null);
+
+        $response = $this->getJson("/api/empresas/nombre/lalala");
+
+        $response->assertStatus(404)
+            ->assertJson([
+                'message' => 'Empresa no encontrada',
+            ]);
+    }
+
 
     #[Test]
     public function test_puede_crear_una_empresa()
     {
-        $user = User::factory()->create(); // ✅ Crear usuario primero
+        $user = User::factory()->create();
 
         $empresaData = Empresa::factory()->make()->toArray();
-        $empresaData['email'] ='juanMA@example.com'; // ✅ Email aleatorio
+        $empresaData['email'] ='juanMA@example.com';
         $empresaData['password'] = 'locoDelPueblo';
         $empresaData['nombre'] = 'Empresa Ejemplo S.L.';
         $empresaData['direccion'] = 'Calle Falsa 123, Madrid';
         $empresaData['cif'] = 'B1234567J';
         $empresaData['cuentaBancaria'] = 'ES12 34567890123456789012';
-        $empresaData['telefono'] = '+34698765432'; // ✅ Prefijo +34 agregado
+        $empresaData['telefono'] = '669843935';
 
         $response = $this->postJson('/api/empresas', $empresaData);
 
@@ -82,11 +209,11 @@ class EmpresaControllerApiTest extends TestCase
     #[Test]
     public function test_no_puede_crear_una_empresa_cif_erroneo(){
         $response = $this->postJson('/api/empresas', [
-            'cif' => 'B1234567890',  // Cif erróneo
+            'cif' => 'B1234567890',
             'nombre' => 'Empresa Test',
             'direccion' => 'Calle Falsa 123',
             'cuentaBancaria' => 'ES12 34567890123456789012',
-            'telefono' => '+34698765432',
+            'telefono' => '669843935',
             'email' => 'juanMA@example.com',
             'password' => 'password123',
         ]);
@@ -112,7 +239,7 @@ class EmpresaControllerApiTest extends TestCase
             'nombre' => 'Empresa Test',
             'direccion' => 'Calle Falsa 123',
             'cuentaBancaria' => 'ES12345678901234567890',
-            'telefono' => '+34698765432',
+            'telefono' => '669843935',
             'email' => 'juanMA@example.com',
             'password' => 'password123',
         ]);
@@ -142,7 +269,7 @@ class EmpresaControllerApiTest extends TestCase
             'nombre' => 'Empresa Test',
             'direccion' => 'Calle Falsa 123',
             'cuentaBancaria' => 'ES12 34567890123456789012',
-            'telefono' => '+34698765432',
+            'telefono' => '669843935',
             'email' => 'juanmaexample.com',
             'password' => 'password123',
         ]);
@@ -159,7 +286,7 @@ class EmpresaControllerApiTest extends TestCase
             'nombre' => 'Empresa Test',
             'direccion' => 'Calle Falsa 123',
             'cuentaBancaria' => 'ES12 34567890123456789012',
-            'telefono' => '+34698765432',
+            'telefono' => '669843935',
             'email' => 'juanMA@example.com',
             'password' => 'password123',
         ]);

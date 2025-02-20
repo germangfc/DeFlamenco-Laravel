@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Empresa;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use PHPUnit\Exception;
 use Psy\Util\Json;
@@ -21,20 +22,42 @@ class EmpresaControllerApi extends Controller
     }
 
     public function getById($id){
-        $empresa = Empresa::find($id);
-        if($empresa){
-            return response()->json($empresa, status: 200);
+        $cacheKey = "empresa_{$id}";
+
+        $empresa = Cache::get($cacheKey);
+
+        if (!$empresa) {
+            $empresa = Empresa::find($id);
+
+            if ($empresa) {
+                Cache::put($cacheKey, $empresa, 20);
+            }
+        }
+
+        if ($empresa) {
+            return response()->json($empresa, 200);
         } else {
-            return response()->json(['message' => 'Empresa no encontrada'], status: 404);
+            return response()->json(['message' => 'Empresa no encontrada'], 404);
         }
     }
 
     public function getByNombre($nombre){
-        $empresa = Empresa::where('nombre', $nombre)->first();
-        if($empresa){
-            return response()->json($empresa, status: 200);
+        $cacheKey = "empresa_nombre_{$nombre}";
+
+        $empresa = Cache::get($cacheKey);
+
+        if (!$empresa) {
+            $empresa = Empresa::where('nombre', $nombre)->first();
+
+            if ($empresa) {
+                Cache::put($cacheKey, $empresa, 20);
+            }
+        }
+
+        if ($empresa) {
+            return response()->json($empresa, 200);
         } else {
-            return response()->json(['message' => 'Empresa no encontrada'], status: 404);
+            return response()->json(['message' => 'Empresa no encontrada'], 404);
         }
     }
 
