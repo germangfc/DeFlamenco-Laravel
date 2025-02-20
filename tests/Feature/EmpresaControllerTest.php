@@ -117,7 +117,7 @@ class EmpresaControllerTest extends TestCase
         $file = UploadedFile::fake()->image('empresa.jpg');
 
         $user = User::factory()->create(['id' => 3]);
-
+        $this->actingAs($user);
         $data = [
             'usuario_id' => $user->id,
             'cif' => 'B12345678',

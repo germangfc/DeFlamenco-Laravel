@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Empresa;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class EmpresaController extends Controller
@@ -69,30 +71,44 @@ class EmpresaController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'cif' => ['required', 'regex:/^[A-HJNP-SUVW][0-9]{7}[0-9A-J]$/'],
-            'nombre' => 'required|max:255',
-            'direccion' => 'required|max:255',
-            'cuentaBancaria' => ['required', 'regex:/^ES\d{2}\s?\d{4}\s?\d{4}\s?\d{2}\s?\d{10}$/'],
-            'telefono' => ['required', 'regex:/^(\+34|0034)?[679]\d{8}$/'],
-            'email' => 'required|email|max:255',
-            'imagen' => 'nullable|image|max:2048' // Validación para la imagen
-        ]);
 
         try {
-            $empresa = new Empresa($request->except('imagen'));
+
+            $validatedUserData = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|unique:users,email',
+                'password' => 'required|string|min:8'
+            ]);
+
+            $validatedEmpresaData = $request->validate([
+                'cif' => ['required', 'regex:/^[A-HJNP-SUVW][0-9]{7}[0-9]$/'],
+                'direccion' => 'required|max:255',
+                'cuentaBancaria' => ['required', 'regex:/^ES\d{2}\s?\d{4}\s?\d{4}\s?\d{2}\s?\d{10}$/'],
+                'telefono' => ['required', 'regex:/^(\+34|0034)?[679]\d{8}$/'],
+                'imagen' => 'nullable|image|max:2048' // Validación para la imagen
+            ]);
+
+            $user = User::create([
+                'name' => $validatedUserData['name'],
+                'email' => $validatedUserData['email'],
+                'password' => Hash::make($validatedUserData['password']),
+            ]);
+
+            $user->assignRole('empresa');
+            $empresa = new Empresa([
+                $validatedEmpresaData->except('imagen'),
+                'usuario_id' => $user->id]);
 
             if ($request->hasFile('imagen')) {
                 $empresa->imagen = $request->file('imagen')->store('empresas', 'public');
             }
-
-            $empresa->usuario_id = auth()->id();
 
             $empresa->save(); // Guarda la empresa en la base de datos
 
             return redirect()->route('empresas.index')->with('status', 'Empresa creada correctamente');
 
         } catch (\Exception $e) {
+            dd($e->getMessage());
             return redirect()->route('empresas.create')->with('error', 'Error al crear la empresa: ' . $e->getMessage());
         }
     }
