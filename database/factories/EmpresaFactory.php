@@ -21,7 +21,7 @@ class EmpresaFactory extends Factory
     {
         return [
             'cif' => $this->generateValidCIF(),
-            'nombre' => $this->faker->company,
+            'name' => $this->faker->company,
             'direccion' => $this->faker->address,
             'imagen' => $this->faker->imageUrl(200, 200, 'business'),
             'telefono' => $this->faker->phoneNumber,
