@@ -40,18 +40,29 @@ Route::prefix('empresa')->group(function () {
         ->name('empresas.showByCif');
 });
 
-Route::get('', [EventosController::class, 'getAll'])->name('eventos');
-Route::get('/{id}', [EventosController::class, 'show'])->name('eventos.show');
+Route::get('/', [EventosController::class, 'getAll'])->name('eventos');
+Route::prefix('eventos')->group(function () {
+    Route::get('/', [EventosController::class, 'getAll'])->name('eventos');
+    Route::get('/create', [EventosController::class, 'create'])->name('eventos.create');
+    Route::post('/store', [EventosController::class, 'store'])->name('eventos.store');
+    Route::get('/{id}', [EventosController::class, 'show'])->name('eventos.show');
+    Route::get('/{id}/edit', [EventosController::class, 'edit'])->name('eventos.edit');
+    Route::put('/{id}', [EventosController::class, 'update'])->name('eventos.update');
+    Route::delete('/{id}', [EventosController::class, 'destroy'])->name('eventos.destroy');
+    Route::get('/search', [EventosController::class, 'search'])->name('eventos.search');
+});
+
+
 Route::prefix('clientes')->group(function () {
     Route::post('/', [ClienteController::class, 'store'])->name('clientes.store');
-    Route::get('/crear', [ClienteController::class, 'create'])->name('clientes.create');
+    Route::get('/create', [ClienteController::class, 'create'])->name('clientes.create');
     Route::get('/', [ClienteController::class, 'index'])->name('clientes.index');
     Route::get('/{id}', [ClienteController::class, 'show'])->name('clientes.show');
-    Route::get('/{id}/editar', [ClienteController::class, 'edit'])->name('clientes.edit');
+    Route::get('/{id}/edit', [ClienteController::class, 'edit'])->name('clientes.edit');
     Route::put('/{id}', [ClienteController::class, 'update'])->name('clientes.update');
     Route::delete('/{id}', [ClienteController::class, 'destroy'])->name('clientes.destroy');
 });
-    Route::delete('/{id}', [ClienteControllerView::class, 'destroy'])->name('clientes.destroy');
+    Route::delete('/{id}', [ClienteController::class, 'destroy'])->name('clientes.destroy');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
