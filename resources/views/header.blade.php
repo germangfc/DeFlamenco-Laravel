@@ -30,8 +30,8 @@
                             <ul
                                 tabindex="0"
                                 class="menu menu-sm dropdown-content mt-3 z-[1] w-52 rounded-box bg-base-100 p-2 shadow">
-                                <li><a>Eventos</a></li>
-                                <li><a>Empresas</a></li>
+                                <li><a class="{{ Request::is('/') || Request::is('/eventos') ? 'bg-primary' : '' }}">Eventos</a></li>
+                                <li><a class="{{ Request::is('/empresa') ? 'bg-primary' : '' }}" href=" {{ route("empresas.index") }}" >Empresas</a></li>
                                 @guest
                                     <li><a id="loginhamburger" href="{{ route('login') }}">Iniciar Sesión</a></li>
                                     <li><a id="registerhamburger" href="{{ route('register') }}">Registrarse</a></li>
@@ -43,8 +43,8 @@
                     <!-- Menú escritorio (se muestra en pantallas grandes) -->
                     <div class="navbar-center hidden lg:flex">
                         <ul class="menu menu-horizontal px-1">
-                            <li><a class="{{ Request::is('*') ? 'bg-primary' : '' }}">Eventos</a></li>
-                            <li><a>Empresas</a></li>
+                            <li><a class="{{ Request::is('/') || Request::is('/eventos') ? 'bg-primary' : '' }}">Eventos</a></li>
+                            <li><a class="{{ Request::is('/empresa') ? 'bg-primary' : '' }}" href=" {{ route("empresas.index") }}" >Empresas</a></li>
 
                         </ul>
                     </div>
