@@ -2,6 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+    /* Tema Claro */
+    :root, [data-theme="flamencoLight"] {
+        --color-base-200: #e6d5b8;
+        --color-base-300: #d9c19e;
+        --color-base-400: #ccad84;
+        --color-base-500: #bf996a;
+        --color-base-600: #9b7d55;
+        --color-base-700: #776140;
+        --color-base-800: #53452b;
+    }
+
+    /* Tema Oscuro */
+    [data-theme="flamencoDark"] {
+        --color-base-200: #3a3633;
+        --color-base-300: #4a4640;
+        --color-base-400: #5a554d;
+        --color-base-500: #6a645a;
+        --color-base-600: #7a7367;
+        --color-base-700: #8a8274;
+        --color-base-800: #9a9181;
+    }
+}
+
 .container {
     @apply mx-auto px-4;
 }
