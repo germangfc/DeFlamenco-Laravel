@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
+
 use App\Http\Controllers\Controller;
 use App\Models\Venta;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Cache;
 
 class VentasApiController extends Controller
 {
@@ -16,9 +19,25 @@ class VentasApiController extends Controller
     }
 
     public function show($id){
-        $venta = Venta::find($id);
+
+        $cacheKey = "venta_{$id}";
+
+        $venta = Cache::get($cacheKey);
+
         if (!$venta) {
-            return response()->json(['message' => 'Venta not Found'], 404);
+
+            $venta = Venta::find($id);
+
+            if (!$venta) {
+                return response()->json(['message' => 'Venta not Found'], 404);
+            }
+            Log::info('Venta no en caché => Recuperada de BD');
+
+            Cache::put($cacheKey, $venta, 60);
+            Log::info('Guardada venta en caché');
+        }
+        else {
+            Log::info('Guardada recuperada de caché');
         }
         return response()->json($venta, 200);
 
