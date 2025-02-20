@@ -21,13 +21,13 @@ class UserSeeder extends Seeder
         $permisoEmpresa = Permission::create(['name' => 'empresa']);
         $permisoCliente = Permission::create(['name' => 'cliente']);
 
-       $roladmin = Role::create(['name' => 'admin']);
-       $rolEmpresa = Role::create(['name' => 'empresa']);
-       $rolCliente = Role::create(['name' => 'cliente']);
+        $roladmin = Role::create(['name' => 'admin']);
+        $rolEmpresa = Role::create(['name' => 'empresa']);
+        $rolCliente = Role::create(['name' => 'cliente']);
 
-         $roladmin->givePermissionTo([$permisoAdmin]);
-         $rolEmpresa->givePermissionTo([$permisoEmpresa]);
-         $rolCliente->givePermissionTo([$permisoCliente]);
+        $roladmin->givePermissionTo([$permisoAdmin]);
+        $rolEmpresa->givePermissionTo([$permisoEmpresa]);
+        $rolCliente->givePermissionTo([$permisoCliente]);
 
 
         $adminUser = User::create([
