@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Cache;
+use function PHPUnit\Framework\logicalAnd;
 
 
 class ClienteApiController extends Controller
@@ -156,8 +157,6 @@ class ClienteApiController extends Controller
     public function update(Request $request, $id)
     {
         $clienteCacheKey = "cliente_{$id}";
-        $userCacheKey = "user_{$id}";
-
         $cliente = Cache::get($clienteCacheKey);
 
         if (!$cliente) {
@@ -170,24 +169,7 @@ class ClienteApiController extends Controller
             Cache::put($clienteCacheKey, $cliente, 20);
         }
 
-        $validatedData = $request->validate([
-            'dni' => 'nullable|string|max:20|unique:clientes,dni,' . $cliente->id,
-            'foto_dni' => 'nullable|string',
-            'name' => 'nullable|string|max:255',
-            'email' => 'nullable|string|email|unique:users,email,' . $cliente->user_id,
-            'password' => 'nullable|string|min:8',
-        ]);
-
-        if ($request->has('dni')) {
-            $cliente->dni = $validatedData['dni'];
-        }
-        if ($request->has('foto_dni')) {
-            $cliente->foto_dni = $validatedData['foto_dni'];
-        }
-
-        $cliente->save();
-        Cache::put($clienteCacheKey, $cliente, 20);
-
+        $userCacheKey = "user_{$cliente->user_id}";
         $user = Cache::get($userCacheKey);
 
         if (!$user) {
@@ -200,6 +182,21 @@ class ClienteApiController extends Controller
             Cache::put($userCacheKey, $user, 20);
         }
 
+        $validatedData = $request->validate([
+            'dni' => 'nullable|string|max:20|unique:clientes,dni,' . $cliente->id,
+            'foto_dni' => 'nullable|string',
+            'name' => 'nullable|string|max:255',
+            'email' => 'nullable|string|email|unique:users,email,' . $cliente->user_id,
+            'password' => 'nullable|string|min:8',
+        ]);
+
+
+        if ($request->has('dni')) {
+            $cliente->dni = $validatedData['dni'];
+        }
+        if ($request->has('foto_dni')) {
+            $cliente->foto_dni = $validatedData['foto_dni'];
+        }
         if ($request->has('name')) {
             $user->name = $validatedData['name'];
         }
@@ -210,7 +207,10 @@ class ClienteApiController extends Controller
             $user->password = Hash::make($validatedData['password']);
         }
 
+        $cliente->save();
         $user->save();
+
+        Cache::put($clienteCacheKey, $cliente, 20);
         Cache::put($userCacheKey, $user, 20);
 
         Mail::to($user->email)->send(new ActualizacionDatos($user));
@@ -221,32 +221,38 @@ class ClienteApiController extends Controller
     public function destroy($id)
     {
         $clienteCacheKey = "cliente_{$id}";
-        $userCacheKey = "user_{$id}";
-
         $cliente = Cache::get($clienteCacheKey);
 
         if (!$cliente) {
             $cliente = Cliente::find($id);
-
-            if (!$cliente) {
-                return response()->json(['message' => 'Cliente no encontrado'], 404);
-            }
-
-            $cliente->is_deleted = true;
-            $cliente->save();
-
-
-            $user = User::find($cliente->user_id);
-
-            if (!$user) {
-                $user = User::find($cliente->user_id);
-
-                $user->is_deleted = true;
-                $user->save();
-
-                return response()->json(['message' => 'Cliente marcado como eliminado'], 200);
-            }
         }
+
+        if (!$cliente) {
+            return response()->json(['message' => 'Cliente no encontrado'], 404);
+        }
+
+        $userCacheKey = "user_{$cliente->user_id}";
+        $user = Cache::get($userCacheKey);
+
+        if (!$user) {
+            $user = User::find($cliente->user_id);
+        }
+        if (!$user) {
+            return response()->json(['message' => 'Usuario no encontrado'], 404);
+        }
+
+        $cliente->is_deleted = true;
+        $user->is_Deleted = true;
+
+        $cliente->save();
+        $user->save();
+
+        Cache::forget($clienteCacheKey);
+        Cache::forget($userCacheKey);
+
+        Mail::to($user->email)->send(new EliminacionCuenta($user));
+
+        return response()->json(['message' => 'Cliente marcado como eliminado'], 200);
     }
 
     public function uploadDni(Request $request, $clienteId)
@@ -255,22 +261,31 @@ class ClienteApiController extends Controller
             'foto_dni' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $cliente = Cliente::findOrFail($clienteId);
+        $cliente = Cliente::find($clienteId);
+
+        if (!$cliente) {
+            return response()->json(['message' => 'Cliente no encontrado'], 404);
+        }
 
         if (!empty($cliente->foto_dni)) {
             Storage::disk('public')->delete('images/' . $cliente->foto_dni);
         }
 
-        $cliente->is_deleted = true;
+        $image = $request->file('foto_dni');
+
+        $customName = 'dni_' . $cliente->dni . '.' . $image->getClientOriginalExtension();
+
+        $image->storeAs('images', $customName, 'public');
+
+        $cliente->foto_dni = $customName;
         $cliente->save();
 
-        $user = User::findOrFail($cliente->user_id);
-
-        $user->is_deleted = true;
-        $user->save();
-
-        return response()->json(['message' => 'Cliente marcado como eliminado'], 200);
+        return response()->json([
+            'message' => 'DNI actualizado correctamente',
+            'path' => $customName
+        ]);
     }
+
 
 
 }
