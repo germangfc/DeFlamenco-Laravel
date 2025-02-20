@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\PagoConfirmado;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Stripe\Stripe;
 
 class StripeController extends Controller
@@ -33,6 +35,8 @@ class StripeController extends Controller
     }
 
     public function success(){
+        Mail::to('yahyaelhadricgs@gmail.com')->send(new PagoConfirmado());
+
         return view('main');
     }
 }
