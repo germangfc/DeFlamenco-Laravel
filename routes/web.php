@@ -1,13 +1,11 @@
 <?php
 
-use App\Http\Controllers\ClienteController;
-use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\EmpresaController;
+use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\EventosController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StripeController;
-use Illuminate\Support\Facades\Auth;
-use \Illuminate\Auth\Middleware\Authorize;
-
 
 Route::get('/', function () {
     return view('main');
@@ -26,7 +24,6 @@ Route::prefix('empresa')->group(function () {
     Route::post('/store', [EmpresaController::class, 'store'])->name('empresas.store');    Route::get('/', [EmpresaController::class, 'index'])->name('empresas.index');
     Route::get('/actualizar/{id}', [EmpresaController::class, 'edit'])->name('empresas.edit');
 
-    // Actualizar empresa (PUT o PATCH)
     Route::put('/{id}', [EmpresaController::class, 'update'])->name('empresas.update');
     Route::delete('/{id}', [EmpresaController::class, 'destroy'])->name('empresas.destroy');
     // Ruta para buscar por ID
@@ -43,20 +40,23 @@ Route::prefix('empresa')->group(function () {
         ->name('empresas.showByCif');
 });
 
+Route::get('', [EventosController::class, 'getAll'])->name('eventos');
+Route::get('/{id}', [EventosController::class, 'show'])->name('eventos.show');
 Route::prefix('clientes')->group(function () {
-    Route::get('/', [ClienteController::class, 'index'])->name('clientes.index');
-    Route::get('/crear', [ClienteController::class, 'create'])->name('clientes.create');
     Route::post('/', [ClienteController::class, 'store'])->name('clientes.store');
+    Route::get('/crear', [ClienteController::class, 'create'])->name('clientes.create');
+    Route::get('/', [ClienteController::class, 'index'])->name('clientes.index');
     Route::get('/{id}', [ClienteController::class, 'show'])->name('clientes.show');
     Route::get('/{id}/editar', [ClienteController::class, 'edit'])->name('clientes.edit');
     Route::put('/{id}', [ClienteController::class, 'update'])->name('clientes.update');
     Route::delete('/{id}', [ClienteController::class, 'destroy'])->name('clientes.destroy');
 });
+    Route::delete('/{id}', [ClienteControllerView::class, 'destroy'])->name('clientes.destroy');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 require __DIR__.'/auth.php';
+
