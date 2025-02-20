@@ -19,14 +19,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Ticket::factory(10)->create();
+        // Vaciar las colecciones antes de crear nuevos datos ( en Mongo no aplica el migrate:fresh )
+        Ticket::truncate();  // Vacía la colección de Ticket
+        Venta::truncate();   // Vacía la colección de Venta
+
+        Ticket::factory(12)->create();
+        Venta::factory()->count(5)->create();
+        Venta::where('lineas_venta', 'size', 0)->delete();
 
         $this->call([
             UserSeeder::class,
         ]);
         Cliente::factory()->count(25)->create();
         Empresa::factory()->count(25)->create();
-        Venta::factory()->count(5)->create();
         Evento::factory()->count(50)->create();
     }
 }
