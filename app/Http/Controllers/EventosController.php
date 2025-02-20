@@ -36,15 +36,33 @@ class EventosController extends Controller
         ]);
 
         try {
-            $evento = Evento::create($request->all());
+            $fotoPath = "";
+            if ($request->hasFile('foto')) {
+                $image = $request->file('foto');
 
-            return redirect()->route('eventos')
-                ->with('success', '¡Evento creado exitosamente!')
-                ->with('debug', 'Evento guardado: ' . json_encode($evento));
+                $timestamp = now()->timestamp;
+                $customName = 'evento_' . $request->nombre . '.' . $image->getClientOriginalExtension();
+
+                $image->storeAs('images', $customName, 'public');
+                $fotoPath=$customName;
+            }
+
+            $evento = Evento::create([
+                'nombre' => $request->nombre,
+                'stock' => $request->stock,
+                'fecha' => $request->fecha,
+                'hora' => $request->hora,
+                'direccion' => $request->direccion,
+                'ciudad' => $request->ciudad,
+                'precio' => $request->precio,
+                'foto' => $fotoPath,
+            ]);
+
+            return redirect()->route('/')
+                ->with('success', '¡Evento creado exitosamente!');
         } catch (Exception $e) {
             return redirect()->route('eventos.create')
-                ->with('error', 'Hubo un problema al crear el evento')
-                ->with('debug', 'Error: ' . $e->getMessage());
+                ->with('error', 'Hubo un problema al crear el evento');
         }
     }
 
