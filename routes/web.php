@@ -24,7 +24,7 @@ Route::get('/dashboard', function () {
 Route::prefix('empresa')->group(function () {
     Route::get('/create', [EmpresaController::class, 'create'])->name('empresas.create');
     Route::post('/store', [EmpresaController::class, 'store'])->name('empresas.store');    Route::get('/', [EmpresaController::class, 'index'])->name('empresas.index');
-    Route::get('/actualizar/{id}', [EmpresaController::class, 'edit'])->name('empresas.edit');
+    Route::get('/actualizar/{id}', [EmpresaController::class, 'edit'])->name('empresas.edit')->middleware("can:admin");
 
     // Actualizar empresa (PUT o PATCH)
     Route::put('/{id}', [EmpresaController::class, 'update'])->name('empresas.update');
