@@ -145,7 +145,8 @@ class EmpresaControllerApi extends Controller
 
 
 
-    public function destroy($id){
+    public function destroy($id)
+    {
         $empresa = Empresa::find($id);
         if($empresa == null){
             return response()->json(['message' => 'Empresa no encontrada'], status: 404);
