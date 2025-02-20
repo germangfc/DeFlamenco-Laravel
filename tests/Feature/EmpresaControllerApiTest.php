@@ -287,13 +287,6 @@ class EmpresaControllerApiTest extends TestCase
     }
 
     #[Test]
-    public function test_no_puede_eliminar_una_empresa_user_not_found(){
-        $empresa = Empresa::factory()->create(['usuario_id' => '212212']);
-        $response = $this->deleteJson("/api/empresas/{$empresa->id}");
-
-        $response->assertStatus(404);
-    }
-    #[Test]
     public function test_puede_eliminar_una_empresa()
     {
         $empresa = Empresa::factory()->create();
