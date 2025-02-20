@@ -54,7 +54,7 @@ class EmpresaControllerApiTest extends TestCase
 
         $empresaData = Empresa::factory()->make()->toArray();
         $empresaData['email'] ='juanMA@example.com'; // ✅ Email aleatorio
-        $empresaData['password'] = 'HIjodePutaMaricon';
+        $empresaData['password'] = 'locoDelPueblo';
         $empresaData['nombre'] = 'Empresa Ejemplo S.L.';
         $empresaData['direccion'] = 'Calle Falsa 123, Madrid';
         $empresaData['cif'] = 'B1234567J';

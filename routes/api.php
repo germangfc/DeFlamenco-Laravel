@@ -30,7 +30,7 @@ Route::get('empresas/nombre/{nombre}', [EmpresaApiController::class, 'getByNombr
 Route::get('empresas/cif/{cif}', [EmpresaApiController::class,'getByCif']);
 Route::post('empresas',[EmpresaApiController::class, 'create']);
 Route::put('empresas/{id}', [EmpresaApiController::class, 'update']);
-Route::delete('empresas/{id}', [EmpresaApiController::class, 'delete']);
+Route::delete('empresas/{id}', [EmpresaApiController::class, 'destroy']);
 
 
 Route::post('/upload-image', [ImagenController::class, 'uploadImage']);

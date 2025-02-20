@@ -59,7 +59,7 @@ class EmpresaControllerApi extends Controller
                 'email'          => 'required|string|email|unique:empresas,email',
                 'password'       => 'required|string|min:8',
             ]);
-        } catch (Exception $e) {
+        } catch (ValidationException  $e) {
             return response()->json(['error' => 'Error de validación', 'detalles' => $e->errors()], 422);
         }
 

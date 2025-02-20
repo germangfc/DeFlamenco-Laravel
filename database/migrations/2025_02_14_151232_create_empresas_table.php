@@ -26,9 +26,6 @@ return new class extends Migration
             // $table->foreign('evento_id')->references('id')->on('eventos');
             $table->boolean('isDeleted')->default(false);
             $table->timestamps();
-            $table->foreign('usuario_id')
-                ->references('id')
-                ->on('users');
         });
     }
 
