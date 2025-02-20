@@ -1,6 +1,10 @@
 {
   "resources/css/app.css": {
+<<<<<<< HEAD
     "file": "assets/app-CqzKFVnu.css",
+=======
+    "file": "assets/app-BMZwU0BW.css",
+>>>>>>> origin/develop
     "src": "resources/css/app.css",
     "isEntry": true
   },

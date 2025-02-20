@@ -12,9 +12,10 @@ use Illuminate\Validation\ValidationException;
 class ClienteController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $clientes = Cliente::all();
+        $clientes = Cliente::paginate(5);
+
         return view('clientes.index', compact('clientes'));
     }
 
@@ -53,8 +54,8 @@ class ClienteController extends Controller
             ]);
 
             $validatedClientData = $request->validate([
-                'dni' => 'required|string|max:20|unique:clientes,dni',
-                'foto_dni' => 'nullable|string'
+                'dni' => 'nullable|string|regex:/^[0-9]{8}[A-Z]$/|unique:clientes,dni' ,
+                'foto_dni' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
             ]);
 
             $user = User::create([
@@ -63,10 +64,15 @@ class ClienteController extends Controller
                 'password' => Hash::make($validatedUserData['password']),
             ]);
 
+            $fotoDniPath = null;
+            if ($request->hasFile('foto_dni')) {
+                $fotoDniPath = $request->file('foto_dni')->store('fotos_dni', 'public');
+            }
+
             Cliente::create([
                 'user_id' => $user->id,
                 'dni' => $validatedClientData['dni'],
-                'foto_dni' => $validatedClientData['foto_dni']
+                'foto_dni' => $fotoDniPath
             ]);
 
             return redirect()->route('clientes.index')->with('success', 'Cliente creado con éxito');
@@ -111,7 +117,7 @@ class ClienteController extends Controller
         }
 
         $validatedData = $request->validate([
-            'dni' => 'nullable|string|max:20|unique:clientes,dni,' . $cliente->id,
+            'dni' => 'nullable|string|regex:/^[0-9]{8}[A-Z]$/|unique:clientes,dni,' . $cliente->id,
             'foto_dni' => 'nullable|string',
             'name' => 'nullable|string|max:255',
             'email' => 'nullable|string|email|unique:users,email,' . $cliente->user_id,
@@ -163,18 +169,15 @@ class ClienteController extends Controller
             }
         }
 
-        $cliente->is_deleted = true;
-        $cliente->save();
+        $cliente->delete();
 
         if ($user) {
-            $user->is_deleted = true;
-            $user->save();
+            $user->delete();
         }
 
         Cache::forget($clienteCacheKey);
         Cache::forget($userCacheKey);
 
-        return redirect()->route('clientes.index')->with('success', 'Cliente marcado como eliminado');
+        return redirect()->route('clientes.index')->with('success', 'Cliente eliminado correctamente');
     }
-
 }

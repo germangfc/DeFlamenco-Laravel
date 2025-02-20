@@ -554,6 +554,7 @@ class ComposerStaticInit626b9e7ddd47fb7eff9aaa53cce0c9ad
     );
 
     public static $classMap = array (
+        'App\\Http\\Controllers\\Api\\EventosApiController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/EventosApiController.php',
         'App\\Dto\\Cliente\\ClienteResponse' => __DIR__ . '/../..' . '/app/Dto/Cliente/ClienteResponse.php',
         'App\\Http\\Controllers\\Api\\ClienteApiController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/ClienteApiController.php',
         'App\\Http\\Controllers\\Api\\EmpresaApiController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/EmpresaApiController.php',
@@ -572,6 +573,8 @@ class ComposerStaticInit626b9e7ddd47fb7eff9aaa53cce0c9ad
         'App\\Http\\Controllers\\Auth\\VerifyEmailController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/VerifyEmailController.php',
         'App\\Http\\Controllers\\ClienteController' => __DIR__ . '/../..' . '/app/Http/Controllers/ClienteController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
+        'App\\Http\\Controllers\\EventosController' => __DIR__ . '/../..' . '/app/Http/Controllers/EventosController.php',
+        'App\\Http\\Controllers\\EmpresaControllerApi' => __DIR__ . '/../..' . '/app/Http/Controllers/EmpresaControllerApi.php',
         'App\\Http\\Controllers\\EmpresaController' => __DIR__ . '/../..' . '/app/Http/Controllers/EmpresaController.php',
         'App\\Http\\Controllers\\EventosController' => __DIR__ . '/../..' . '/app/Http/Controllers/EventosController.php',
         'App\\Http\\Controllers\\MailController' => __DIR__ . '/../..' . '/app/Http/Controllers/MailController.php',
