@@ -28,20 +28,26 @@ class EventosController extends Controller
             'nombre' => 'required|string|max:255|unique:eventos',
             'stock' => 'required|integer',
             'fecha' => 'required|date',
-            'hora' => 'required|date_format:H:i:s',
+            'hora' => 'required|date_format:H:i',
             'direccion' => 'required|string|max:255',
             'ciudad' => 'required|string|max:255',
             'precio' => 'required|numeric',
-            'foto' =>'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
 
-        try{
-            $eventos= Evento::create($request->all());
-            return redirect()->route('eventos.index');
+        try {
+            $evento = Evento::create($request->all());
+
+            return redirect()->route('eventos')
+                ->with('success', '¡Evento creado exitosamente!')
+                ->with('debug', 'Evento guardado: ' . json_encode($evento));
         } catch (Exception $e) {
-            return redirect()->route('eventos.create')->with('error', 'El evento ya existe');
+            return redirect()->route('eventos.create')
+                ->with('error', 'Hubo un problema al crear el evento')
+                ->with('debug', 'Error: ' . $e->getMessage());
         }
     }
+
 
     public function show($id)
     {
