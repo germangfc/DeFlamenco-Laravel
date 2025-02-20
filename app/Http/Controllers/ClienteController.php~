@@ -6,7 +6,6 @@ use App\Mail\ClienteBienvenido;
 use App\Models\Cliente;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -87,7 +86,7 @@ class ClienteController extends Controller
             Mail::to($user->email)->send(new ClienteBienvenido($cliente, $user));
 
             $user->assignRole('cliente');
-            Auth::login($user);
+            Auth
             return redirect()->route('clientes.index')->with('success', 'Cliente creado con éxito');
         } catch (ValidationException $e) {
             return redirect()->back()->withErrors($e->errors())->withInput();

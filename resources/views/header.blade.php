@@ -97,6 +97,7 @@
                 <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
                     <div class="w-10 rounded-full">
                         <img
+                            id="imagenPerfil"
                             alt="User avatar"
                             src="{{ Auth::user()->getProfilePhotoUrl() }}" />
                     </div>
@@ -109,7 +110,7 @@
                     <li><a href="{{ route('profile.edit') }}">Perfil</a></li>
                     <li><form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" >Cerrar Sesión</button>
+                            <button id="cerrarSesioncliente" type="submit" >Cerrar Sesión</button>
                         </form>
 
                     </li>
@@ -123,7 +124,7 @@
                         <li><a>Settings</a></li>
                         <li><form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit" >Cerrar Sesión</button>
+                                <button id="cerrarSesioncliente" type="submit" >Cerrar Sesión</button>
                             </form>
                         </li>
                     </ul>
@@ -136,7 +137,7 @@
                         <li><a>Settings</a></li>
                         <li><form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit" >Cerrar Sesión</button>
+                                <button id="cerrarSesioncliente" type="submit" >Cerrar Sesión</button>
                             </form>
                         </li>
                     </ul>

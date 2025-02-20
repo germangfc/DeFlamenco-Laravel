@@ -1,52 +1,57 @@
 <x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
-
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
-        </div>
-
-        <!-- Email Address -->
+        <!-- Selección de Entidad -->
         <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            <label for="selectEntidad" class="block text-sm font-medium text-gray-700">Seleccione una opción</label>
+            <select name="selectEntidad" id="selectEntidad" class="mt-1 block w-full">
+                <option value="">-- Seleccione una opción --</option>
+                <option value="cliente" {{ old('selectEntidad') == 'cliente' ? 'selected' : '' }}>Cliente</option>
+                <option value="empresa" {{ old('selectEntidad') == 'empresa' ? 'selected' : '' }}>Empresa</option>
+            </select>
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        <!-- Secciones adicionales -->
+        <div id="seccionCliente" class="mt-4" style="display: none;">
+            @include('clientes.form-create')
         </div>
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        <div id="seccionEmpresa" class="mt-4" style="display: none;">
+            @include('empresas.form-create')
         </div>
 
+        <!-- Botón de Registro -->
         <div class="flex items-center justify-end mt-4">
             <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
                 {{ __('Already registered?') }}
             </a>
-
-            <x-primary-button class="ms-4">
+            <x-primary-button class="ml-4">
                 {{ __('Register') }}
             </x-primary-button>
         </div>
-    </form>
+
+    <script>
+        const selectEntidad = document.getElementById('selectEntidad');
+        const seccionCliente = document.getElementById('seccionCliente');
+        const seccionEmpresa = document.getElementById('seccionEmpresa');
+
+        function actualizarSecciones() {
+            const valor = selectEntidad.value;
+            if(valor === 'cliente') {
+                seccionCliente.style.display = 'block';
+                seccionEmpresa.style.display = 'none';
+            } else if(valor === 'empresa') {
+                seccionCliente.style.display = 'none';
+                seccionEmpresa.style.display = 'block';
+            } else {
+                seccionCliente.style.display = 'none';
+                seccionEmpresa.style.display = 'none';
+            }
+        }
+
+        // Actualizar la vista al cambiar el select
+        selectEntidad.addEventListener('change', actualizarSecciones);
+
+        // Si hay un valor seleccionado previamente (por ejemplo, tras una validación fallida)
+        document.addEventListener('DOMContentLoaded', actualizarSecciones);
+    </script>
+
 </x-guest-layout>
