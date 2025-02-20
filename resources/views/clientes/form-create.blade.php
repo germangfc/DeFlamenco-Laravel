@@ -35,5 +35,5 @@
         <div class="alert alert-danger mt-2">{{ $message }}</div>
         @enderror
     </div>
-    <button type="submit" class="btn btn-primary w-100">Crear Cliente</button>
+    <button type="submit" id="submitCliente" class="btn btn-primary w-100">Crear Cliente</button>
 </form>
