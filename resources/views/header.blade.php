@@ -1,7 +1,7 @@
 <header class="shadow-2xl">
     <div class="navbar bg-base-100">
         <div class="flex-1">
-            <a href="/" class="btn btn-ghost text-xl">Tablao Pass</a>
+            <a href="/" class="btn btn-ghost text-2xl" style="font-family: 'Dancing Script', cursive;">Tablao Pass</a>
         </div>
         <div class="flex-none">
             {{--menu--}}
@@ -105,12 +105,13 @@
                 <ul
                     tabindex="0"
                     class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                    <li><a href="{{ route('clientes.index') }}">Clientes</a>
                     <li><a href="{{ route('profile.edit') }}">Perfil</a></li>
-                    <li><a>Settings</a></li>
                     <li><form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" >Cerrar Sesión</button>
                         </form>
+
                     </li>
                 </ul>
                 @endcan
