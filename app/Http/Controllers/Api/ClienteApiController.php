@@ -136,7 +136,8 @@ class ClienteApiController extends Controller
 
             $cliente = Cliente::create([
                 'user_id' => $user->id,
-                'dni' => $validatedClientData['dni']
+                'dni' => $validatedClientData['dni'],
+                'avatar'=>"avatardefault.jpg"
             ]);
 
             Mail::to($user->email)->send(new ClienteBienvenido($cliente, $user));
@@ -285,6 +286,37 @@ class ClienteApiController extends Controller
             'path' => $customName
         ]);
     }
+
+    public function uploadAvatar(Request $request, $clienteId)
+    {
+        $request->validate([
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $cliente = Cliente::find($clienteId);
+
+        if (!$cliente) {
+            return response()->json(['message' => 'Cliente no encontrado'], 404);
+        }
+
+        if (!empty($cliente->avatar)) {
+            Storage::disk('public')->delete('avatars/' . $cliente->avatar);
+        }
+
+        $image = $request->file('avatar');
+        $customName = 'avatar_' . $cliente->id . '.' . $image->getClientOriginalExtension();
+
+        $image->storeAs('avatars', $customName, 'public');
+
+        $cliente->avatar = $customName;
+        $cliente->save();
+
+        return response()->json([
+            'message' => 'Avatar actualizado correctamente',
+            'path' => $customName
+        ]);
+    }
+
 
 
 

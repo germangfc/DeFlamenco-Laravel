@@ -19,7 +19,7 @@ class EventosController extends Controller
 
     public function create()
     {
-        return view('eventos.create');
+        return view('eventos.store');
     }
 
     public function store(Request $request)
@@ -28,19 +28,44 @@ class EventosController extends Controller
             'nombre' => 'required|string|max:255|unique:eventos',
             'stock' => 'required|integer',
             'fecha' => 'required|date',
-            'hora' => 'required|date_format:H:i:s',
+            'hora' => 'required|date_format:H:i',
             'direccion' => 'required|string|max:255',
             'ciudad' => 'required|string|max:255',
             'precio' => 'required|numeric',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
 
-        try{
-            $eventos= Evento::create($request->all());
-            return redirect()->route('eventos.index');
+        try {
+            $fotoPath = "";
+            if ($request->hasFile('foto')) {
+                $image = $request->file('foto');
+
+                $timestamp = now()->timestamp;
+                $customName = 'evento_' . $request->nombre . "_" . $timestamp. '.' . $image->getClientOriginalExtension();
+
+                $image->storeAs('images', $customName, 'public');
+                $fotoPath=$customName;
+            }
+
+            $evento = Evento::create([
+                'nombre' => $request->nombre,
+                'stock' => $request->stock,
+                'fecha' => $request->fecha,
+                'hora' => $request->hora,
+                'direccion' => $request->direccion,
+                'ciudad' => $request->ciudad,
+                'precio' => $request->precio,
+                'foto' => $fotoPath,
+            ]);
+
+            return redirect()->route('eventos')
+                ->with('success', '¡Evento creado exitosamente!');
         } catch (Exception $e) {
-            return redirect()->route('eventos.create')->with('error', 'El evento ya existe');
+            return redirect()->route('eventos.create')
+                ->with('error', 'Hubo un problema al crear el evento');
         }
     }
+
 
     public function show($id)
     {
@@ -93,6 +118,7 @@ class EventosController extends Controller
             'direccion' => 'required|string|max:255',
             'ciudad' => 'required|string|max:255',
             'precio' => 'required|numeric',
+            'foto' =>'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
 
         $evento = Evento::find($id);
@@ -108,6 +134,7 @@ class EventosController extends Controller
         $evento->direccion = $request->direccion;
         $evento->ciudad = $request->ciudad;
         $evento->precio = $request->precio;
+        $evento->foto = $request->foto;
         $evento->save();
 
         $cacheKey = "evento_{$id}";
