@@ -19,7 +19,7 @@ class EventosController extends Controller
 
     public function create()
     {
-        return view('eventos.create');
+        return view('eventos.store');
     }
 
     public function store(Request $request)
@@ -32,6 +32,7 @@ class EventosController extends Controller
             'direccion' => 'required|string|max:255',
             'ciudad' => 'required|string|max:255',
             'precio' => 'required|numeric',
+            'foto' =>'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
 
         try{
@@ -93,6 +94,7 @@ class EventosController extends Controller
             'direccion' => 'required|string|max:255',
             'ciudad' => 'required|string|max:255',
             'precio' => 'required|numeric',
+            'foto' =>'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
 
         $evento = Evento::find($id);
@@ -108,6 +110,7 @@ class EventosController extends Controller
         $evento->direccion = $request->direccion;
         $evento->ciudad = $request->ciudad;
         $evento->precio = $request->precio;
+        $evento->foto = $request->foto;
         $evento->save();
 
         $cacheKey = "evento_{$id}";
