@@ -232,19 +232,21 @@ class ClienteApiController extends Controller
                 return response()->json(['message' => 'Cliente no encontrado'], 404);
             }
 
-        $cliente->is_deleted = true;
-        $cliente->save();
+            $cliente->is_deleted = true;
+            $cliente->save();
 
 
-        $user = User::find($cliente->user_id);
-
-        if (!$user) {
             $user = User::find($cliente->user_id);
 
-        $user->is_deleted = true;
-        $user->save();
+            if (!$user) {
+                $user = User::find($cliente->user_id);
 
-        return response()->json(['message' => 'Cliente marcado como eliminado'], 200);
+                $user->is_deleted = true;
+                $user->save();
+
+                return response()->json(['message' => 'Cliente marcado como eliminado'], 200);
+            }
+        }
     }
 
     public function uploadDni(Request $request, $clienteId)
@@ -262,11 +264,10 @@ class ClienteApiController extends Controller
         $cliente->is_deleted = true;
         $cliente->save();
 
+        $user = User::findOrFail($cliente->user_id);
+
         $user->is_deleted = true;
         $user->save();
-
-        Cache::forget($clienteCacheKey);
-        Cache::forget($userCacheKey);
 
         return response()->json(['message' => 'Cliente marcado como eliminado'], 200);
     }
