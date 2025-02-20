@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\ClienteApiController;
 use App\Http\Controllers\Api\EmpresaApiController;
 use App\Http\Controllers\Api\EventosApiController;
 use App\Http\Controllers\Api\ImagenController;
+use App\Http\Controllers\Api\TicketApiController;
 use App\Http\Controllers\Api\TicketController;
 use App\Http\Controllers\EmpresaControllerApi;
 use App\Http\Controllers\MailController;
@@ -14,12 +15,12 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::apiResource('/ticket', TicketController::class);
-Route::apiResource('clientes', ClienteController::class);
-Route::get('clientes/dni/{dni}', [ClienteController::class, 'searchByDni']);
-Route::post('/clientes/email', [ClienteController::class, 'searchByEmail']);
-Route::post('clientes/upload-dni/{clienteId}', [ClienteController::class, 'uploadDni']);
-Route::apiResource('usuarios',\App\Http\Controllers\Api\UserController::class);
+Route::apiResource('/ticket', TicketApiController::class);
+Route::apiResource('clientes', ClienteApiController::class);
+Route::get('clientes/dni/{dni}', [ClienteApiController::class, 'searchByDni']);
+Route::post('/clientes/email', [ClienteApiController::class, 'searchByEmail']);
+Route::post('clientes/upload-dni/{clienteId}', [ClienteApiController::class, 'uploadDni']);
+Route::apiResource('usuarios',\App\Http\Controllers\Api\UserApiController::class);
 
 Route::get('eventos/nombre/{nombre}', [EventosApiController::class, 'getByNombre']);
 
