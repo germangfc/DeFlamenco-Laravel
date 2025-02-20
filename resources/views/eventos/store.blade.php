@@ -8,9 +8,10 @@
                 @csrf
 
                 <div class="relative group mb-6">
-                    <input type="file" name="imagen" id="imagen" accept="image/*" class="hidden" onchange="previewImage(event)" required>
-                    <label for="imagen" class="cursor-pointer block">
-                        <img id="preview" class="object-cover h-60 w-full rounded-2xl transition-transform duration-500 group-hover:scale-105" src="https://via.placeholder.com/800x400" alt="Selecciona una imagen" />
+                    <input type="file" name="foto" id="foto" accept="image/*" class="hidden" onchange="previewImage(event)" required>
+                    <label for="foto" class="cursor-pointer block">
+                        <img id="preview" class="object-cover h-60 w-full rounded-2xl transition-transform duration-500 group-hover:scale-105"
+                             src="https://via.placeholder.com/800x400" alt="Selecciona una imagen" />
                     </label>
                 </div>
 

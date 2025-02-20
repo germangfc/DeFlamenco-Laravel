@@ -41,7 +41,7 @@ class EventosController extends Controller
                 $image = $request->file('foto');
 
                 $timestamp = now()->timestamp;
-                $customName = 'evento_' . $request->nombre . '.' . $image->getClientOriginalExtension();
+                $customName = 'evento_' . $request->nombre . "_" . $timestamp. '.' . $image->getClientOriginalExtension();
 
                 $image->storeAs('images', $customName, 'public');
                 $fotoPath=$customName;
@@ -58,7 +58,7 @@ class EventosController extends Controller
                 'foto' => $fotoPath,
             ]);
 
-            return redirect()->route('/')
+            return redirect()->route('eventos')
                 ->with('success', '¡Evento creado exitosamente!');
         } catch (Exception $e) {
             return redirect()->route('eventos.create')
