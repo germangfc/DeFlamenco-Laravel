@@ -59,7 +59,7 @@ class EmpresaControllerApi extends Controller
                 'email'          => 'required|string|email|unique:empresas,email',
                 'password'       => 'required|string|min:8',
             ]);
-        } catch (ValidationException  $e) {
+        } catch (Exception $e) {
             return response()->json(['error' => 'Error de validación', 'detalles' => $e->errors()], 422);
         }
 
@@ -68,6 +68,7 @@ class EmpresaControllerApi extends Controller
             $user->name     = $validatedData['nombre'];
             $user->email    = $validatedData['email'];
             $user->password = Hash::make($validatedData['password']);
+            $user->tipo     = 'empresa';
             $user->save();
             $empresa = new Empresa();
             $empresa->cif           = $validatedData['cif'];
@@ -87,13 +88,11 @@ class EmpresaControllerApi extends Controller
 
     public function update($id, Request $request)
     {
-        // Buscar la empresa, si no existe retorna 404
         $empresa = Empresa::find($id);
         if (!$empresa) {
             return response()->json(['message' => 'Empresa no encontrada'], 404);
         }
 
-        // Buscar el usuario, si no existe retorna 404
         $user = User::find($empresa->usuario_id);
         if (!$user) {
             return response()->json(['message' => 'Usuario asociado a la empresa no encontrado'], 404);
@@ -102,11 +101,11 @@ class EmpresaControllerApi extends Controller
 
         $validatedData = $request->validate([
             'cif'            => ['nullable', 'regex:/^[A-HJNP-SUVW][0-9]{7}[0-9A-J]$/'],
-            'nombre'         => ['nullable', 'max:255', Rule::unique('empresas')],  // Eliminar el ignore($id)
+            'nombre'         => ['nullable', 'max:255', Rule::unique('empresas')],
             'direccion'      => 'nullable|max:255',
             'cuentaBancaria' => ['nullable', 'regex:/^ES\d{2}\s?\d{4}\s?\d{4}\s?\d{2}\s?\d{10}$/'],
             'telefono'       => ['nullable', 'regex:/^(\+34|0034)?[679]\d{8}$/'],
-            'email'          => ['nullable', 'string', 'email', Rule::unique('empresas', 'email')],  // Eliminar el ignore($id)
+            'email'          => ['nullable', 'string', 'email', Rule::unique('empresas', 'email')],
             'password'       => 'nullable|string|min:8',
         ]);
 
@@ -124,7 +123,7 @@ class EmpresaControllerApi extends Controller
         }
         if ($request->filled('email') && $user->email !== $request->email) {
             $user->email = $request->email;
-            $empresa->email = $request->email; // Asegurar coherencia en empresa
+            $empresa->email = $request->email;
             $updated = true;
         }
         if ($request->filled('password')) {
@@ -145,8 +144,7 @@ class EmpresaControllerApi extends Controller
 
 
 
-    public function destroy($id)
-    {
+    public function destroy($id){
         $empresa = Empresa::find($id);
         if($empresa == null){
             return response()->json(['message' => 'Empresa no encontrada'], status: 404);

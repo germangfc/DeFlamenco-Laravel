@@ -5,25 +5,28 @@ use App\Http\Controllers\Api\EmpresaApiController;
 use App\Http\Controllers\Api\EventosApiController;
 use App\Http\Controllers\Api\ImagenController;
 use App\Http\Controllers\Api\TicketController;
+use App\Http\Controllers\Api\UserApiController;
 use App\Http\Controllers\EmpresaControllerApi;
 use App\Http\Controllers\MailController;
 use Illuminate\Http\Request;
+use \App\Http\Controllers\Api\TicketApiController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::apiResource('/ticket', TicketController::class);
-Route::apiResource('clientes', ClienteController::class);
-Route::get('clientes/dni/{dni}', [ClienteController::class, 'searchByDni']);
-Route::post('/clientes/email', [ClienteController::class, 'searchByEmail']);
-Route::post('clientes/upload-dni/{clienteId}', [ClienteController::class, 'uploadDni']);
-Route::apiResource('usuarios',\App\Http\Controllers\Api\UserController::class);
+Route::apiResource('/ticket', TicketApiController::class);
+Route::apiResource('clientes', ClienteApiController::class);
+Route::get('clientes/dni/{dni}', [ClienteApiController::class, 'searchByDni']);
+Route::post('/clientes/email', [ClienteApiController::class, 'searchByEmail']);
+Route::post('clientes/upload-dni/{clienteId}', [ClienteApiController::class, 'uploadDni']);
+Route::apiResource('usuarios',UserApiController::class);
 
 Route::get('eventos/nombre/{nombre}', [EventosApiController::class, 'getByNombre']);
 
-Route::get('empresas',[EmpresaApiController::class, 'getAll']);
+
+Route::apiResource('empresas', EmpresaControllerApi::class);
 Route::get('empresas/{id}', [EmpresaApiController::class, 'getById']);
 Route::get('empresas/nombre/{nombre}', [EmpresaApiController::class, 'getByNombre']);
 Route::get('empresas/cif/{cif}', [EmpresaApiController::class,'getByCif']);
