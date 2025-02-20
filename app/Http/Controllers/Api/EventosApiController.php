@@ -25,6 +25,7 @@ class EventosApiController extends Controller
                 'direccion' => 'required|string|max:255',
                 'ciudad' => 'required|string|max:255',
                 'precio' => 'required|numeric',
+                'foto' =>'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
             ]);
 
             $eventos = Evento::create($validatedData);
@@ -83,6 +84,7 @@ class EventosApiController extends Controller
                 'direccion' => 'required|string|max:255',
                 'ciudad' => 'required|string|max:255',
                 'precio' => 'required|numeric',
+                'foto' =>'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
             ]);
 
             $eventos = Evento::find($id);

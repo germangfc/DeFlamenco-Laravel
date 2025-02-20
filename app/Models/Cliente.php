@@ -13,6 +13,7 @@ class Cliente extends Model
         'user_id',
         'dni',
         'foto_dni',
+        'avatar',
         'lista_entradas',
         'is_deleted',
     ];
