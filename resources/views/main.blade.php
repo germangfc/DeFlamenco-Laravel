@@ -30,5 +30,6 @@
 {{-- Esto es el footer --}}
 @include('footer')
 
+
 </body>
 </html>

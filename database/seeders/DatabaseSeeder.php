@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Empresa;
+use App\Models\Evento;
 use App\Models\Ticket;
 use App\Models\Cliente;
 use App\Models\User;
@@ -27,9 +28,10 @@ class DatabaseSeeder extends Seeder
         Venta::where('lineas_venta', 'size', 0)->delete();
 
         $this->call([
-            UserSeeder::class
+            UserSeeder::class,
         ]);
         Cliente::factory()->count(25)->create();
         Empresa::factory()->count(25)->create();
+        Evento::factory()->count(50)->create();
     }
 }

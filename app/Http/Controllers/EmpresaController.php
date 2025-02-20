@@ -18,13 +18,23 @@ class EmpresaController extends Controller
 
     public function show($id)
     {
+        $cacheKey = "empresa_{$id}";
+
+        if (Cache::has($cacheKey)) {
+            return view('empresas.show', ['empresa' => Empresa::find($id)]);
+        }
+
         $empresa = Empresa::find($id);
 
         if (!$empresa) {
             return redirect()->route('empresas.index')->with('error', 'Empresa no encontrada');
         }
 
-        return view('empresas.show')->with('empresa', $empresa);
+        $view = view('empresas.show', compact('empresa'));
+
+        Cache::put($cacheKey, $view->render(), 60);
+
+        return $view; // Devuelve la vista real, no solo el HTML
     }
 
     public function showByNombre($nombre)
@@ -60,12 +70,12 @@ class EmpresaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'cif'=> ['required', 'regex:/^[A-HJNP-SUVW][0-9]{7}[0-9A-J]$/'],
-            'nombre'=> 'required|max:255',
-            'direccion'=> 'required|max:255',
+            'cif' => ['required', 'regex:/^[A-HJNP-SUVW][0-9]{7}[0-9A-J]$/'],
+            'nombre' => 'required|max:255',
+            'direccion' => 'required|max:255',
             'cuentaBancaria' => ['required', 'regex:/^ES\d{2}\s?\d{4}\s?\d{4}\s?\d{2}\s?\d{10}$/'],
-            'telefono'=> ['required','regex:/^(\+34|0034)?[679]\d{8}$/'],
-            'email'=> 'required|email|max:255',
+            'telefono' => ['required', 'regex:/^(\+34|0034)?[679]\d{8}$/'],
+            'email' => 'required|email|max:255',
             'imagen' => 'nullable|image|max:2048' // Validación para la imagen
         ]);
 
@@ -78,27 +88,14 @@ class EmpresaController extends Controller
 
             $empresa->usuario_id = auth()->id();
 
-    public function show($id)
-    {
-        $cacheKey = "empresa_{$id}";
+            $empresa->save(); // Guarda la empresa en la base de datos
 
-        $html = Cache::get($cacheKey);
+            return redirect()->route('empresas.index')->with('status', 'Empresa creada correctamente');
 
-        if (!$html) {
-            $empresa = Empresa::find($id);
-
-            if (!$empresa) {
-                return redirect()->route('empresas.index')->with('error', 'Empresa no encontrada');
-            }
-
-            $html = view('empresas.show', compact('empresa'))->render();
-
-            Cache::put($cacheKey, $html, 60);
+        } catch (\Exception $e) {
+            return redirect()->route('empresas.create')->with('error', 'Error al crear la empresa: ' . $e->getMessage());
         }
-
-        return response($html);
     }
-
 
     public function edit($id)
     {
@@ -122,12 +119,12 @@ class EmpresaController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'cif'=> 'required|regex:/^[A-HJNP-SUVW][0-9]{7}[0-9A-J]$/',
+            'cif' => ['required', 'regex:/^[A-HJNP-SUVW][0-9]{7}[0-9A-J]$/'],
             'nombre'=> 'required|max:255',
             'direccion'=> 'required|max:255',
-            'cuentaBancaria'=>'required|regex:/^ES\d{2}\s?\d{4}\s?\d{4}\s?\d{2}\s?\d{10}$/',
-            'telefono'=> 'required|regex:/^(\+34|0034)?[679]\d{8}$/',
-            'correo'=> 'required|email|max:255'
+            'cuentaBancaria' => ['required', 'regex:/^ES\d{2}\s?\d{4}\s?\d{4}\s?\d{2}\s?\d{10}$/'],
+            'telefono' => ['required', 'regex:/^(\+34|0034)?[679]\d{8}$/'],
+            'email'=> 'required|email|max:255'
         ]);
 
         try {
