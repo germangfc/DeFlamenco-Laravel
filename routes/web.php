@@ -39,6 +39,17 @@ Route::prefix('empresa')->group(function () {
         ->where('cif', '[A-Za-z0-9]+') // Regla básica para CIF
         ->name('empresas.showByCif');
 });
+Route::get('/', [EventosController::class, 'getAll'])->name('eventos');
+Route::prefix('eventos')->group(function () {
+    Route::get('/', [EventosController::class, 'getAll'])->name('eventos');
+    Route::get('/create', [EventosController::class, 'create'])->name('eventos.create');
+    Route::post('/store', [EventosController::class, 'store'])->name('eventos.store');
+    Route::get('/{id}', [EventosController::class, 'show'])->name('eventos.show');
+    Route::get('/{id}/edit', [EventosController::class, 'edit'])->name('eventos.edit');
+    Route::put('/{id}', [EventosController::class, 'update'])->name('eventos.update');
+    Route::delete('/{id}', [EventosController::class, 'destroy'])->name('eventos.destroy');
+    Route::get('/search', [EventosController::class, 'search'])->name('eventos.search');
+});
 
 Route::get('/', [EventosController::class, 'getAll'])->name('eventos');
 Route::prefix('eventos')->group(function () {
@@ -70,4 +81,5 @@ Route::middleware('auth')->group(function () {
 });
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 require __DIR__.'/auth.php';
+
 
