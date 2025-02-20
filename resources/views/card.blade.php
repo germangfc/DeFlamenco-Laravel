@@ -13,24 +13,27 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             @foreach($eventos as $evento)
-                <div class="bg-gray-900 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-                    <a href="{{ route('eventos.show', $evento->id) }}" class="block w-full">
+                <div class="rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                    <a href="{{ route('eventos.show', $evento->id) }}">
                         <figure class="relative overflow-hidden rounded-lg">
-                            <img class="object-cover h-64 w-full transition-transform duration-300 hover:scale-110 rounded-lg" src='https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp' alt="Evento {{ $evento->id }}" />
+                            <img class="object-cover h-64 w-full transition-transform duration-300 hover:scale-110 rounded-lg"
+                                 src='{{ asset("storage/images/" . $evento->foto) }}'
+                                 alt="Evento {{ $evento->id }}" />
                         </figure>
-                        <div class="p-4 text-white text-center font-serif">
-                            <h3 class="text-lg font-semibold">{{ $evento->nombre }}</h3>
-                            <p class="text-sm flex items-center justify-center mt-1">
-                                <i class="fas fa-calendar-alt mr-1"></i> {{ $evento->fecha }}
-                            </p>
-                            <p class="text-sm flex items-center justify-center mt-1">
-                                <i class="fas fa-tag mr-1"></i> {{ $evento->precio }}€
-                            </p>
-                        </div>
                     </a>
+                    <div class="p-4 text-white text-center font-serif">
+                        <h3 class="text-lg font-semibold">{{ $evento->nombre }}</h3>
+                        <p class="text-sm flex items-center justify-center mt-1">
+                            <i class="fas fa-calendar-alt mr-1"></i> {{ $evento->fecha }}
+                        </p>
+                        <p class="text-sm flex items-center justify-center mt-1">
+                            <i class="fas fa-tag mr-1"></i> {{ $evento->precio }}€
+                        </p>
+                    </div>
                 </div>
             @endforeach
         </div>
+
 
         <div class="flex justify-center mt-8 space-x-2">
             @if (!$eventos->onFirstPage())
