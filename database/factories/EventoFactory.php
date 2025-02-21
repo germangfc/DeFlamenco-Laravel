@@ -24,7 +24,7 @@ class EventoFactory extends Factory
             'direccion' => $this->faker->streetAddress(),
             'ciudad' => $this->faker->city(),
             'precio' => $this->faker->randomFloat(2, 5, 500),
-            'foto' => "flamencoDefault.jpg",
+            'foto' => "https://granadateguia.com/wp-content/uploads/2023/02/baile-flamenco-870x480.jpg",
         ];
     }
 }
