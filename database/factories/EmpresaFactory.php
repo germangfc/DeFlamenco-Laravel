@@ -27,7 +27,7 @@ class EmpresaFactory extends Factory
             'telefono' => $this->faker->phoneNumber,
             'email' => $this->faker->unique()->safeEmail,
             'cuentaBancaria' => $this->faker->iban('ES'),
-            'usuario_id' => User::factory(),
+            'usuario_id' => User::factory()->create(['tipo' => 'empresa'])->id,
             'lista_eventos' => json_encode($this->faker->words(3)),
             'isDeleted' => false,
         ];
