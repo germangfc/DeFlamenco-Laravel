@@ -53,4 +53,18 @@ class ImagenController extends Controller
 
         return response()->json(['message' => 'Archivo no encontrado'], 404);
     }
+
+    public function showAvatar($fileName)
+    {
+        $filePath = "avatars/" . $fileName;
+
+        if (Storage::disk('public')->exists($filePath)) {
+            $fileContent = Storage::disk('public')->get($filePath);
+            $mimeType = Storage::disk('public')->mimeType($filePath);
+
+            return response($fileContent, 200)->header('Content-Type', $mimeType);
+        }
+
+        return response()->json(['message' => 'Archivo no encontrado'], 404);
+    }
 }

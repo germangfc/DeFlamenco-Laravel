@@ -1,7 +1,7 @@
 <header class="shadow-2xl">
     <div class="navbar bg-base-100">
         <div class="flex-1">
-            <a href="/" class="btn btn-ghost text-xl">Tablao Pass</a>
+            <a href="/" class="btn btn-ghost text-2xl" style="font-family: 'Dancing Script', cursive;">Tablao Pass</a>
         </div>
         <div class="flex-none">
             {{--menu--}}
@@ -30,8 +30,8 @@
                             <ul
                                 tabindex="0"
                                 class="menu menu-sm dropdown-content mt-3 z-[1] w-52 rounded-box bg-base-100 p-2 shadow">
-                                <li><a>Eventos</a></li>
-                                <li><a>Empresas</a></li>
+                                <li><a class="{{ Request::is('/') || Request::is('/eventos') ? 'bg-primary' : '' }}" href=" {{ route("eventos") }}">Eventos</a></li>
+                                <li><a class="{{ Request::is('/empresa') ? 'bg-primary' : '' }}" href=" {{ route("empresas.index") }}" >Empresas</a></li>
                                 @guest
                                     <li><a id="loginhamburger" href="{{ route('login') }}">Iniciar Sesión</a></li>
                                     <li><a id="registerhamburger" href="{{ route('register') }}">Registrarse</a></li>
@@ -43,8 +43,8 @@
                     <!-- Menú escritorio (se muestra en pantallas grandes) -->
                     <div class="navbar-center hidden lg:flex">
                         <ul class="menu menu-horizontal px-1">
-                            <li><a class="{{ Request::is('*') ? 'bg-primary' : '' }}">Eventos</a></li>
-                            <li><a>Empresas</a></li>
+                            <li><a class="{{ Request::is('/') || Request::is('/eventos') ? 'bg-primary' : '' }}" href=" {{ route("eventos") }}">Eventos</a></li>
+                            <li><a class="{{ Request::is('/empresa') ? 'bg-primary' : '' }}" href=" {{ route("empresas.index") }}" >Empresas</a></li>
 
                         </ul>
                     </div>
@@ -97,6 +97,7 @@
                 <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
                     <div class="w-10 rounded-full">
                         <img
+                            id="imagenPerfil"
                             alt="User avatar"
                             src="{{ Auth::user()->getProfilePhotoUrl() }}" />
                     </div>
@@ -105,12 +106,13 @@
                 <ul
                     tabindex="0"
                     class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                    <li><a href="{{ route('clientes.index') }}">Clientes</a>
                     <li><a href="{{ route('profile.edit') }}">Perfil</a></li>
-                    <li><a>Settings</a></li>
                     <li><form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" >Cerrar Sesión</button>
+                            <button id="cerrarSesioncliente" type="submit" >Cerrar Sesión</button>
                         </form>
+
                     </li>
                 </ul>
                 @endcan
@@ -122,7 +124,7 @@
                         <li><a>Settings</a></li>
                         <li><form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit" >Cerrar Sesión</button>
+                                <button id="cerrarSesioncliente" type="submit" >Cerrar Sesión</button>
                             </form>
                         </li>
                     </ul>
@@ -135,7 +137,7 @@
                         <li><a>Settings</a></li>
                         <li><form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit" >Cerrar Sesión</button>
+                                <button id="cerrarSesioncliente" type="submit" >Cerrar Sesión</button>
                             </form>
                         </li>
                     </ul>

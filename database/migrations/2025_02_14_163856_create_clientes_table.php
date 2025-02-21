@@ -14,6 +14,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('dni')->unique();
             $table->string('foto_dni')->nullable();
+            $table->string('avatar')->nullable();
             $table->json('lista_entradas')->nullable();
             $table->timestamps();
             $table->boolean('is_deleted')->default(false);
