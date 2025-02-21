@@ -21,7 +21,7 @@
             @foreach ($empresas as $empresa)
                 <tr>
                     <td>{{ $empresa->cif }}</td>
-                    <td>{{ $empresa->nombre }}</td>
+                    <td>{{ $empresa->name }}</td>
                     <td>{{ $empresa->email }}</td>
                     <td>{{ $empresa->telefono }}</td>
                     <td>
