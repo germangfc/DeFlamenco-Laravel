@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
-
+use App\Models\Ticket;
+use MongoDB\BSON\ObjectId;
 use App\Http\Controllers\Controller;
 use App\Models\Venta;
 use Exception;
@@ -37,29 +38,75 @@ class VentasApiController extends Controller
             Log::info('Guardada venta en caché');
         }
         else {
-            Log::info('Guardada recuperada de caché');
+            Log::info('Venta recuperada de caché');
         }
+
         return response()->json($venta, 200);
 
     }
     public function store(Request $request){
         try {
+            Log::info("Storing Venta. Validating...");
+            //Log::info($request->all());
+
+            // Convertir idTicket a ObjectId para que coincida con MongoDB
+            $lineasVenta = array_map(function ($linea) {
+                if (isset($linea['idTicket']) && is_string($linea['idTicket'])) {
+                    try {
+                        $linea['idTicket'] = new ObjectId($linea['idTicket']);
+                    } catch (Exception $e) {
+                        throw ValidationException::withMessages([
+                            'lineasVenta.*.idTicket' => ['Formato de idTicket inválido.']
+                        ]);
+                    }
+                }
+                return $linea;
+            }, $request->lineasVenta);
+
+            $request->merge(['lineasVenta' => $lineasVenta]);
+
+            // Validación estándar
             $request->validate([
-                'guid' => 'required|unique:ventas',
-                'lineasVenta' => 'array|min:1'
-            ]);
-            $request->lineasVenta->validate([
-                'idTicket' => "required|unique|exists:Ticket",
-                'precioVentaTicket'=> 'required|numeric'
+                'guid' => 'required|unique:mongodb.ventas',
+                'lineasVenta' => 'required|array|min:1',
+                'lineasVenta.*.idTicket' => 'required',
+                'lineasVenta.*.precioUnitario' => 'required|numeric|min:0.01'
             ]);
 
-            $venta = new Venta($request->all());
+
+            // Validar manualmente que idTicket sea único en la colección tickets
+            foreach ($lineasVenta as $linea) {
+                // Verificar si el idTicket ya existe en la colección tickets
+                $ticketExiste = Ticket::where('_id', $linea['idTicket'])->exists();
+                if (!$ticketExiste) {
+                    throw ValidationException::withMessages([
+                        'lineasVenta.*.idTicket' => ['El idTicket no existe en la colección tickets.']
+                    ]);
+                }
+
+                // Verificar si el idTicket ya está en otra venta
+                $ticketDuplicado = Venta::where('lineasVenta.idTicket', $linea['idTicket'])->exists();
+                if ($ticketDuplicado) {
+                    throw ValidationException::withMessages([
+                        'lineasVenta.*.idTicket' => ['El idTicket ya ha sido registrado en otra venta.']
+                    ]);
+                }
+            }
+            Log::info("Venta Validated");
+
+            // Crear y guardar la venta
+            $venta = new Venta;
+            $venta->guid = $request->guid;
+            $venta->lineasVenta = $lineasVenta;
             $venta->save();
+
+            Log::info("Venta Stored");
             return response()->json($venta, 201);
+            
         } catch (ValidationException $e) {
             return response()->json(['error' => $e->errors()], 422);
         } catch (Exception $e) {
-            return response()->json(['error' => 'Error al guardar la venta'], 400);
+            return response()->json(['error' => 'Error al guardar la venta: ' . $e], 400);
         }
 
     }
