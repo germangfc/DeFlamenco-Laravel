@@ -62,11 +62,22 @@ class EmpresaControllerApi extends Controller
     }
 
     public function getByCif($cif){
-        $empresa = Empresa::where('cif', $cif)->first();
-        if($empresa){
-            return response()->json($empresa, status: 200);
+        $cacheKey = "empresa_cif_{$cif}";
+
+        $empresa = Cache::get($cacheKey);
+
+        if (!$empresa) {
+            $empresa = Empresa::where('cif', $cif)->first();
+
+            if ($empresa) {
+                Cache::put($cacheKey, $empresa, 20);
+            }
+        }
+
+        if ($empresa) {
+            return response()->json($empresa, 200);
         } else {
-            return response()->json(['message' => 'Empresa no encontrada'], status: 404);
+            return response()->json(['message' => 'Empresa no encontrada'], 404);
         }
     }
 
@@ -159,6 +170,14 @@ class EmpresaControllerApi extends Controller
             $empresa->save();
         }
 
+        Cache::forget("empresa_{$empresa->id}");
+        Cache::forget("empresa_cif_{$empresa->cif}");
+        Cache::forget("user_{$user->id}");
+
+        Cache::put("empresa_{$empresa->id}", $empresa, 20);
+        Cache::put("empresa_cif_{$empresa->cif}", $empresa, 20);
+        Cache::put("user_{$user->id}", $user, 20);
+
         return response()->json([
             'message' => 'Empresa y usuario actualizados con éxito',
             'empresa' => $empresa,
@@ -167,20 +186,34 @@ class EmpresaControllerApi extends Controller
 
 
 
-    public function destroy($id){
-        $empresa = Empresa::find($id);
-        if($empresa == null){
-            return response()->json(['message' => 'Empresa no encontrada'], status: 404);
+    public function destroy($id)
+    {
+        $empresaCacheKey = "empresa_{$id}";
+        $empresa = Cache::get($empresaCacheKey);
+
+        if ($empresa === null) {
+            $empresa = Empresa::find($id);
+            if ($empresa === null) {
+                return response()->json(['message' => 'Empresa no encontrada'], 404);
+            }
         }
-        $user = User::find($empresa->usuario_id );
-        if($user == null){
-            return response()->json(['message' => 'Usuario asociado a la empresa no encontrado'], status: 404);
+
+        $userCacheKey = "user_{$empresa->usuario_id}";
+        $user = Cache::get($userCacheKey);
+        if ($user === null) {
+            $user = User::find($empresa->usuario_id);
+            if ($user === null) {
+                return response()->json(['message' => 'Usuario asociado a la empresa no encontrado'], 404);
+            }
         }
+
         $empresa->update(['isDeleted' => true]);
         $user->update(['isDeleted' => true]);
 
-        $empresa->save();
-        $user->save();
-        return response()->json(['message' => 'Empresa y usuario eliminados correctamente'], status: 204);
+        Cache::forget($empresaCacheKey);
+        Cache::forget($userCacheKey);
+
+        return response()->json(['message' => 'Empresa y usuario eliminados correctamente'], 204);
     }
+
 }

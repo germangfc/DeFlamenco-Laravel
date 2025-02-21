@@ -173,6 +173,66 @@ class EmpresaControllerApiTest extends TestCase
             ]);
     }
 
+    #[Test]
+    public function test_get_by_cif_en_cache(){
+        $empresa = Empresa::factory()->create();
+
+        Cache::shouldReceive('get')
+            ->once()
+            ->with("empresa_cif_{$empresa->cif}")
+            ->andReturn($empresa);
+
+        $response = $this->getJson("/api/empresas/cif/{$empresa->cif}");
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'id' => $empresa->id,
+                'nombre' => $empresa->nombre,
+            ]);
+    }
+
+    #[Test]
+    public function test_get_by_cif_no_en_cache(){
+        $empresa = Empresa::factory()->create();
+
+        Cache::shouldReceive('get')
+            ->once()
+            ->with("empresa_cif_{$empresa->cif}")
+            ->andReturnNull();
+
+
+        Cache::shouldReceive('put')
+            ->once()
+            ->with("empresa_cif_{$empresa->cif}", Mockery::on(function ($arg) use ($empresa) {
+                return $arg instanceof Empresa && $arg->cif === $empresa->cif;
+            }), 20);
+
+
+        $response = $this->getJson("/api/empresas/cif/{$empresa->cif}");
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'id' => $empresa->id,
+                'nombre' => $empresa->nombre,
+            ]);
+    }
+
+    public function test_get_by_cif_not_found()
+    {
+        Cache::shouldReceive('get')
+            ->once()
+            ->with('empresa_cif_lalala')
+            ->andReturn(null);
+
+        $response = $this->getJson("/api/empresas/cif/lalala");
+
+        $response->assertStatus(404)
+            ->assertJson([
+                'message' => 'Empresa no encontrada',
+            ]);
+    }
+
+
 
     #[Test]
     public function test_puede_crear_una_empresa()
@@ -299,14 +359,33 @@ class EmpresaControllerApiTest extends TestCase
     #[Test]
     public function test_puede_actualizar_una_empresa()
     {
-        $empresa = Empresa::factory()->create();
+        Cache::spy(); // Espiar la caché para verificar interacciones
+
+        // Crear usuario y empresa con valores fijos
+        $user = User::factory()->create();
+        $empresa = Empresa::factory()->create([
+            'usuario_id' => $user->id,
+            'cif' => 'B1234567J', // Asegurar un valor fijo para la caché
+        ]);
+
         $nuevaData = ['nombre' => 'Empresa Actualizada'];
 
         $response = $this->putJson("/api/empresas/{$empresa->id}", $nuevaData);
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('empresas', ['id' => $empresa->id, 'nombre' => 'Empresa Actualizada']);
+
+        // Verificar que las claves de la caché fueron eliminadas
+        Cache::shouldHaveReceived('forget')->with("empresa_{$empresa->id}")->once();
+        Cache::shouldHaveReceived('forget')->with("empresa_cif_{$empresa->cif}")->once();
+        Cache::shouldHaveReceived('forget')->with("user_{$user->id}")->once();
+
+        // Verificar que las nuevas claves fueron guardadas en la caché
+        Cache::shouldHaveReceived('put')->with("empresa_{$empresa->id}", \Mockery::type(Empresa::class), 20)->once();
+        Cache::shouldHaveReceived('put')->with("empresa_cif_{$empresa->cif}", \Mockery::type(Empresa::class), 20)->once();
+        Cache::shouldHaveReceived('put')->with("user_{$user->id}", \Mockery::type(User::class), 20)->once();
     }
+
 
     #[Test]
     public function test_no_puede_actualizar_una_empresa_not_found(){
@@ -407,20 +486,39 @@ class EmpresaControllerApiTest extends TestCase
     }
 
     #[Test]
-    public function test_no_puede_eliminar_una_empresa_not_found(){
+    public function test_no_puede_eliminar_una_empresa_not_found()
+    {
+        Cache::spy(); // Simula el comportamiento de la caché
+
         $response = $this->deleteJson('/api/empresas/999');
 
         $response->assertStatus(404);
+
+        // Asegurar que no se intentó eliminar caché de una empresa inexistente
+        Cache::shouldNotHaveReceived('forget');
     }
 
     #[Test]
     public function test_puede_eliminar_una_empresa()
     {
+        Cache::spy(); // Simula la caché
+
         $empresa = Empresa::factory()->create();
+
+        // Guardamos en caché antes de la prueba
+        Cache::put("empresa_{$empresa->id}", $empresa, 20);
+        Cache::put("user_{$empresa->usuario_id}",$empresa, 20);
 
         $response = $this->deleteJson("/api/empresas/{$empresa->id}");
 
         $response->assertStatus(204);
+
+        // Verificar que la empresa y el usuario están marcados como eliminados
         $this->assertDatabaseHas('empresas', ['id' => $empresa->id, 'isDeleted' => true]);
+        $this->assertDatabaseHas('users', ['id' => $empresa->usuario_id, 'isDeleted' => true]);
+
+        // Verificar que las claves de caché fueron eliminadas
+        Cache::shouldHaveReceived('forget')->with("empresa_{$empresa->id}");
+        Cache::shouldHaveReceived('forget')->with("user_{$empresa->usuario_id}");
     }
 }
