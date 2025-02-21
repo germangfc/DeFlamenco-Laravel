@@ -45,6 +45,20 @@
             </tbody>
         </table>
 
-        {{ $empresas->links() }}
+        <div class="flex justify-center mt-8 space-x-2">
+            @if (!$empresa->onFirstPage())
+                <a href="{{ $empresa->previousPageUrl() }}" class="btn btn-square">«</a>
+            @endif
+
+            @for ($i = max(1, $empresa->currentPage() - 1); $i <= min($empresa->lastPage(), $empresa->currentPage() + 1); $i++)
+                <a href="{{ $empresa->url($i) }}" class="btn btn-square {{ $i == $empresa->currentPage() ? 'btn-active' : '' }}">
+                    {{ $i }}
+                </a>
+            @endfor
+
+            @if ($empresa->hasMorePages())
+                <a href="{{ $empresa->nextPageUrl() }}" class="btn btn-square">»</a>
+            @endif
+        </div>
     </div>
 @endsection
