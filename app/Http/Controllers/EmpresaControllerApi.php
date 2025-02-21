@@ -47,7 +47,7 @@ class EmpresaControllerApi extends Controller
         $empresa = Cache::get($cacheKey);
 
         if (!$empresa) {
-            $empresa = Empresa::where('nombre', $nombre)->first();
+            $empresa = Empresa::where('name', $nombre)->first();
 
             if ($empresa) {
                 Cache::put($cacheKey, $empresa, 20);
@@ -86,7 +86,7 @@ class EmpresaControllerApi extends Controller
         try {
             $validatedData = $request->validate([
                 'cif'            => ['required', 'regex:/^[A-HJNP-SUVW][0-9]{7}[0-9A-J]$/'],
-                'nombre'         => ['required', 'max:255','unique:empresas,nombre'],
+                'name'         => ['required', 'max:255','unique:empresas,name'],
                 'direccion'      => 'required|max:255',
                 'cuentaBancaria' => ['required', 'regex:/^ES\d{2}\s?\d{4}\s?\d{4}\s?\d{2}\s?\d{10}$/'],
                 'telefono'       => ['required', 'regex:/^(\+34|0034)?[679]\d{8}$/'],
@@ -99,14 +99,14 @@ class EmpresaControllerApi extends Controller
 
         try {
             $user = new User();
-            $user->name     = $validatedData['nombre'];
+            $user->name     = $validatedData['name'];
             $user->email    = $validatedData['email'];
             $user->password = Hash::make($validatedData['password']);
             $user->tipo     = 'empresa';
             $user->save();
             $empresa = new Empresa();
             $empresa->cif           = $validatedData['cif'];
-            $empresa->nombre        = $validatedData['nombre'];
+            $empresa->name        = $validatedData['name'];
             $empresa->direccion     = $validatedData['direccion'];
             $empresa->cuentaBancaria = $validatedData['cuentaBancaria'];
             $empresa->telefono      = $validatedData['telefono'];
@@ -135,7 +135,7 @@ class EmpresaControllerApi extends Controller
 
         $validatedData = $request->validate([
             'cif'            => ['nullable', 'regex:/^[A-HJNP-SUVW][0-9]{7}[0-9A-J]$/'],
-            'nombre'         => ['nullable', 'max:255', Rule::unique('empresas')],
+            'name'         => ['nullable', 'max:255', Rule::unique('empresas')],
             'direccion'      => 'nullable|max:255',
             'cuentaBancaria' => ['nullable', 'regex:/^ES\d{2}\s?\d{4}\s?\d{4}\s?\d{2}\s?\d{10}$/'],
             'telefono'       => ['nullable', 'regex:/^(\+34|0034)?[679]\d{8}$/'],
@@ -150,9 +150,9 @@ class EmpresaControllerApi extends Controller
 
         // Verificar cambios en el usuario y actualizarlo si es necesario
         $updated = false;
-        if ($request->filled('nombre') && $user->name !== $request->nombre) {
-            $user->name = $request->nombre;
-            $empresa->nombre = $request->nombre; // Asegurar coherencia en empresa
+        if ($request->filled('name') && $user->name !== $request->nombre) {
+            $user->name = $request->name;
+            $empresa->name = $request->name; // Asegurar coherencia en empresa
             $updated = true;
         }
         if ($request->filled('email') && $user->email !== $request->email) {
