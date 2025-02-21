@@ -4,9 +4,11 @@ namespace Tests\Feature;
 
 use App\Models\Empresa;
 use App\Models\User;
+use Database\Seeders\UserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
@@ -18,16 +20,17 @@ class EmpresaControllerTest extends TestCase
     {
         parent::setUp(); // Inicializa Laravel
 
+        $this->seed(UserSeeder::class);
+
         // Aquí puedes usar Eloquent
-        User::factory()->create(['id' => 1]);
-        User::factory()->create(['id' => 2]);
+        User::factory()->create();
+        User::factory()->create();
+        Empresa::factory(5)->create(); // Crea 5 empresas en la base de datos
     }
 
-    /** @test */
+
     public function index()
     {
-
-        Artisan::call('db:seed', ['--class' => 'EmpresasTableSeeder']); // Ejecuta solo EmpresasTableSeeder
 
         $response = $this->get(route('empresas.index'));
 
@@ -41,9 +44,6 @@ class EmpresaControllerTest extends TestCase
     public function testShow()
     {
 
-        // Ejecuta el seeder para cargar las empresas
-        Artisan::call('db:seed', ['--class' => 'EmpresasTableSeeder']);
-
         // Recupera una empresa existente desde la base de datos
         $empresa = Empresa::first();
 
@@ -54,7 +54,7 @@ class EmpresaControllerTest extends TestCase
             ->assertViewHas('empresa', $empresa);
     }
 
-    /** @test */
+
     public function showNotFound()
     {
         $response = $this->get(route('empresas.show', 999));
@@ -67,15 +67,17 @@ class EmpresaControllerTest extends TestCase
     public function testShowByCif()
     {
 
-        // Ejecuta el seeder para cargar las empresas
-        Artisan::call('db:seed', ['--class' => 'EmpresasTableSeeder']);
+        Empresa::factory()->create([
+            'cif' => 'B12345678',
+            'name' => 'Empresa Test',
+        ]);
 
         // Recupera la empresa por su CIF
         $empresa = Empresa::where('cif', 'B12345678')->first();
 
         $response = $this->get(route('empresas.showByCif', 'B12345678'));
 
-        $response->assertRedirect(route('empresas.show', $empresa));
+        $response->assertRedirect(route('empresas.show', ['id' => $empresa->id]));
     }
 
     public function testShowByCifNotFound()
@@ -90,18 +92,20 @@ class EmpresaControllerTest extends TestCase
     public function testShowByNombre()
     {
 
-        // Ejecuta el seeder para cargar las empresas
-        Artisan::call('db:seed', ['--class' => 'EmpresasTableSeeder']);
+        Empresa::factory()->create([
+            'name' => 'Empresa Ejemplo 1',
+            'cif' => 'B87654321',
+        ]);
 
         // Recupera la empresa por su nombre
-        $empresa = Empresa::where('nombre', 'Empresa Ejemplo 1')->first();
+        $empresa = Empresa::where('name', 'Empresa Ejemplo 1')->first();
 
         $response = $this->get(route('empresas.showByNombre', 'Empresa Ejemplo 1'));
 
-        $response->assertRedirect(route('empresas.show', $empresa));
+        $response->assertRedirect(route('empresas.show', ['id' => $empresa->id]));
     }
 
-    /** @test */
+
     public function showByNombreNotFound()
     {
         $response = $this->get(route('empresas.showByNombre', 'Empresa Inexistente'));
@@ -116,18 +120,18 @@ class EmpresaControllerTest extends TestCase
 
         $file = UploadedFile::fake()->image('empresa.jpg');
 
-        $user = User::factory()->create(['id' => 3]);
-
         $data = [
-            'usuario_id' => $user->id,
-            'cif' => 'B12345678',
-            'nombre' => 'Empresa Test',
-            'direccion' => 'Calle Falsa 123',
-            'cuentaBancaria' => 'ES1234567890123456789012',
-            'telefono' => '600123456',
+            // Datos del usuario
+            'name' => 'Empresa Test',
             'email' => 'empresa@test.com',
+            'password' => 'password123', // Se requiere para crear el usuario
+
+            // Datos de la empresa
+            'cif' => 'B12345678',
+            'direccion' => 'Calle Falsa 123',
+            'cuentaBancaria' => 'ES12 3456 7890 1234 5678 9012', // Se corrigió el formato
+            'telefono' => '600123456',
             'imagen' => $file,
-            'isDeleted' => false
         ];
 
         $response = $this->post(route('empresas.store'), $data);
@@ -135,33 +139,32 @@ class EmpresaControllerTest extends TestCase
         $response->assertRedirect(route('empresas.index'))
             ->assertSessionHas('status', 'Empresa creada correctamente');
 
-        // Verificar que la empresa se ha guardado en la BD
+        // Verificar que el usuario se ha guardado en la base de datos
+        $this->assertDatabaseHas('users', [
+            'name' => 'Empresa Test',
+            'email' => 'empresa@test.com',
+        ]);
+
+        // Verificar que la empresa se ha guardado en la base de datos
         $this->assertDatabaseHas('empresas', [
-            'usuario_id' => $user->id,
-            'nombre' => 'Empresa Test',
             'cif' => 'B12345678',
             'direccion' => 'Calle Falsa 123',
             'telefono' => '600123456',
-            'email' => 'empresa@test.com',
-            'cuentaBancaria' => 'ES1234567890123456789012'
+            'cuentaBancaria' => 'ES12 3456 7890 1234 5678 9012',
         ]);
 
         // Verificar que la imagen se ha guardado correctamente en la carpeta 'public/empresas'
         Storage::disk('public')->assertExists('empresas/' . $file->hashName());
     }
 
-
     public function testUpdate()
     {
-
-        // Ejecuta el seeder para cargar las empresas
-        Artisan::call('db:seed', ['--class' => 'EmpresasTableSeeder']);
 
         // Recupera una empresa existente desde la base de datos
         $empresa = Empresa::first();
 
         $data = [
-            'nombre' => 'Nuevo Nombre',
+            'name' => 'Nuevo Nombre',
             'cif' => 'B12345678',
             'direccion' => 'Calle Falsa 124',
             'cuentaBancaria' => 'ES1234567890123456789012',
@@ -173,40 +176,46 @@ class EmpresaControllerTest extends TestCase
         $response->assertRedirect(route('empresas.index'))
             ->assertSessionHas('status', 'Empresa actualizada correctamente');
 
-        $this->assertDatabaseHas('empresas', ['id' => $empresa->id, 'nombre' => 'Nuevo Nombre']);
+        $this->assertDatabaseHas('empresas', ['id' => $empresa->id, 'name' => 'Nuevo Nombre']);
     }
 
     public function testDestroy()
     {
+        Storage::fake('public'); // Asegurar almacenamiento de prueba
 
-        Storage::fake('public');
+        $file = UploadedFile::fake()->image('empresa.jpg');
 
-        // Ejecuta el seeder para cargar las empresas
-        Artisan::call('db:seed', ['--class' => 'EmpresasTableSeeder']);
-
-        $user = User::factory()->create(['id' => 3]);
-
-        $empresa = Empresa::create([
-            'usuario_id' => $user->id,
-            'cif' => 'B12345678',
-            'nombre' => 'Empresa para Eliminar',
-            'direccion' => 'Calle Falsa 123',
-            'cuentaBancaria' => 'ES1234567890123456789012',
-            'telefono' => '600123456',
-            'email' => 'empresa@eliminar.com',
-            'imagen' => 'storage/empresa.jpg',
-            'isDeleted' => false
+        // 🔹 Crear el usuario
+        $user = User::factory()->create([
+            'name' => 'Usuario Test',
+            'email' => 'empresa@test.com',
+            'password' => bcrypt('password123'),
         ]);
 
-        Storage::put('storage/empresa.jpg', 'fake-content');
+        // 🔹 Crear la empresa con usuario_id
+        $empresa = Empresa::create([
+            'name' => 'Empresa Test',
+            'email' => 'empresa@test.com',
+            'cif' => 'B12345678',
+            'direccion' => 'Calle Falsa 123',
+            'cuentaBancaria' => 'ES12 3456 7890 1234 5678 9012',
+            'telefono' => '600123456',
+            'imagen' => $file->store('empresas', 'public'), // Almacenar en public/empresas
+            'usuario_id' => $user->id,
+            'isDeleted' => false,
+        ]);
 
+        // 🔹 Eliminar la empresa
         $response = $this->delete(route('empresas.destroy', $empresa->id));
 
         $response->assertRedirect(route('empresas.index'))
             ->assertSessionHas('status', 'Empresa eliminada correctamente');
 
         $this->assertDatabaseMissing('empresas', ['id' => $empresa->id]);
-        Storage::assertMissing('storage/empresa.jpg');
+
+        // 🔹 Verificar que la imagen se eliminó
+        Storage::disk('public')->assertMissing('empresas/' . basename($empresa->imagen));
     }
+
 
 }

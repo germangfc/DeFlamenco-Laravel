@@ -1,5 +1,5 @@
 @extends("main")
 
 @section('content')
-    @include('form-create')
+    @include('empresas.form-create')
 @endsection

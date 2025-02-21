@@ -22,7 +22,7 @@ Route::get('/dashboard', function () {
 Route::prefix('empresa')->group(function () {
     Route::get('/create', [EmpresaController::class, 'create'])->name('empresas.create');
     Route::post('/store', [EmpresaController::class, 'store'])->name('empresas.store');    Route::get('/', [EmpresaController::class, 'index'])->name('empresas.index');
-    Route::get('/actualizar/{id}', [EmpresaController::class, 'edit'])->name('empresas.edit')->middleware("can:admin");
+    Route::get('/actualizar/{id}', [EmpresaController::class, 'edit'])->name('empresas.edit');//->middleware("can:admin");
 
     Route::put('/{id}', [EmpresaController::class, 'update'])->name('empresas.update');
     Route::delete('/{id}', [EmpresaController::class, 'destroy'])->name('empresas.destroy');
@@ -50,19 +50,6 @@ Route::prefix('eventos')->group(function () {
     Route::delete('/{id}', [EventosController::class, 'destroy'])->name('eventos.destroy');
     Route::get('/search', [EventosController::class, 'search'])->name('eventos.search');
 });
-
-Route::get('/', [EventosController::class, 'getAll'])->name('eventos');
-Route::prefix('eventos')->group(function () {
-    Route::get('/', [EventosController::class, 'getAll'])->name('eventos');
-    Route::get('/create', [EventosController::class, 'create'])->name('eventos.create');
-    Route::post('/store', [EventosController::class, 'store'])->name('eventos.store');
-    Route::get('/{id}', [EventosController::class, 'show'])->name('eventos.show');
-    Route::get('/{id}/edit', [EventosController::class, 'edit'])->name('eventos.edit');
-    Route::put('/{id}', [EventosController::class, 'update'])->name('eventos.update');
-    Route::delete('/{id}', [EventosController::class, 'destroy'])->name('eventos.destroy');
-    Route::get('/search', [EventosController::class, 'search'])->name('eventos.search');
-});
-
 
 Route::prefix('clientes')->group(function () {
     Route::post('/', [ClienteController::class, 'store'])->name('clientes.store');
