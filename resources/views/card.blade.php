@@ -1,3 +1,7 @@
+@php
+    use Illuminate\Support\Str;
+@endphp
+
 @extends('main')
 
 @section("content")
@@ -10,11 +14,11 @@
                     <a href="{{ route('eventos.show', $evento->id) }}">
                         <figure class="relative overflow-hidden rounded-lg">
                             <img class="object-cover h-64 w-full transition-transform duration-300 hover:scale-110 rounded-lg"
-                                 src='{{ asset("storage/images/" . $evento->foto) }}'
+                                 src='{{ Str::startsWith($evento->foto, 'http') ? $evento->foto : asset("storage/images/" . $evento->foto) }}'
                                  alt="Evento {{ $evento->id }}" />
                         </figure>
                     </a>
-                    <div class="p-4 text-white text-center font-serif">
+                    <div class="p-4  text-center font-serif">
                         <h3 class="text-lg font-semibold">{{ $evento->nombre }}</h3>
                         <p class="text-sm flex items-center justify-center mt-1">
                             <i class="fas fa-calendar-alt mr-1"></i> {{ $evento->fecha }}
