@@ -8,6 +8,8 @@
                 <table class="table table-striped">
                     <thead>
                     <tr>
+                        <th>Flyer</th>
+                        <th>Evento</th>
                         <th>Precio</th>
                         <th>Estado</th>
                     </tr>
@@ -15,6 +17,17 @@
                     <tbody>
                     @foreach ($tickets as $ticket)
                         <tr>
+                            @foreach($eventos as $evento)
+                                @if ($ticket->event_id == $evento->id)
+                                    <td>
+                                        <img class="object-cover h-16 w-24 rounded-lg"
+                                             src='{{ asset("storage/images/" . $evento->foto) }}'
+                                             alt="Evento {{ $evento->id }}" />
+                                    </td>
+                                    <td>{{ $evento->name }}</td>
+                                    <td>{{ $evento->fecha }}</td>
+                                @endif
+                            @endforeach
                             <td>{{ number_format($ticket->price, 2) }} €</td>
                             <td>
                                 @if ($ticket->isDeleted)

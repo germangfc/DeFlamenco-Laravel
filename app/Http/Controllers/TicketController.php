@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Evento;
 use App\Models\Ticket;
 
 class TicketController extends Controller
@@ -10,7 +11,8 @@ class TicketController extends Controller
     {
         $idClient = auth()->user()->id;
         $tickets = Ticket::where('idClient', $idClient)->paginate(10);
+        $eventos = Evento::all();
 
-        return view('tickets.index', compact('tickets'));
+        return view('tickets.index', compact('tickets','eventos'));
     }
 }
