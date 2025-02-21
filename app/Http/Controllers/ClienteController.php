@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ClienteBienvenido;
 use App\Models\Cliente;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
 
 class ClienteController extends Controller
@@ -50,12 +53,13 @@ class ClienteController extends Controller
             $validatedUserData = $request->validate([
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|unique:users,email',
-                'password' => 'required|string|min:8'
+                'password' => 'required'
             ]);
 
+
             $validatedClientData = $request->validate([
-                'dni' => 'nullable|string|regex:/^[0-9]{8}[A-Z]$/|unique:clientes,dni' ,
-                'foto_dni' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+                'dni' => 'required|string|unique:clientes,dni',
+                'foto_dni' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
             ]);
 
             $user = User::create([
@@ -64,17 +68,26 @@ class ClienteController extends Controller
                 'password' => Hash::make($validatedUserData['password']),
             ]);
 
-            $fotoDniPath = null;
+            $fotoDniPath = "";
             if ($request->hasFile('foto_dni')) {
-                $fotoDniPath = $request->file('foto_dni')->store('fotos_dni', 'public');
+                $image = $request->file('foto_dni');
+
+                $customName = 'dni_' . $validatedClientData['dni'] . '.' . $image->getClientOriginalExtension();
+
+                $image->storeAs('images', $customName, 'public');
+                $fotoDniPath=$customName;
             }
 
-            Cliente::create([
+            $cliente=Cliente::create([
                 'user_id' => $user->id,
                 'dni' => $validatedClientData['dni'],
                 'foto_dni' => $fotoDniPath
             ]);
 
+            Mail::to($user->email)->send(new ClienteBienvenido($cliente, $user));
+
+            $user->assignRole('cliente');
+            Auth::login($user);
             return redirect()->route('clientes.index')->with('success', 'Cliente creado con éxito');
         } catch (ValidationException $e) {
             return redirect()->back()->withErrors($e->errors())->withInput();

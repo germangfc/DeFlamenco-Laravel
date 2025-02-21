@@ -1,0 +1,55 @@
+{
+    "name": "testcontainers/testcontainers",
+    "description": "Testcontainers implementation in PHP",
+    "license": "MIT",
+    "keywords": [
+        "docker",
+        "testcontainers"
+    ],
+    "type": "library",
+    "authors": [
+        {
+            "name": "Soner Sayakci",
+            "email": "github@shyim.de"
+        }
+    ],
+    "require": {
+        "ext-curl": "*",
+        "php": ">= 8.1",
+        "beluga-php/docker-php": "^1.45"
+    },
+    "require-dev": {
+        "ext-pdo": "*",
+        "ext-pdo_mysql": "*",
+        "ext-pdo_pgsql": "*",
+        "phpunit/phpunit": "^9.5",
+        "brianium/paratest": "^6.11",
+        "friendsofphp/php-cs-fixer": "^3.12",
+        "phpstan/phpstan": "^1.8",
+        "phpstan/phpstan-phpunit": "^1.1",
+        "phpstan/extension-installer": "^1.2",
+        "predis/predis": "^3.0 || ^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Testcontainers\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Testcontainers\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "integration": "paratest tests/ --bootstrap vendor/autoload.php -f",
+        "cs": "php-cs-fixer fix --dry-run",
+        "cs:fix": "php-cs-fixer fix",
+        "phpstan": "phpstan analyse --memory-limit=256M"
+    },
+    "config": {
+        "allow-plugins": {
+            "phpstan/extension-installer": true,
+            "php-http/discovery": false
+        }
+    }
+}

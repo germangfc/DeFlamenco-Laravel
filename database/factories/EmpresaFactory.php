@@ -21,13 +21,13 @@ class EmpresaFactory extends Factory
     {
         return [
             'cif' => $this->generateValidCIF(),
-            'nombre' => $this->faker->company,
+            'name' => $this->faker->company,
             'direccion' => $this->faker->address,
             'imagen' => $this->faker->imageUrl(200, 200, 'business'),
             'telefono' => $this->faker->phoneNumber,
             'email' => $this->faker->unique()->safeEmail,
             'cuentaBancaria' => $this->faker->iban('ES'),
-            'usuario_id' => User::factory(),
+            'usuario_id' => User::factory()->create(['tipo' => 'empresa'])->id,
             'lista_eventos' => json_encode($this->faker->words(3)),
             'isDeleted' => false,
         ];
@@ -50,11 +50,6 @@ class EmpresaFactory extends Factory
         $primerCaracter = $letrasValidas[random_int(0, strlen($letrasValidas) - 1)];
         $numeros = str_pad(random_int(0, 9999999), 7, '0', STR_PAD_LEFT);
         $ultimoCaracter = random_int(0, 9);
-        $letrasFinales = 'ABCDEFGHIJ';
-
-        if (random_int(0, 1)) {
-            $ultimoCaracter = $letrasFinales[random_int(0, strlen($letrasFinales) - 1)];
-        }
 
         return $primerCaracter . $numeros . $ultimoCaracter;
     }

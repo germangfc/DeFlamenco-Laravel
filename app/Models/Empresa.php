@@ -12,12 +12,12 @@ class Empresa extends Model
     protected $table = "empresas";
     // Los campos requeridos
     protected $fillable = [
-      'cif', 'nombre', 'direccion','imagen' ,'telefono', 'email','cuentaBancaria', 'usuario_id', 'lista_eventos','isDeleted'
+      'cif', 'name', 'direccion','imagen' ,'telefono', 'email','cuentaBancaria', 'usuario_id', 'lista_eventos','isDeleted'
     ];
 
     public function scopeSearch($query, $name)
     {
-        return $query->where('nombre', 'LIKE', "%$name%");
+        return $query->where('name', 'LIKE', "%$name%");
     }
 
     protected $casts = [
@@ -26,7 +26,7 @@ class Empresa extends Model
 
     public function usuario()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'usuario_id');
     }
 
 
