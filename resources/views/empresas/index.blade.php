@@ -4,7 +4,6 @@
     <div class="container">
         <h1>Listado de Empresas</h1>
 
-        <!-- Botón para crear nueva empresa -->
         <a href="{{ route('empresas.create') }}" class="btn btn-success mb-3">Crear Nueva Empresa</a>
 
         <table class="table table-striped">
@@ -25,13 +24,10 @@
                     <td>{{ $empresa->email }}</td>
                     <td>{{ $empresa->telefono }}</td>
                     <td>
-                        <!-- Botón Ver -->
                         <a href="{{ route('empresas.show', $empresa->id) }}" class="btn btn-info btn-sm">Ver</a>
 
-                        <!-- Botón Modificar -->
                         <a href="{{ route('empresas.edit', $empresa->id) }}" class="btn btn-warning btn-sm">Modificar</a>
 
-                        <!-- Botón Eliminar (con formulario) -->
                         <form action="{{ route('empresas.destroy', $empresa->id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
@@ -45,6 +41,20 @@
             </tbody>
         </table>
 
-        {{ $empresas->links() }}
+        <div class="flex justify-center mt-8 space-x-2">
+            @if (!$empresas->onFirstPage())
+                <a href="{{ $empresas->previousPageUrl() }}" class="btn btn-square">«</a>
+            @endif
+
+            @for ($i = max(1, $empresas->currentPage() - 1); $i <= min($empresas->lastPage(), $empresas->currentPage() + 1); $i++)
+                <a href="{{ $empresas->url($i) }}" class="btn btn-square {{ $i == $empresas->currentPage() ? 'btn-active' : '' }}">
+                    {{ $i }}
+                </a>
+            @endfor
+
+            @if ($empresas->hasMorePages())
+                <a href="{{ $empresas->nextPageUrl() }}" class="btn btn-square">»</a>
+            @endif
+        </div>
     </div>
 @endsection
