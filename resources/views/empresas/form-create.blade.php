@@ -55,16 +55,7 @@
                         <input type="text" name="cuentaBancaria" id="cuentaBancaria" value="{{ old('cuentaBancaria') }}" class="form-control" required placeholder="Cuenta Bancaria">
                     </div>
                 </div>
-                <!-- Tipo -->
-                <div class="form-group">
-                    <label for="tipo" class="col-lg-3 control-label">Tipo:</label>
-                    <div class="col-lg-6">
-                        <select name="tipo" id="tipo" class="form-control">
-                            <option value="juego" {{ old('tipo', 'juego') == 'juego' ? 'selected' : '' }}>Juego</option>
-                            <option value="consola" {{ old('tipo', 'juego') == 'consola' ? 'selected' : '' }}>Consola</option>
-                        </select>
-                    </div>
-                </div>
+
                 <!-- Botones -->
                 <div class="form-group">
                     <label class="col-md-3 control-label"></label>

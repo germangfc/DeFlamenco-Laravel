@@ -3,31 +3,53 @@
 namespace App\Http\Controllers;
 
 use App\Models\Empresa;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Mockery\Exception;
 
 class EmpresaController extends Controller
 {
-    public function index(Request $request)
-    {
-        $empresas = Empresa::search($request->nombre)->orderBy('id', 'ASC')->paginate(5);
+   public function index(Request $request)
+   {
+       $empresas = Empresa::search($request->nombre)->orderBy('id', 'ASC')->paginate(5);
 
-        return view('empresas.index')->with('empresas', $empresas);
+       return view('empresas.index')->with('empresas', $empresas);
+   }
+
+    public function show($id)
+    {
+        $cacheKey = "empresa_{$id}";
+
+        if (Cache::has($cacheKey)) {
+            return view('empresas.show', ['empresa' => Empresa::find($id)]);
+        }
+
+        $empresa = Empresa::find($id);
+
+        if (!$empresa) {
+            return redirect()->route('empresas.index')->with('error', 'Empresa no encontrada');
+        }
+
+        $view = view('empresas.show', compact('empresa'));
+
+        Cache::put($cacheKey, $view->render(), 60);
+
+        return $view; // Devuelve la vista real, no solo el HTML
     }
 
     public function showByNombre($nombre)
     {
 
         $nombre = trim($nombre); // Elimina espacios al inicio y final del nombre
-        $empresa = Empresa::whereRaw('LOWER(nombre) = ?', [strtolower($nombre)])->first();
+        $empresa = Empresa::whereRaw('LOWER(name) = ?', [strtolower($nombre)])->first();
 
         if (!$empresa) {
             return redirect()->route('empresas.index')->with('error', 'Empresa no encontrada');
         }
 
-        return redirect()->route('empresas.show', $empresa);
+        return redirect()->route('empresas.show', ['id' => $empresa->id]);
     }
 
     public function showByCif($cif)
@@ -39,60 +61,62 @@ class EmpresaController extends Controller
             return redirect()->route('empresas.index')->with('error', 'Empresa no encontrada');
         }
 
-        return redirect()->route('empresas.show', $empresa);
+        return redirect()->route('empresas.show',['id' => $empresa->id]);
     }
 
-    public function create()
-    {
-        return view('empresas.create');
-    }
+   public function create()
+   {
+       return view ('empresas.create');
+   }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'cif' => ['required', 'regex:/^[A-HJNP-SUVW][0-9]{7}[0-9A-J]$/'],
-            'nombre' => 'required|max:255',
-            'direccion' => 'required|max:255',
-            'cuentaBancaria' => ['required', 'regex:/^ES\d{2}\s?\d{4}\s?\d{4}\s?\d{2}\s?\d{10}$/'],
-            'telefono' => ['required', 'regex:/^(\+34|0034)?[679]\d{8}$/'],
-            'email' => 'required|email|max:255',
-            'imagen' => 'nullable|image|max:2048' // Validación para la imagen
-        ]);
-
         try {
-            $empresa = new Empresa($request->except('imagen'));
+            // 🔹 Validar los datos del usuario
+            $validatedUserData = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|unique:users,email',
+                'password' => 'required|string|min:8',
+            ]);
 
+            // 🔹 Validar los datos de la empresa
+            $validatedEmpresaData = $request->validate([
+                'name' => 'required|string|max:255',
+                'cif' => ['required', 'regex:/^[A-HJNP-SUVW][0-9]{7}[0-9]$/'],
+                'direccion' => 'required|max:255',
+                'email' => 'required|string|email|unique:users,email',
+                'cuentaBancaria' => ['required', 'regex:/^ES\d{2}\s?\d{4}\s?\d{4}\s?\d{2}/'],
+                'telefono' => ['required', 'regex:/^(\+34|0034)?[679]\d{8}$/'],
+                'imagen' => 'nullable|image|max:2048'
+            ]);
+
+            // 🔹 Crear el usuario en la BD
+            $user = User::create([
+                'name' => $validatedUserData['name'],
+                'email' => $validatedUserData['email'],
+                'password' => Hash::make($validatedUserData['password']),
+            ]);
+
+            // 🔹 Asignar rol al usuario
+            $user->assignRole('empresa');
+
+            // 🔹 Crear la empresa y asignarle el usuario recién creado
+            $empresa = new Empresa($validatedEmpresaData);
+            $empresa->usuario_id = $user->id;
+            $empresa->isDeleted = false;
+
+            // 🔹 Guardar la imagen si está presente
             if ($request->hasFile('imagen')) {
                 $empresa->imagen = $request->file('imagen')->store('empresas', 'public');
             }
 
-            $empresa->usuario_id = auth()->id();
+            // 🔹 Guardar la empresa en la BD
+            $empresa->save();
 
-        } catch (Exception $e) {
-            return redirect()->route('empresas.create')->with('error', 'Error al crear la empresa');
-
+            return redirect()->route('empresas.index')->with('status', 'Empresa creada correctamente');
+        } catch (\Exception $e) {
+            return redirect()->route('empresas.create')->with('error', 'Error al crear la empresa: ' . $e->getMessage());
         }
-    }
-
-    public function show($id)
-    {
-        $cacheKey = "empresa_{$id}";
-
-        $html = Cache::get($cacheKey);
-
-        if (!$html) {
-            $empresa = Empresa::find($id);
-
-            if (!$empresa) {
-                return redirect()->route('empresas.index')->with('error', 'Empresa no encontrada');
-            }
-
-            $html = view('empresas.show', compact('empresa'))->render();
-
-            Cache::put($cacheKey, $html, 60);
-        }
-
-        return response($html);
     }
 
     public function edit($id)
@@ -114,16 +138,15 @@ class EmpresaController extends Controller
         return view('empresas.edit')->with('empresa', $empresa);
     }
 
-
     public function update(Request $request, $id)
     {
         $request->validate([
-            'cif' => 'required|regex:/^[A-HJNP-SUVW][0-9]{7}[0-9A-J]$/',
-            'nombre' => 'required|max:255',
-            'direccion' => 'required|max:255',
-            'cuentaBancaria' => 'required|regex:/^ES\d{2}\s?\d{4}\s?\d{4}\s?\d{2}\s?\d{10}$/',
-            'telefono' => 'required|regex:/^(\+34|0034)?[679]\d{8}$/',
-            'correo' => 'required|email|max:255'
+            'cif' => ['required', 'regex:/^[A-HJNP-SUVW][0-9]{7}[0-9A-J]$/'],
+            'name'=> 'required|max:255',
+            'direccion'=> 'required|max:255',
+            'cuentaBancaria' => ['required', 'regex:/^ES\d{2}\s?\d{4}\s?\d{4}\s?\d{2}\s?\d{10}$/'],
+            'telefono' => ['required', 'regex:/^(\+34|0034)?[679]\d{8}$/'],
+            'email'=> 'required|email|max:255'
         ]);
 
         try {
@@ -135,7 +158,7 @@ class EmpresaController extends Controller
 
             $empresa->fill($request->all());
 
-            if ($request->hasFile('imagen')) {
+            if($request->hasFile('imagen')) {
                 if (Storage::exists($empresa->imagen)) {
                     Storage::delete($empresa->imagen);
                 }
@@ -151,10 +174,9 @@ class EmpresaController extends Controller
 
             return redirect()->route('empresas.index')->with('status', 'Empresa actualizada correctamente');
         } catch (\Exception $e) {
-            return redirect()->route('empresas.edit', $id)->with('error', 'Error al actualizar la empresa: ' . $e->getMessage());
+            return redirect()->route('empresas.edit', $id)->with('error', 'Error al actualizar la empresa: '.$e->getMessage());
         }
     }
-
     public function destroy($id)
     {
         $cacheKey = "empresa_{$id}";
@@ -167,8 +189,9 @@ class EmpresaController extends Controller
         if ($empresa) {
             Cache::forget($cacheKey);
 
-            if (Storage::exists($empresa->imagen)) {
-                Storage::delete($empresa->imagen);
+            // 🔹 Verificar si la imagen existe y eliminarla
+            if ($empresa->imagen && Storage::disk('public')->exists($empresa->imagen)) {
+                Storage::disk('public')->delete($empresa->imagen);
             }
 
             $empresa->delete();
@@ -178,4 +201,7 @@ class EmpresaController extends Controller
 
         return redirect()->route('empresas.index')->with('error', 'No se ha encontrado la empresa');
     }
+
+
+
 }
