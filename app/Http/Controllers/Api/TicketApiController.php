@@ -55,6 +55,7 @@ class TicketApiController extends Controller
     {
         $cacheKey = "ticket_{$id}";
 
+
         $ticket = Cache::get($cacheKey);
 
         if (!$ticket) {
@@ -70,10 +71,8 @@ class TicketApiController extends Controller
         }
 
         $ticket->update(['isReturned' => true]);
-
-        Cache::put($cacheKey, $ticket, 20);
-
-        Cache::forget('tickets.all');
+        
+        Cache::forget($cacheKey);
 
         return response()->json(['message' => 'Ticket successfully returned', 'ticket' => $ticket], 200);
     }
