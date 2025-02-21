@@ -20,15 +20,12 @@ return new class extends Migration
             $table->string('telefono');
             $table->string('email');
             $table->string('cuentaBancaria');
-            $table->unsignedInteger('usuario_id');
-           // $table->foreign('usuario_id')->references('id')->on('usuarios')->onDelete('cascade');
+            $table->unsignedInteger('usuario_id')->unique(); // Asegura que un usuario solo tenga una empresa
+            $table->foreign('usuario_id')->references('id')->on('users');
             $table->json('lista_eventos')->default(json_encode([]));
             // $table->foreign('evento_id')->references('id')->on('eventos');
             $table->boolean('isDeleted')->default(false);
             $table->timestamps();
-            $table->foreign('usuario_id')
-                ->references('id')
-                ->on('users');
         });
     }
 
