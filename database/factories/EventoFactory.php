@@ -24,7 +24,7 @@ class EventoFactory extends Factory
             'direccion' => $this->faker->streetAddress(),
             'ciudad' => $this->faker->city(),
             'precio' => $this->faker->randomFloat(2, 5, 500),
-            'foto' => $this->faker->imageUrl(),
+            'foto' => "flamencoDefault.jpg",
         ];
     }
 }
