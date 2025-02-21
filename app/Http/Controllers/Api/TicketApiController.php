@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 
 class TicketApiController extends Controller
@@ -76,6 +77,5 @@ class TicketApiController extends Controller
 
         return response()->json(['message' => 'Ticket successfully returned', 'ticket' => $ticket], 200);
     }
-
 
 }
