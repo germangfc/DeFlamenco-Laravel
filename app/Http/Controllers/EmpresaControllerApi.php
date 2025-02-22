@@ -145,14 +145,12 @@ class EmpresaControllerApi extends Controller
 
 
 
-        // Actualizar la empresa (excepto email y nombre, que van en el usuario)
         $empresa->update($request->except(['email', 'nombre', 'password']));
 
-        // Verificar cambios en el usuario y actualizarlo si es necesario
         $updated = false;
         if ($request->filled('name') && $user->name !== $request->nombre) {
             $user->name = $request->name;
-            $empresa->name = $request->name; // Asegurar coherencia en empresa
+            $empresa->name = $request->name;
             $updated = true;
         }
         if ($request->filled('email') && $user->email !== $request->email) {
