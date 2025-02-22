@@ -22,7 +22,7 @@
     </div>
     <div class="form-group mb-3">
         <x-input-label for="foto_dni">Foto DNI</x-input-label>
-        <x-text-input type="file" name="foto_dni" id="foto_dni" class="form-control"/>
+        <x-file-input-basico name="foto_dni" id="foto_dni" class="form-control" accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml"/>
         <x-input-error class="mt-2" :messages="$errors->get('foto_dni')" />
     </div>
     <div class="flex items-center justify-end mt-4">
