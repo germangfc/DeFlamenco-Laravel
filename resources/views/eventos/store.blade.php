@@ -1,77 +1,87 @@
 @extends('main')
 
 @section("content")
-    <!-- Cargar la API de Google Maps con el autocompletado de direcciones -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAToojCJw_9KvxDrlkEbwR9YkQ-Ib4sVxA&libraries=places"></script>
 
-    <div class="flex justify-center items-center min-h-screen ring-gray-700">
-        <div class="bg-gray-800 bg-opacity-80 backdrop-blur-lg shadow-2xl ring-1 ring-gray-700 rounded-3xl max-w-3xl w-full p-8 transition-all duration-500 hover:shadow-4xl hover:scale-[1.02]">
-
-            <form action="{{ route('eventos.store') }}" method="POST" enctype="multipart/form-data" class="text-gray-300">
-                @csrf
-
-                <div class="relative group mb-6">
-                    <input type="file" name="foto" id="foto" accept="image/*" class="hidden" onchange="previewImage(event)" required>
-                    <label for="foto" class="cursor-pointer block">
-                        <img id="preview" class="object-cover h-60 w-full rounded-2xl transition-transform duration-500 group-hover:scale-105"
-                             src="https://via.placeholder.com/800x400" alt="Selecciona una imagen" />
-                    </label>
-                </div>
-
-                <div class="text-lg space-y-6">
-                    <div>
-                        <label class="text-white font-semibold">Nombre del Evento</label>
-                        <input type="text" name="nombre" class="w-full px-4 py-3 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-400" required>
+    <x-guest-layout>
+        <div>
+            <div>
+                <form action="{{ route('eventos.store') }}" method="POST" enctype="multipart/form-data" class="">
+                    @csrf
+                    <div class="flex items-center justify-center w-full">
+                        <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed flamenco-dark:border-base-100 rounded-lg cursor-pointer bg-white hover:bg-gray-300">
+                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                <img id="preview" class="object-cover h-60 w-full rounded-2xl hidden" src="https://via.placeholder.com/800x400" alt="Preview" />
+                                <svg id="upload-icon" class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                                </svg>
+                                <p id="upload-text" class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                            </div>
+                            <input id="dropzone-file" type="file" name="foto" accept="image/*" class="hidden" onchange="previewImage(event)" required />
+                        </label>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="text-lg space-y-6">
                         <div>
-                            <label class="text-white font-semibold">Fecha</label>
-                            <input type="date" name="fecha" class="w-full px-4 py-3 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-400" required>
+                            <x-input-label for="evento" :value="__('Evento')" />
+                            <x-text-input id="evento" placeholder="Introduce el nombre del evento." class="block mt-1 w-full" type="text" name="evento" :value="old('evento')" required autofocus autocomplete="evento" />
+                            <x-input-error :messages="$errors->get('evento')" class="mt-2" />
                         </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <x-input-label for="fecha" :value="__('Fecha')" />
+                                <x-text-input id="fecha" placeholder="dd/mm/aaaa." class="block mt-1 w-full" type="date" name="fecha" :value="old('fecha')" required autofocus autocomplete="fecha" />
+                                <x-input-error :messages="$errors->get('fecha')" class="mt-2" />
+                            </div>
+                            <div>
+                                <x-input-label for="hora" :value="__('Hora')" />
+                                <x-text-input id="hora" placeholder="" class="block mt-1 w-full" type="time" name="hora" :value="old('hora')" required autofocus autocomplete="hora" />
+                                <x-input-error :messages="$errors->get('hora')" class="mt-2" />
+                            </div>
+                        </div>
+
                         <div>
-                            <label class="text-white font-semibold">Hora</label>
-                            <input type="time" name="hora" class="w-full px-4 py-3 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-400" required>
+                            <x-input-label for="direccion" :value="__('Direccion')" />
+                            <x-text-input id="direccion"  placeholder="Introduce la dirección del evento." class="block mt-1 w-full" type="text" name="direccion" :value="old('direccion')" required autofocus autocomplete="direccion" />
+                            <x-input-error :messages="$errors->get('direccion')" class="mt-2" />
+                        </div>
+
+                        <div>
+                            <x-input-label for="ciudad" :value="__('Ciudad')" />
+                            <x-text-input id="ciudad" placeholder="Introduce la ciudad del evento." class="block mt-1 w-full" type="text" name="ciudad" :value="old('ciudad')" required autofocus autocomplete="ciudad" />
+                            <x-input-error :messages="$errors->get('ciudad')" class="mt-2" />
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <x-input-label for="precio" :value="__('Precio')" />
+                                <x-text-input id="precio" placeholder="Introduce el precio." class="block mt-1 w-full" type="number" name="precio" :value="old('precio')" required autofocus autocomplete="precio" />
+                                <x-input-error :messages="$errors->get('precio')" class="mt-2" />
+                            </div>
+                            <div>
+                                <x-input-label for="aforo" :value="__('Aforo')" />
+                                <x-text-input id="aforo" placeholder="Introduce el aforo." class="block mt-1 w-full" type="number" name="aforo" :value="old('aforo')" required autofocus autocomplete="aforo" />
+                                <x-input-error :messages="$errors->get('aforo')" class="mt-2" />
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Campo de Dirección con Autocompletado -->
-                    <div>
-                        <label class="text-white font-semibold">Dirección</label>
-                        <input type="text" id="autocomplete" name="direccion" class="w-full px-4 py-3 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-400" required>
+                    <div class="flex justify-end items-center mt-10">
+                        <a href="{{ route('eventos') }}" class="underline text-sm hover:text-gray-900 dark:hover:text-gray-100 rounded-md">
+                            Volver
+                        </a>
+                        <x-primary-button type="submit" class="ms-3">
+                            Crear Evento
+                        </x-primary-button>
                     </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="text-white font-semibold">Ciudad</label>
-                            <input type="text" name="ciudad" class="w-full px-4 py-3 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-400" required>
-                        </div>
-                        <div>
-                            <label class="text-white font-semibold">Precio</label>
-                            <input type="number" name="precio" step="0.01" class="w-full px-4 py-3 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-400" required>
-                        </div>
-                        <div>
-                            <label class="text-white font-semibold">Stock</label>
-                            <input type="number" name="stock" min="1" class="w-full px-4 py-3 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-400" required>
-                        </div>
-
-                    </div>
-                </div>
-
-                <div class="flex justify-between items-center mt-10">
-                    <button type="submit" class="px-6 py-3 rounded-full bg-teal-500 text-white text-lg font-semibold hover:bg-teal-600 transition-all duration-300 transform hover:scale-105 shadow-md flex items-center gap-2">
-                        Crear Evento
-                    </button>
-                    <a href="{{ route('eventos') }}" class="px-6 py-3 rounded-full bg-gray-600 text-white text-lg font-semibold hover:bg-gray-500 transition-all duration-300 transform hover:scale-105 shadow-md flex items-center gap-2">
-                        Volver
-                    </a>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
-    </div>
+    </x-guest-layout>
 
     <script>
-        // Función para inicializar el autocompletado de Google Places
         function initAutocomplete() {
             const autocomplete = new google.maps.places.Autocomplete(
                 document.getElementById("autocomplete"),
@@ -85,30 +95,35 @@
                     return;
                 }
 
-                // Puedes acceder a la dirección completa o datos específicos
                 const direccion = place.formatted_address || "";
                 const ciudad = place.address_components.find(c => c.types.includes("locality"))?.long_name || "";
 
-                // Aquí puedes poner la lógica para llenar los campos con los valores correspondientes
-                // Si quieres llenar automáticamente los campos de ciudad, puedes agregar algo como:
                 document.querySelector('[name="direccion"]').value = direccion;
                 document.querySelector('[name="ciudad"]').value = ciudad;
             });
         }
 
-        // Cargar el autocompletado al cargar la página
         google.maps.event.addDomListener(window, "load", initAutocomplete);
     </script>
 
     <script>
-        // Función para la vista previa de la imagen
         function previewImage(event) {
-            const reader = new FileReader();
-            reader.onload = function(){
-                const output = document.getElementById('preview');
-                output.src = reader.result;
+            const input = event.target;
+            const file = input.files[0];
+            const preview = document.getElementById('preview');
+            const uploadIcon = document.getElementById('upload-icon');
+            const uploadText = document.getElementById('upload-text');
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                    uploadIcon.classList.add('hidden');
+                    uploadText.classList.add('hidden');
+                };
+                reader.readAsDataURL(file);
             }
-            reader.readAsDataURL(event.target.files[0]);
         }
     </script>
 @endsection
