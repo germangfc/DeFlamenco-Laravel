@@ -67,15 +67,12 @@
         </div>
     </div>
 
-    <!-- Include Leaflet.js (OpenStreetMap) -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
     <script>
-        // Dirección del evento (puedes cambiarlo por cualquier dirección que tengas en tu base de datos)
-        var address = '{{ $evento->ciudad . ' ' . $evento->direccion }}'; // Puedes cambiar 'ciudad' por cualquier campo de la base de datos
+        var address = '{{ $evento->ciudad . ' ' . $evento->direccion }}';
 
-        // Obtener las coordenadas usando la API de Nominatim (OpenStreetMap)
         fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`)
             .then(response => response.json())
             .then(data => {
@@ -86,7 +83,7 @@
                     var map = L.map('map').setView([lat, lon], 13);
 
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright"></a>'
                     }).addTo(map);
 
                     var marker = L.marker([lat, lon]).addTo(map);
