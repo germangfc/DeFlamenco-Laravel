@@ -44,7 +44,7 @@
 
                         <div>
                             <x-input-label for="direccion" :value="__('Direccion')" />
-                            <x-text-input id="direccion"  placeholder="Introduce la dirección del evento." class="block mt-1 w-full" type="text" name="direccion" :value="old('direccion')" required autofocus autocomplete="direccion" />
+                            <input type="text" id="autocomplete" name="direccion" class="w-full px-4 py-3 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-400" required>
                             <x-input-error :messages="$errors->get('direccion')" class="mt-2" />
                         </div>
 
