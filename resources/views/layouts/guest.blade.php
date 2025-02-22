@@ -17,6 +17,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased">
+    @include('header')
     <div class="min-h-screen flex flex-col md:flex-row gap-4">
         <!-- Lado superior (móviles) o lateral (pantallas grandes): Imagen -->
         <div class="w-full md:w-1/2 h-64 md:h-auto flex items-center justify-center bg-cover bg-center relative"

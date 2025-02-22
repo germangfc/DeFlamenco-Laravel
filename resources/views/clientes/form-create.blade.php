@@ -22,8 +22,15 @@
     </div>
     <div class="form-group mb-3">
         <x-input-label for="foto_dni">Foto DNI</x-input-label>
-        <x-text-input type="file" name="foto_dni" id="foto_dni" class="form-control"/>
+        <x-file-input-basico name="foto_dni" id="foto_dni" class="form-control" accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml"/>
         <x-input-error class="mt-2" :messages="$errors->get('foto_dni')" />
     </div>
-    <button type="submit" id="submitCliente" class="btn btn-primary w-100">Crear Cliente</button>
+    <div class="flex items-center justify-end mt-4">
+        <a class="underline text-sm hover:text-gray-900 dark:hover:text-gray-100 rounded-md " href="{{ route('login') }}">
+            {{ __('¿Ya tienes Cuenta?') }}
+        </a>
+        <x-primary-button class="ml-4">
+            {{ __('Crear Cliente') }}
+        </x-primary-button>
+    </div>
 </form>
