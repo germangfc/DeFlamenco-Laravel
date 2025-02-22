@@ -52,7 +52,7 @@ class EmpresaControllerApiTest extends TestCase
         $response->assertStatus(200)
             ->assertJson([
                 'id' => $empresa->id,
-                'nombre' => $empresa->nombre,
+                'name' => $empresa->name,
             ]);
     }
     public function test_empresa_no_en_cache()
@@ -76,7 +76,7 @@ class EmpresaControllerApiTest extends TestCase
         $response->assertStatus(200)
             ->assertJson([
                 'id' => $empresa->id,
-                'nombre' => $empresa->nombre,
+                'name' => $empresa->name,
             ]);
     }
 
@@ -93,7 +93,7 @@ class EmpresaControllerApiTest extends TestCase
         $response->assertStatus(200)
             ->assertJson([
                 'id' => $empresa->id,
-                'nombre' => $empresa->nombre,
+                'name' => $empresa->name,
             ]);
     }
 
@@ -120,15 +120,15 @@ class EmpresaControllerApiTest extends TestCase
 
         Cache::shouldReceive('get')
             ->once()
-            ->with("empresa_nombre_{$empresa->nombre}")
+            ->with("empresa_nombre_{$empresa->name}")
             ->andReturn($empresa);
 
-        $response = $this->getJson("/api/empresas/nombre/{$empresa->nombre}");
+        $response = $this->getJson("/api/empresas/nombre/{$empresa->name}");
 
         $response->assertStatus(200)
             ->assertJson([
                 'id' => $empresa->id,
-                'nombre' => $empresa->nombre,
+                'name' => $empresa->name,
             ]);
     }
 
@@ -138,23 +138,23 @@ class EmpresaControllerApiTest extends TestCase
 
         Cache::shouldReceive('get')
             ->once()
-            ->with("empresa_nombre_{$empresa->nombre}")
+            ->with("empresa_nombre_{$empresa->name}")
             ->andReturnNull();
 
 
         Cache::shouldReceive('put')
             ->once()
-            ->with("empresa_nombre_{$empresa->nombre}", Mockery::on(function ($arg) use ($empresa) {
-                return $arg instanceof Empresa && $arg->nombre === $empresa->nombre;
+            ->with("empresa_nombre_{$empresa->name}", Mockery::on(function ($arg) use ($empresa) {
+                return $arg instanceof Empresa && $arg->name === $empresa->name;
             }), 20);
 
 
-        $response = $this->getJson("/api/empresas/nombre/{$empresa->nombre}");
+        $response = $this->getJson("/api/empresas/nombre/{$empresa->name}");
 
         $response->assertStatus(200)
             ->assertJson([
                 'id' => $empresa->id,
-                'nombre' => $empresa->nombre,
+                'name' => $empresa->name,
             ]);
     }
 
@@ -187,7 +187,7 @@ class EmpresaControllerApiTest extends TestCase
         $response->assertStatus(200)
             ->assertJson([
                 'id' => $empresa->id,
-                'nombre' => $empresa->nombre,
+                'name' => $empresa->name,
             ]);
     }
 
@@ -213,7 +213,7 @@ class EmpresaControllerApiTest extends TestCase
         $response->assertStatus(200)
             ->assertJson([
                 'id' => $empresa->id,
-                'nombre' => $empresa->nombre,
+                'name' => $empresa->name,
             ]);
     }
 
@@ -242,7 +242,7 @@ class EmpresaControllerApiTest extends TestCase
         $empresaData = Empresa::factory()->make()->toArray();
         $empresaData['email'] ='juanMA@example.com';
         $empresaData['password'] = 'locoDelPueblo';
-        $empresaData['nombre'] = 'Empresa Ejemplo S.L.';
+        $empresaData['name'] = 'Empresa Ejemplo S.L.';
         $empresaData['direccion'] = 'Calle Falsa 123, Madrid';
         $empresaData['cif'] = 'B1234567J';
         $empresaData['cuentaBancaria'] = 'ES12 34567890123456789012';
@@ -263,14 +263,14 @@ class EmpresaControllerApiTest extends TestCase
         $response = $this->postJson('/api/empresas', []);
 
         $response->assertStatus(422)
-            ->assertJsonValidationErrors(['cif', 'nombre', 'direccion', 'cuentaBancaria', 'telefono', 'email', 'password']);
+            ->assertJsonValidationErrors(['cif', 'name', 'direccion', 'cuentaBancaria', 'telefono', 'email', 'password']);
     }
 
     #[Test]
     public function test_no_puede_crear_una_empresa_cif_erroneo(){
         $response = $this->postJson('/api/empresas', [
             'cif' => 'B1234567890',
-            'nombre' => 'Empresa Test',
+            'name' => 'Empresa Test',
             'direccion' => 'Calle Falsa 123',
             'cuentaBancaria' => 'ES12 34567890123456789012',
             'telefono' => '669843935',
@@ -283,20 +283,20 @@ class EmpresaControllerApiTest extends TestCase
 
     #[Test]
     public function test_no_puede_crear_una_empresa_nombre_no_Unico(){
-        $empresa = Empresa::factory()->create(['nombre' => 'Empresa Test']);
-        $nuevaData = ['nombre' => 'Empresa Test'];
+        $empresa = Empresa::factory()->create(['name' => 'Empresa Test']);
+        $nuevaData = ['name' => 'Empresa Test'];
 
         $response = $this->postJson('/api/empresas', $nuevaData);
 
         $response->assertStatus(422)
-            ->assertJsonValidationErrors(['nombre']);
+            ->assertJsonValidationErrors(['name']);
     }
 
     #[Test]
     public function test_no_puede_crear_una_empresa_cuenta_incorrecta(){
         $response = $this->postJson('/api/empresas', [
             'cif' => 'B1234567J',
-            'nombre' => 'Empresa Test',
+            'name' => 'Empresa Test',
             'direccion' => 'Calle Falsa 123',
             'cuentaBancaria' => 'ES12345678901234567890',
             'telefono' => '669843935',
@@ -311,7 +311,7 @@ class EmpresaControllerApiTest extends TestCase
     public function test_no_puede_crear_una_empresa_telefono_incorrecto(){
         $response = $this->postJson('/api/empresas', [
             'cif' => 'B1234567J',
-            'nombre' => 'Empresa Test',
+            'name' => 'Empresa Test',
             'direccion' => 'Calle Falsa 123',
             'cuentaBancaria' => 'ES12 34567890123456789012',
             'telefono' => '+469876543',
@@ -326,7 +326,7 @@ class EmpresaControllerApiTest extends TestCase
     public function test_no_puede_crear_una_empresa_email_incorrecto(){
         $response = $this->postJson('/api/empresas', [
             'cif' => 'B1234567J',
-            'nombre' => 'Empresa Test',
+            'name' => 'Empresa Test',
             'direccion' => 'Calle Falsa 123',
             'cuentaBancaria' => 'ES12 34567890123456789012',
             'telefono' => '669843935',
@@ -343,7 +343,7 @@ class EmpresaControllerApiTest extends TestCase
 
         $response = $this->postJson('/api/empresas', [
             'cif' => 'B1234567J',
-            'nombre' => 'Empresa Test',
+            'name' => 'Empresa Test',
             'direccion' => 'Calle Falsa 123',
             'cuentaBancaria' => 'ES12 34567890123456789012',
             'telefono' => '669843935',
@@ -368,12 +368,12 @@ class EmpresaControllerApiTest extends TestCase
             'cif' => 'B1234567J', // Asegurar un valor fijo para la caché
         ]);
 
-        $nuevaData = ['nombre' => 'Empresa Actualizada'];
+        $nuevaData = ['name' => 'Empresa Actualizada'];
 
         $response = $this->putJson("/api/empresas/{$empresa->id}", $nuevaData);
 
         $response->assertStatus(200);
-        $this->assertDatabaseHas('empresas', ['id' => $empresa->id, 'nombre' => 'Empresa Actualizada']);
+        $this->assertDatabaseHas('empresas', ['id' => $empresa->id, 'name' => 'Empresa Actualizada']);
 
         // Verificar que las claves de la caché fueron eliminadas
         Cache::shouldHaveReceived('forget')->with("empresa_{$empresa->id}")->once();
@@ -389,17 +389,17 @@ class EmpresaControllerApiTest extends TestCase
 
     #[Test]
     public function test_no_puede_actualizar_una_empresa_not_found(){
-        $response = $this->putJson('/api/empresas/999', ['nombre' => 'Empresa Actualizada']);
+        $response = $this->putJson('/api/empresas/999', ['name' => 'Empresa Actualizada']);
 
         $response->assertStatus(404);
     }
 
     #[Test]
     public function test_no_puede_actualizar_una_empresa_con_nombre_no_unico(){
-        $empresa = Empresa::factory()->create(['nombre' => 'Empresa Test']);
+        $empresa = Empresa::factory()->create(['name' => 'Empresa Test']);
         $nuevaData = [
             'cif' => 'B1234567J',
-            'nombre' => 'Empresa Test',
+            'name' => 'Empresa Test',
             'direccion' => 'Calle Falsa 123',
             'cuentaBancaria' => 'ES12 34567890123456789012',
             'telefono' => '+34698765432',
@@ -410,7 +410,7 @@ class EmpresaControllerApiTest extends TestCase
         $response = $this->putJson("/api/empresas/{$empresa->id}", $nuevaData);
 
         $response->assertStatus(422)
-            ->assertJsonValidationErrors(['nombre']);
+            ->assertJsonValidationErrors(['name']);
     }
 
     #[Test]
@@ -419,7 +419,7 @@ class EmpresaControllerApiTest extends TestCase
         $empresa = Empresa::factory()->create();
         $nuevaData = [
             'cif' => 'B1234567J',
-            'nombre' => 'Empresa Test',
+            'name' => 'Empresa Test',
             'direccion' => 'Calle Falsa 123',
             'cuentaBancaria' => 'ES12345678901234567890',
             'telefono' => '+34698765432',
@@ -438,7 +438,7 @@ class EmpresaControllerApiTest extends TestCase
         $empresa = Empresa::factory()->create();
         $nuevaData = [
             'cif' => "ajajaja",
-            'nombre' => 'Empresa Test',
+            'name' => 'Empresa Test',
             'direccion' => 'Calle Falsa 123',
             'cuentaBancaria' => 'ES12 34567890123456789012',
             'telefono' => '+34698765432',
@@ -455,7 +455,7 @@ class EmpresaControllerApiTest extends TestCase
     public function test_no_puede_actualizar_telefono_invalido(){
         $empresa = Empresa::factory()->create();
         $nuevaData = ['cif' => 'B1234567J',
-            'nombre' => 'Empresa Test',
+            'name' => 'Empresa Test',
             'direccion' => 'Calle Falsa 123',
             'cuentaBancaria' => 'ES12 34567890123456789012',
             'telefono' => '+469876543',
@@ -472,7 +472,7 @@ class EmpresaControllerApiTest extends TestCase
     public function test_no_puede_actualizar_email_invalido(){
         $empresa = Empresa::factory()->create();
         $nuevaData = ['cif' => 'B1234567J',
-            'nombre' => 'Empresa Test',
+            'name' => 'Empresa Test',
             'direccion' => 'Calle Falsa 123',
             'cuentaBancaria' => 'ES12 34567890123456789012',
             'telefono' => '+34669843935',
