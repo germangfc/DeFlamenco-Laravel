@@ -18,10 +18,6 @@
     <body class="font-sans antialiased">
         <div class="min-h-screen">
             @include('header')
-
-            <!-- Page Heading -->
-
-
             <!-- Page Content -->
             <main>
                 {{ $slot }}
