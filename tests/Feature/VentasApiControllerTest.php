@@ -30,27 +30,21 @@ class VentasApiControllerTest extends TestCase
     {
         $response = $this->getJson('/api/ventas');
         $response->assertStatus(200)
-            ->assertJsonPath('data', fn($data) => count($data) === 1);
-            /*->assertJsonStructure([
-                'data' => [
-                    '*' => [
-                        'id',
-                        'cliente',
-                        'fecha',
-                        'total',
-                        'lineasVenta' => [
-                            '*' => [
-                                'id',
-                                'ticket',
-                                'descripcion',
-                                'precio',
-                                'cantidad',
-                            ],
-                        ],
+            ->assertJsonCount(1)
+            ->assertJsonStructure([
+                '*' => [ // El asterisco indica que cada elemento del array debe seguir esta estructura
+                    'guid',
+                    'lineasVenta' => [
+                        '*' => [ // Cada línea de venta debe seguir esta estructura
+                            'idTicket',
+                            'precioUnitario'
+                        ]
                     ],
-                ],
-            ]
-            );*/
+                    'updated_at',
+                    'created_at',
+                    'id'
+                ]
+            ]);
     }
     #[Test]
     public function testShowVentaFoundInCache()
