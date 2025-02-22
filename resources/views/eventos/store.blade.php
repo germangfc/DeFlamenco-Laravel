@@ -1,6 +1,9 @@
 @extends('main')
 
 @section("content")
+    <!-- Cargar la API de Google Maps con el autocompletado de direcciones -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAToojCJw_9KvxDrlkEbwR9YkQ-Ib4sVxA&libraries=places"></script>
+
     <div class="flex justify-center items-center min-h-screen ring-gray-700">
         <div class="bg-gray-800 bg-opacity-80 backdrop-blur-lg shadow-2xl ring-1 ring-gray-700 rounded-3xl max-w-3xl w-full p-8 transition-all duration-500 hover:shadow-4xl hover:scale-[1.02]">
 
@@ -32,9 +35,10 @@
                         </div>
                     </div>
 
+                    <!-- Campo de Dirección con Autocompletado -->
                     <div>
                         <label class="text-white font-semibold">Dirección</label>
-                        <input type="text" name="direccion" class="w-full px-4 py-3 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-400" required>
+                        <input type="text" id="autocomplete" name="direccion" class="w-full px-4 py-3 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-400" required>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
@@ -67,6 +71,37 @@
     </div>
 
     <script>
+        // Función para inicializar el autocompletado de Google Places
+        function initAutocomplete() {
+            const autocomplete = new google.maps.places.Autocomplete(
+                document.getElementById("autocomplete"),
+                { types: ["geocode"] }
+            );
+
+            autocomplete.addListener("place_changed", () => {
+                const place = autocomplete.getPlace();
+                if (!place.geometry) {
+                    alert("Dirección no válida");
+                    return;
+                }
+
+                // Puedes acceder a la dirección completa o datos específicos
+                const direccion = place.formatted_address || "";
+                const ciudad = place.address_components.find(c => c.types.includes("locality"))?.long_name || "";
+
+                // Aquí puedes poner la lógica para llenar los campos con los valores correspondientes
+                // Si quieres llenar automáticamente los campos de ciudad, puedes agregar algo como:
+                document.querySelector('[name="direccion"]').value = direccion;
+                document.querySelector('[name="ciudad"]').value = ciudad;
+            });
+        }
+
+        // Cargar el autocompletado al cargar la página
+        google.maps.event.addDomListener(window, "load", initAutocomplete);
+    </script>
+
+    <script>
+        // Función para la vista previa de la imagen
         function previewImage(event) {
             const reader = new FileReader();
             reader.onload = function(){
