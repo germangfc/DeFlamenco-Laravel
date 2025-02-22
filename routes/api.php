@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Api\ClienteApiController;
-use App\Http\Controllers\Api\EmpresaApiController;
 use App\Http\Controllers\Api\EventosApiController;
 use App\Http\Controllers\Api\ImagenController;
 use App\Http\Controllers\Api\TicketApiController;
@@ -36,6 +35,7 @@ Route::post('empresas',[EmpresaControllerApi::class, 'create']);
 Route::put('empresas/{id}', [EmpresaControllerApi::class, 'update']);
 Route::delete('empresas/{id}', [EmpresaControllerApi::class, 'destroy']);
 
+Route::apiResource('ventas', VentasApiController::class);
 
 Route::post('/upload-image', [ImagenController::class, 'uploadImage']);
 Route::delete('/delete-image/{filePath}', [ImagenController::class, 'deleteImage']);
