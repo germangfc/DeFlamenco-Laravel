@@ -10,7 +10,7 @@ use Stripe\Stripe;
 class StripeController extends Controller
 {
     public  function index(){
-        return view('main');
+        return redirect()->route('eventos');
     }
 
     public function checkout(){
@@ -29,7 +29,7 @@ class StripeController extends Controller
             ]],
             'mode' => 'payment',
             'success_url' => route('success'),
-            'cancel_url' => route('main'),
+            'cancel_url' => route('eventos'),
         ]);
         return redirect()->away($session->url);
     }
@@ -37,7 +37,7 @@ class StripeController extends Controller
     public function success(){
         Mail::to('yahyaelhadricgs@gmail.com')->send(new PagoConfirmado());
 
-        return view('main');
+        return redirect()->route('eventos');
     }
 }
 

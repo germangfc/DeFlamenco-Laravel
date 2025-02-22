@@ -5,34 +5,36 @@
         <h1 class="text-center mb-4">Lista de Clientes</h1>
         <div class="card">
             <div class="card-body">
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Email</th>
-                        <th>DNI</th>
-                        <th>Acciones</th>
-                    </tr>
-                    </thead>
-                    <tbody>
+                <x-table-basico :headers="[ 'Nombre', 'Email', 'DNI', 'Acciones']" tableClass="table table-striped w-full">
                     @foreach ($clientes as $cliente)
-                        <tr>
-                            <td>{{ $cliente->user->name}}</td>
+                        <tr class="hover">
+                            <td>
+                                <div class="flex items-center gap-3">
+                                    <div class="avatar">
+                                        <div class="mask mask-squircle h-12 w-12">
+                                            <img src="{{ asset('storage/images/' . $cliente->foto_dni)}}" alt="Avatar de {{ $cliente->user->name }}">
+                                        </div>
+                                    </div>
+                                    <div class="font-bold">{{ $cliente->user->name }}</div>
+                                </div>
+                            </td>
                             <td>{{ $cliente->user->email }}</td>
                             <td>{{ $cliente->dni }}</td>
                             <td>
-                                <a href="{{ route('clientes.show', $cliente->id) }}" class="btn btn-info">Ver</a>
-                                <a href="{{ route('clientes.edit', $cliente->id) }}" class="btn btn-primary btn-sm">Editar</a>
-                                <form action="{{ route('clientes.destroy', $cliente->id) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
-                                </form>
+                                <div class="flex gap-2">
+                                    <a href="{{ route('clientes.show', $cliente->id) }}" class="btn btn-info btn-sm">Ver</a>
+                                    <a href="{{ route('clientes.edit', $cliente->id) }}" class="btn btn-primary btn-sm">Editar</a>
+                                    <form action="{{ route('clientes.destroy', $cliente->id) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @endforeach
-                    </tbody>
-                </table>
+                </x-table-basico>
+
                 <div class="flex justify-center mt-8 space-x-2">
                     @if ($clientes->onFirstPage())
                         <span class="btn btn-disabled">«</span>

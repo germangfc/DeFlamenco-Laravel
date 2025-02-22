@@ -51,7 +51,7 @@ class ClienteController extends Controller
     {
         try {
             $validatedUserData = $request->validate([
-                'name' => 'required|string|max:255',
+                'name' => 'required|string|max:255|min:3',
                 'email' => 'required|string|email|unique:users,email',
                 'password' => 'required'
             ]);
