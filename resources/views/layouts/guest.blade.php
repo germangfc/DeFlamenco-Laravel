@@ -17,19 +17,30 @@
     </head>
     <body class="font-sans antialiased">
     <div class="min-h-screen flex flex-col md:flex-row">
-        <!-- Lado superior para pantallas pequeñas y lateral para pantallas grandes: Imagen -->
-        <div class="w-full md:w-1/2 flex items-center justify-center bg-cover bg-center" style="background-image: url('{{ Vite::asset("resources/images/foto_login_flamenco_con_fondo.svg") }}');">
-            <!-- Puedes agregar contenido extra si lo deseas -->
+        <!-- Lado superior (móviles) o lateral (pantallas grandes): Imagen -->
+        <div class="w-full md:w-1/2 h-64 md:h-auto flex items-center justify-center bg-cover bg-center relative"
+             style="background-image: url('{{ Vite::asset("resources/images/foto_login_flamenco_con_fondo.svg") }}');">
+            <!-- Contenedor para el mensaje solo en móviles -->
+            <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 md:hidden">
+                <h2 class="text-3xl text-white" style="font-family: 'Dancing Script', cursive;">
+                    Bienvenido a Tablao Pass
+                </h2>
+            </div>
         </div>
-        <!-- Lado inferior para pantallas pequeñas y lateral para pantallas grandes: Formulario de login -->
+        <!-- Lado inferior (móviles) o lateral (pantallas grandes): Formulario de login -->
         <div class="flex flex-col w-full md:w-1/2 justify-center items-center bg-base-100">
-            <h2 class="text-3xl">Bienvenido a Tablao Pass</h2>
+            <!-- Mensaje visible solo en pantallas medianas y superiores -->
+            <h2 class="text-3xl hidden md:block" style="font-family: 'Dancing Script', cursive;">
+                Bienvenido a Tablao Pass
+            </h2>
             <div class="w-full sm:max-w-md mt-6 bg-base-200 px-6 py-4 shadow-2xl overflow-hidden sm:rounded-lg">
                 {{ $slot }}
             </div>
         </div>
     </div>
     </body>
+
+
 
 
 </html>
