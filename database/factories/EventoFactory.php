@@ -21,8 +21,8 @@ class EventoFactory extends Factory
             'stock' => $this->faker->numberBetween(0, 100),
             'fecha' => $this->faker->date(),
             'hora' => $this->faker->time(),
-            'direccion' => $this->faker->streetAddress(),
-            'ciudad' => $this->faker->city(),
+            'direccion' => 'IES Luis Vives',
+            'ciudad' => 'Leganes',
             'precio' => $this->faker->randomFloat(2, 5, 500),
             'foto' => "https://granadateguia.com/wp-content/uploads/2023/02/baile-flamenco-870x480.jpg",
         ];
