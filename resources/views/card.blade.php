@@ -7,8 +7,9 @@
 @section("content")
     <div class="p-8">
         @include('components.slider')
-
+        <x-search-bar />
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
             @foreach($eventos as $evento)
                 <div class="rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
                     <a href="{{ route('eventos.show', $evento->id) }}">

@@ -23,10 +23,30 @@ class Evento extends Model
     ];
     protected $primarykey = 'id';
 
-    public function scopeSearch($query, $name)
+    public function scopeSearch($query, array $filters)
     {
-        return $query->where('nombre', 'LIKE', "%$name%");
+        return $query
+            ->when($filters['query'] ?? null, function ($q, $term) {
+                $term = strtolower($term);
+                $q->where(function ($q2) use ($term) {
+                    $q2->whereRaw('LOWER(nombre) LIKE ?', ["%{$term}%"])
+                        ->orWhereRaw('LOWER(ciudad) LIKE ?', ["%{$term}%"])
+                        ->orWhereRaw('LOWER(direccion) LIKE ?', ["%{$term}%"]);
+                });
+            })
+            ->when($filters['fecha'] ?? null, function ($q, $fecha) {
+                $q->whereDate('fecha', '=', $fecha);
+            })
+            ->when($filters['precio_min'] ?? null, function ($q, $precioMin) {
+                $q->where('precio', '>=', $precioMin);
+            })
+            ->when($filters['precio_max'] ?? null, function ($q, $precioMax) {
+                $q->where('precio', '<=', $precioMax);
+            });
     }
+
+
+
 
     public function scopeFindById($query, $id)
     {
