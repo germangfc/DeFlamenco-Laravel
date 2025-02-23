@@ -5,6 +5,7 @@ use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\EventosController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\VentaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StripeController;
 
@@ -19,6 +20,11 @@ Route::get('/success', [StripeController::class, 'success'])->name('success');
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::prefix('venta')->group(function () {
+    Route::get('/{id}',[VentaController::class, 'show'])->name('ventas.show'); //->middleware(['auth','admin']);
+    Route::get('/', [VentaController::class,'index'])->name('ventas.index'); //->middleware(['auth','admin']);
+});
 
 Route::prefix('empresa')->group(function () {
     Route::get('/create', [EmpresaController::class, 'create'])->name('empresas.create');
