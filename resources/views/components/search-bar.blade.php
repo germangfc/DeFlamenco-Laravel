@@ -1,31 +1,28 @@
-<div class="drawer drawer-end">
-    <!-- Input toggle para abrir/cerrar el drawer -->
+<div class="drawer drawer-end relative z-50 ">
     <input id="drawer-toggle" type="checkbox" class="drawer-toggle" />
+    {{--Buscador--}}
     <div class="drawer-content">
-        <!-- Contenido principal: barra de búsqueda visible -->
-        <div class="flex flex-wrap items-center gap-4">
-            <!-- Botón para abrir el drawer de filtros -->
-            <label for="drawer-toggle" class="btn btn-secondary drawer-button">Filtros</label>
-            <form method="GET" action="{{ route('eventos') }}" class="">
+        <div class="flex items-center justify-between mb-4 w-full">
+            <label for="drawer-toggle" class="btn btn-secondary drawer-button">Filtrar</label>
+            <form method="GET" action="{{ route('eventos') }}" class="w-1/2">
                 <div class="flex gap-2">
                     <input
                         type="text"
                         name="query"
                         value="{{ request('query') }}"
-                        placeholder="Buscar eventos..."
+                        placeholder="Nombre, Ciudad o Direccion"
                         class="input input-bordered w-full" />
                     <button type="submit" class="btn btn-primary">Buscar</button>
                 </div>
             </form>
         </div>
     </div>
+    {{--Filtros--}}
     <div class="drawer-side">
-        <!-- Overlay para cerrar el drawer al hacer clic -->
         <label for="drawer-toggle" class="drawer-overlay"></label>
         <div class="menu p-4 w-80 bg-base-200 text-base-content">
-            <!-- Filtros adicionales -->
             <form method="GET" action="{{ route('eventos') }}">
-                {{-- Mantener los valores actuales en la URL --}}
+                <!-- Conserva el término de búsqueda principal -->
                 <input type="hidden" name="query" value="{{ request('query') }}">
                 <div class="form-control">
                     <label class="label">
@@ -60,7 +57,7 @@
                         class="input input-bordered" />
                 </div>
                 <div class="form-control mt-4">
-                    <button type="submit" class="btn btn-primary">Aplicar Filtros</button>
+                    <button type="submit" class="btn btn-primary w-full">Aplicar Filtros</button>
                 </div>
             </form>
         </div>

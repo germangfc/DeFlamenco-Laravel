@@ -33,6 +33,7 @@
         </div>
 
 
+        @if($eventos->count() > 0)
         <div class="flex justify-center mt-8 space-x-2">
             @if (!$eventos->onFirstPage())
                 <a href="{{ $eventos->previousPageUrl() }}" class="btn btn-square">«</a>
@@ -48,6 +49,9 @@
                 <a href="{{ $eventos->nextPageUrl() }}" class="btn btn-square">»</a>
             @endif
         </div>
+        @else
+            <p class="text-center mt-8">No se han encontrado eventos.</p>
+        @endif
     </div>
 
 
