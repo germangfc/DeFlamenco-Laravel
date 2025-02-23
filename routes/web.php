@@ -43,7 +43,7 @@ Route::prefix('empresa')->group(function () {
 Route::get('/', [EventosController::class, 'getAll'])->name('eventos');
 Route::prefix('eventos')->group(function () {
     Route::get('/', [EventosController::class, 'getAll'])->name('eventos');
-    Route::get('/create', [EventosController::class, 'create'])->name('eventos.create')->middleware("can:empresa");
+    Route::get('/create', [EventosController::class, 'create'])->name('eventos.create');
     Route::post('/', [EventosController::class, 'store'])->name('eventos.store');
     Route::get('/{id}', [EventosController::class, 'show'])->name('eventos.show');
     Route::get('/{id}/edit', [EventosController::class, 'edit'])->name('eventos.edit');
@@ -55,7 +55,7 @@ Route::prefix('eventos')->group(function () {
 Route::get('/', [EventosController::class, 'getAll'])->name('eventos');
 Route::prefix('eventos')->group(function () {
     Route::get('/', [EventosController::class, 'getAll'])->name('eventos');
-    Route::get('/create', [EventosController::class, 'create'])->name('eventos.create')->middleware("can:empresa");
+    Route::get('/create', [EventosController::class, 'create'])->name('eventos.create');
     Route::post('/store', [EventosController::class, 'store'])->name('eventos.store');
     Route::get('/{id}', [EventosController::class, 'show'])->name('eventos.show');
     Route::get('/{id}/edit', [EventosController::class, 'edit'])->name('eventos.edit');

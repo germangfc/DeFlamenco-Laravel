@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
 
         Ticket::factory(12)->create();
         Venta::factory()->count(5)->create();
-        Venta::where('lineas_venta', 'size', 0)->delete();
+        Venta::where('lineasVenta', 'size', 0)->delete();
 
         $this->call([
             UserSeeder::class,
