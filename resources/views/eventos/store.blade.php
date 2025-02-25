@@ -24,9 +24,9 @@
 
                     <div class="text-lg space-y-6">
                         <div>
-                            <x-input-label for="evento" :value="__('Evento')" />
-                            <x-text-input id="evento" placeholder="Introduce el nombre del evento." class="block mt-1 w-full" type="text" name="evento" :value="old('evento')" required autofocus autocomplete="evento" />
-                            <x-input-error :messages="$errors->get('evento')" class="mt-2" />
+                            <x-input-label for="nombre" :value="__('Evento')" />
+                            <x-text-input id="nombre" placeholder="Introduce el nombre del evento." class="block mt-1 w-full" type="text" name="nombre" :value="old('nombre')" required autofocus autocomplete="off" />
+                            <x-input-error :messages="$errors->get('nombre')" class="mt-2" />
                         </div>
 
                         <div class="grid grid-cols-2 gap-4">
@@ -61,9 +61,9 @@
                                 <x-input-error :messages="$errors->get('precio')" class="mt-2" />
                             </div>
                             <div>
-                                <x-input-label for="aforo" :value="__('Aforo')" />
-                                <x-text-input id="aforo" placeholder="Introduce el aforo." class="block mt-1 w-full" type="number" name="aforo" :value="old('aforo')" required autofocus autocomplete="aforo" />
-                                <x-input-error :messages="$errors->get('aforo')" class="mt-2" />
+                                <x-input-label for="stock" :value="__('Aforo')" />
+                                <x-text-input id="stock" placeholder="Introduce el aforo." class="block mt-1 w-full" type="number" name="stock" :value="old('stock')" required autofocus autocomplete="off" />
+                                <x-input-error :messages="$errors->get('stock')" class="mt-2" />
                             </div>
                         </div>
                     </div>
