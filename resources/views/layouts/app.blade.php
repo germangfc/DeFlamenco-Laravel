@@ -6,6 +6,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'Laravel') }}</title>
+        <link href="{{ Vite::asset("resources/images/foto_login_flamenco.svg") }}" rel="icon" type="image/png">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -17,10 +18,6 @@
     <body class="font-sans antialiased">
         <div class="min-h-screen">
             @include('header')
-
-            <!-- Page Heading -->
-
-
             <!-- Page Content -->
             <main>
                 {{ $slot }}

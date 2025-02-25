@@ -12,10 +12,16 @@ class EventosController extends Controller
 {
     public function getAll(Request $request)
     {
-        $eventos = Evento::search($request->nombre)->orderBy('id', 'ASC')->paginate(4);
+        $eventos = Evento::search($request->only([
+            'query', 'fecha', 'precio_min', 'precio_max'
+        ]))
+            ->orderBy('id', 'ASC')
+            ->paginate(12);
 
         return view('card', compact('eventos'));
     }
+
+
 
     public function create()
     {

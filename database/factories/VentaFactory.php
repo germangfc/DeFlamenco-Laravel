@@ -28,7 +28,7 @@ class VentaFactory extends Factory
         if (empty(self::$availableTicketsIds)) {
             return [
                 'guid' => (string) Str::uuid(),
-                'lineas_venta' => [],
+                'lineasVenta' => [],
             ];
         }
 
@@ -40,41 +40,14 @@ class VentaFactory extends Factory
         for ($i = 0; $i < $numLineasVenta; $i++) {
             $lineasVenta[] = [
                 'idTicket' => array_shift(self::$availableTicketsIds), // Elimina el ticket del array
-                'precio_unitario' => fake()->randomFloat(2, 1, 100),
+                'precioUnitario' => fake()->randomFloat(2, 1, 100),
             ];
         }
 
         return [
             'guid' => (string) Str::uuid(),
-            'lineas_venta' => $lineasVenta, // Se asignan las líneas de venta
+            'lineasVenta' => $lineasVenta, // Se asignan las líneas de venta
         ];
     }
 
 }
-
-/*    public function definition(): array
-    {
-        static $availableTicketIds = null;
-
-        // Si es la primera vez, obtenemos los IDs de la colección Ticket
-        if ($availableTicketIds === null) {
-            $availableTicketIds = Ticket::pluck('id')->toArray();
-            shuffle($availableTicketIds); // Barajamos los tickets para aleatoriedad
-        }
-
-        // Determinar cuántas líneas de venta tendrá esta venta
-        $numLineas = rand(1, min(5, count($availableTicketIds))); // Evitar pedir más de los disponibles
-
-        // Extraer los IDs únicos para esta venta
-        $selectedTickets = array_splice($availableTicketIds, 0, $numLineas);
-
-        return [
-            'guid' => (string) Str::uuid(),
-            'lineas_venta' => collect($selectedTickets)->map(function ($ticketId) {
-                return [
-                    'idTicket' => $ticketId,
-                    'precio_unitario' => fake()->randomFloat(2, 1, 100),
-                ];
-            })->toArray(),
-        ];
-    }*/

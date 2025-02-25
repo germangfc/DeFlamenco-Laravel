@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cormorant:wght@400;600&family=Playfair+Display:wght@500;700&family=Lora&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,27 +7,39 @@
 @layer base {
     /* Tema Claro */
     :root, [data-theme="flamencoLight"] {
-        --color-base-200: #e6d5b8;
-        --color-base-300: #d9c19e;
-        --color-base-400: #ccad84;
-        --color-base-500: #bf996a;
-        --color-base-600: #9b7d55;
-        --color-base-700: #776140;
-        --color-base-800: #53452b;
+        --color-base-200: #E8D9CD;
+        --color-base-300: #DBC6B4;
+        --color-base-400: #CEB39B;
+        --color-base-500: #C1A082;
+        --color-base-600: #A9876B;
+        --color-base-700: #8F6E56;
+        --color-base-800: #755541;
     }
 
     /* Tema Oscuro */
     [data-theme="flamencoDark"] {
-        --color-base-200: #3a3633;
-        --color-base-300: #4a4640;
-        --color-base-400: #5a554d;
-        --color-base-500: #6a645a;
-        --color-base-600: #7a7367;
-        --color-base-700: #8a8274;
-        --color-base-800: #9a9181;
+        --color-base-200: #1e1e1e;
+        --color-base-300: #2a2a2a;
+        --color-base-400: #363636;
+        --color-base-500: #424242;
+        --color-base-600: #4e4e4e;
+        --color-base-700: #5a5a5a;
+        --color-base-800: #666666;
     }
 }
 
 .container {
     @apply mx-auto px-4;
+}
+
+
+@layer base {
+    html {
+        font-family: cormorant;
+        @apply text-[18px] md:text-[20px];
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: cinzel;
+    }
 }
