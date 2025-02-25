@@ -3,10 +3,10 @@
 @section("content")
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAToojCJw_9KvxDrlkEbwR9YkQ-Ib4sVxA&libraries=places"></script>
 
-    <x-edit>
+    <x-guest-layout>
         <div>
             <div>
-                <form action="{{ route('eventos.create') }}" method="POST" enctype="multipart/form-data" class="">
+                <form action="{{ route('eventos.store') }}" method="POST" enctype="multipart/form-data" class="">
                     @csrf
                     <div class="flex items-center justify-center w-full">
                         <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed flamenco-dark:border-base-100 rounded-lg cursor-pointer bg-white hover:bg-gray-300">
@@ -79,7 +79,7 @@
                 </form>
             </div>
         </div>
-    </x-edit>
+    </x-guest-layout>
 
     <script>
         function initAutocomplete() {
