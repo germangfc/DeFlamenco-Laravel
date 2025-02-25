@@ -23,7 +23,7 @@ class EmpresaFactory extends Factory
             'cif' => $this->generateValidCIF(),
             'name' => $this->faker->company,
             'direccion' => $this->faker->address,
-            'imagen' => $this->faker->imageUrl(200, 200, 'business'),
+            'imagen' => "https://circulantis.com/blog/wp-content/uploads/2018/07/pasos-para-crear-una-empresa-circulantis.jpg",
             'telefono' => $this->faker->phoneNumber,
             'email' => $this->faker->unique()->safeEmail,
             'cuentaBancaria' => $this->faker->iban('ES'),
@@ -32,6 +32,7 @@ class EmpresaFactory extends Factory
             'isDeleted' => false,
         ];
     }
+
 
     public function configure()
     {
