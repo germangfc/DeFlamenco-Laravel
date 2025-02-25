@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Models\Empresa;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
-use PHPUnit\Exception;
-use Psy\Util\Json;
 use Illuminate\Validation\Rule;
+use PHPUnit\Exception;
 
 
 class EmpresaControllerApi extends Controller
