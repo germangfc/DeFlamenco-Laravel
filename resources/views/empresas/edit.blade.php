@@ -9,73 +9,66 @@
                     @csrf
                     @method('PUT')
 
+                    <!-- Nombre -->
                     <div class="mb-3">
-                        <label for="name" class="form-label">Nombre</label>
-                        <input type="text" name="name" class="form-control" id="name"
-                               value="{{ $empresa->name }}" required>
-                        @error('name')
-                        <div class="alert alert-danger mt-2">{{ $message }}</div>
-                        @enderror
+                        <x-input-label for="name" :value="__('Nombre')" />
+                        <x-text-input type="text" name="name" id="name" class="form-control" value="{{ old('name', $empresa->name) }}" required />
+                        <x-input-error class="mt-2" :messages="$errors->get('name')" />
                     </div>
 
+                    <!-- Email -->
                     <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" name="email" class="form-control" id="email"
-                               value="{{ $empresa->email }}" required>
-                        @error('email')
-                        <div class="alert alert-danger mt-2">{{ $message }}</div>
-                        @enderror
+                        <x-input-label for="email" :value="__('Email')" />
+                        <x-text-input type="email" name="email" id="email" class="form-control" value="{{ old('email', $empresa->email) }}" required />
+                        <x-input-error class="mt-2" :messages="$errors->get('email')" />
                     </div>
 
+                    <!-- CIF -->
                     <div class="mb-3">
-                        <label for="cif" class="form-label">CIF</label>
-                        <input type="text" name="cif" class="form-control" id="cif"
-                               value="{{ $empresa->cif }}" required>
-                        @error('cif')
-                        <div class="alert alert-danger mt-2">{{ $message }}</div>
-                        @enderror
+                        <x-input-label for="cif" :value="__('CIF')" />
+                        <x-text-input type="text" name="cif" id="cif" class="form-control" value="{{ old('cif', $empresa->cif) }}" required />
+                        <x-input-error class="mt-2" :messages="$errors->get('cif')" />
                     </div>
 
+                    <!-- Dirección -->
                     <div class="mb-3">
-                        <label for="direccion" class="form-label">Dirección</label>
-                        <input type="text" name="direccion" class="form-control" id="direccion"
-                               value="{{ $empresa->direccion }}" required>
-                        @error('direccion')
-                        <div class="alert alert-danger mt-2">{{ $message }}</div>
-                        @enderror
+                        <x-input-label for="direccion" :value="__('Dirección')" />
+                        <x-text-input type="text" name="direccion" id="direccion" class="form-control" value="{{ old('direccion', $empresa->direccion) }}" required />
+                        <x-input-error class="mt-2" :messages="$errors->get('direccion')" />
                     </div>
 
+                    <!-- Teléfono -->
                     <div class="mb-3">
-                        <label for="telefono" class="form-label">Teléfono</label>
-                        <input type="text" name="telefono" class="form-control" id="telefono"
-                               value="{{ $empresa->telefono }}" required>
-                        @error('telefono')
-                        <div class="alert alert-danger mt-2">{{ $message }}</div>
-                        @enderror
+                        <x-input-label for="telefono" :value="__('Teléfono')" />
+                        <x-text-input type="text" name="telefono" id="telefono" class="form-control" value="{{ old('telefono', $empresa->telefono) }}" required />
+                        <x-input-error class="mt-2" :messages="$errors->get('telefono')" />
                     </div>
 
+                    <!-- Cuenta Bancaria -->
                     <div class="mb-3">
-                        <label for="cuentaBancaria" class="form-label">Cuenta Bancaria</label>
-                        <input type="text" name="cuentaBancaria" class="form-control" id="cuentaBancaria"
-                               value="{{ $empresa->cuentaBancaria }}" required>
-                        @error('cuentaBancaria')
-                        <div class="alert alert-danger mt-2">{{ $message }}</div>
-                        @enderror
+                        <x-input-label for="cuentaBancaria" :value="__('Cuenta Bancaria')" />
+                        <x-text-input type="text" name="cuentaBancaria" id="cuentaBancaria" class="form-control" value="{{ old('cuentaBancaria', $empresa->cuentaBancaria) }}" required />
+                        <x-input-error class="mt-2" :messages="$errors->get('cuentaBancaria')" />
                     </div>
 
+                    <!-- Imagen -->
                     <div class="mb-3">
-                        <label for="imagen" class="form-label">Imagen</label>
-                        <input type="file" name="imagen" class="form-control" id="imagen">
+                        <x-input-label for="imagen" :value="__('Imagen')" />
+                        <x-file-input-basico name="imagen" id="imagen" class="form-control" accept="image/*"/>
+                        <x-input-error class="mt-2" :messages="$errors->get('imagen')" />
+
                         @if ($empresa->imagen)
                             <img src="{{ asset('storage/' . $empresa->imagen) }}" alt="Imagen Empresa" class="img-fluid mt-2">
                         @endif
-                        @error('imagen')
-                        <div class="alert alert-danger mt-2">{{ $message }}</div>
-                        @enderror
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Actualizar</button>
-                    <a href="{{ route('empresas.index') }}" class="btn btn-secondary">Cancelar</a>
+                    <!-- Botones -->
+                    <div class="mb-3">
+                        <a href="{{ route('empresas.index') }}" class="btn btn-secondary">Cancelar</a>
+                        <x-primary-button class="ml-4">
+                            {{ __('Actualizar') }}
+                        </x-primary-button>
+                    </div>
                 </form>
             </div>
         </div>

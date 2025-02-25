@@ -153,7 +153,7 @@ class EmpresaController extends Controller
             'cif' => ['required', 'regex:/^[A-HJNP-SUVW][0-9]{7}[0-9A-J]$/'],
             'name' => 'required|max:255',
             'direccion' => 'required|max:255',
-            'cuentaBancaria' => ['required', 'regex:/^ES\d{2}\s?\d{4}\s?\d{4}\s?\d{2}\s?\d{10}$/'],
+            'cuentaBancaria' => ['required', 'regex:/^ES\d{2}\s?\d{4}(\s?\d{4}){3,4}\s?\d{2}/'],
             'telefono' => ['required', 'regex:/^(\+34|0034)?[679]\d{8}$/'],
             'email' => 'required|email|max:255'
         ]);
