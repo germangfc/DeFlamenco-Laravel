@@ -8,7 +8,16 @@
                 <x-table-basico :headers="[ 'Nombre', 'Fecha', 'Hora', 'Ciudad','Precio', 'Acciones']" tableClass="table table-striped w-full">
                     @foreach ($eventos as $evento)
                         <tr class="hover">
-                            <td>{{ $evento->nombre }}</td>
+                            <td>
+                                <div class="flex items-center gap-3">
+                                    <div class="avatar">
+                                        <div class="mask mask-squircle h-12 w-12">
+                                            <img src="{{ asset('storage/images/' . $evento->foto)}}" alt="Avatar de {{ $evento->nombre }}">
+                                        </div>
+                                    </div>
+                                    <div class="font-bold">{{ $evento->nombre }}</div>
+                                </div>
+                            </td>
                             <td>{{ $evento->fecha }}</td>
                             <td>{{ $evento->hora }}</td>
                             <td>{{ $evento->ciudad }}</td>
