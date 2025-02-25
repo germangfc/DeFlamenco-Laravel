@@ -124,7 +124,7 @@
                                 <span class="text-lg font-bold">{{ count(session('cart', [])) > 0 ? count(session('cart', [])) : 0 }} Items</span>
                                 <span class="text-info">Subtotal: {{ number_format($subtotal, 2) }}€</span>
                                 <div class="card-actions">
-                                    <a href="{{ route('cart.index') }}" class="btn btn-primary btn-block">View cart</a>
+                                    <button href="{{ route('cart.index') }}" class="btn btn-primary btn-block">View cart</button>
                                 </div>
                             </div>
                         </div>

@@ -52,14 +52,6 @@ class StripeController extends Controller
             ];
         }
 
-        if (StripeSession::STATUS_COMPLETE){
-            //llamar al generador de entrada que necesita un id de evento y un cliente que se buscara a partira del usuario, usuario el cual esta ahora mismo auth
-
-            // generar venta que necesita una lista de entradas en este metodo se genera la venta con maximo 5 lineas de venta
-            // y se disminuye la cantidad de entradas disponibles en el evento
-
-
-        }
         // Crear la sesión de Stripe Checkout
         $session = StripeSession::create([
             'line_items' => $lineItems,

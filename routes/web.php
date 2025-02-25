@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\ClienteController;
@@ -14,8 +15,6 @@ Route::get('/', function () {
 })->name('main');
 
 
-Route::post('/checkout', [StripeController::class, "checkout"])->name('checkout');
-Route::get('/success', [StripeController::class, 'success'])->name('success');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -87,6 +86,18 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 });
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+Route::post('/cart/update/{idEvent}', [CartController::class, 'update'])->name('cart.update');
+Route::delete('/cart/remove/{idEvent}', [CartController::class, 'remove'])->name('cart.remove');
+
+Route::middleware('auth')->group(function () {
+    Route::post('/checkout/stripe', [StripeController::class, 'checkout'])->name('stripe.checkout');
+    Route::get('/checkout/success', [StripeController::class, 'success'])->name('stripe.success');
+});
+
+
 require __DIR__.'/auth.php';
 
 
