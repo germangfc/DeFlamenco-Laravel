@@ -49,11 +49,12 @@ Route::prefix('empresa')->group(function () {
 
 Route::get('/', [EventosController::class, 'getAll'])->name('eventos');
 Route::prefix('eventos')->group(function () {
-    Route::post('/create', [EventosController::class, 'create'])->name('eventos.create');
-    Route::get('/', [EventosController::class, 'index'])->name('eventos.index');
+    Route::get('/create', [EventosController::class, 'create'])->name('eventos.create');
+    Route::post('/', [EventosController::class, 'store'])->name('eventos.store');
+    Route::get('/', [EventosController::class, 'getAll'])->name('eventos.index');
     Route::get('/index-admin', [EventosController::class, 'index'])->name('eventos.index-admin');
     Route::get('/{id}', [EventosController::class, 'show'])->name('eventos.show');
-    Route::get('/{id}/edit', [EventosController::class, 'edit'])->name('eventos.edit');
+    Route::put('/{id}/edit', [EventosController::class, 'edit'])->name('eventos.edit');
     Route::put('/{id}', [EventosController::class, 'update'])->name('eventos.update');
     Route::delete('/{id}', [EventosController::class, 'destroy'])->name('eventos.destroy');
 });

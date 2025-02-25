@@ -33,6 +33,7 @@ class UserSeeder extends Seeder
         $adminUser = User::create([
             'name' => 'Admin',
             'email' => 'admin@example.com',
+            'tipo'=>'admin',
             'password' => bcrypt('12345678'),
             'email_verified_at' => now(),
             'remember_token' => Str::random(10),

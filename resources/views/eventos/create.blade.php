@@ -6,7 +6,7 @@
     <x-edit>
         <div>
             <div>
-                <form action="{{ route('eventos.create') }}" method="POST" enctype="multipart/form-data" class="">
+                <form action="{{ route('eventos.store') }}" method="POST" enctype="multipart/form-data" class="">
                     @csrf
                     <div class="flex items-center justify-center w-full">
                         <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed flamenco-dark:border-base-100 rounded-lg cursor-pointer bg-white hover:bg-gray-300">
@@ -24,44 +24,44 @@
 
                     <div class="text-lg space-y-6">
                         <div>
-                            <x-input-label for="nombre" :value="__('Evento')" />
+                            <x-input-label for="nombre" :value="('Evento')" />
                             <x-text-input id="nombre" placeholder="Introduce el nombre del evento." class="block mt-1 w-full" type="text" name="nombre" :value="old('nombre')" required autofocus autocomplete="off" />
                             <x-input-error :messages="$errors->get('nombre')" class="mt-2" />
                         </div>
 
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <x-input-label for="fecha" :value="__('Fecha')" />
+                                <x-input-label for="fecha" :value="('Fecha')" />
                                 <x-text-input id="fecha" placeholder="dd/mm/aaaa." class="block mt-1 w-full" type="date" name="fecha" :value="old('fecha')" required autofocus autocomplete="fecha" />
                                 <x-input-error :messages="$errors->get('fecha')" class="mt-2" />
                             </div>
                             <div>
-                                <x-input-label for="hora" :value="__('Hora')" />
+                                <x-input-label for="hora" :value="('Hora')" />
                                 <x-text-input id="hora" placeholder="" class="block mt-1 w-full" type="time" name="hora" :value="old('hora')" required autofocus autocomplete="hora" />
                                 <x-input-error :messages="$errors->get('hora')" class="mt-2" />
                             </div>
                         </div>
 
                         <div>
-                            <x-input-label for="direccion" :value="__('Direccion')" />
+                            <x-input-label for="direccion" :value="('Direccion')" />
                             <input type="text" id="autocomplete" name="direccion" class="w-full px-4 py-3 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-400" required>
                             <x-input-error :messages="$errors->get('direccion')" class="mt-2" />
                         </div>
 
                         <div>
-                            <x-input-label for="ciudad" :value="__('Ciudad')" />
+                            <x-input-label for="ciudad" :value="('Ciudad')" />
                             <x-text-input id="ciudad" placeholder="Introduce la ciudad del evento." class="block mt-1 w-full" type="text" name="ciudad" :value="old('ciudad')" required autofocus autocomplete="ciudad" />
                             <x-input-error :messages="$errors->get('ciudad')" class="mt-2" />
                         </div>
 
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <x-input-label for="precio" :value="__('Precio')" />
+                                <x-input-label for="precio" :value="('Precio')" />
                                 <x-text-input id="precio" placeholder="Introduce el precio." class="block mt-1 w-full" type="number" name="precio" :value="old('precio')" required autofocus autocomplete="precio" />
                                 <x-input-error :messages="$errors->get('precio')" class="mt-2" />
                             </div>
                             <div>
-                                <x-input-label for="stock" :value="__('Aforo')" />
+                                <x-input-label for="stock" :value="('Aforo')" />
                                 <x-text-input id="stock" placeholder="Introduce el aforo." class="block mt-1 w-full" type="number" name="stock" :value="old('stock')" required autofocus autocomplete="off" />
                                 <x-input-error :messages="$errors->get('stock')" class="mt-2" />
                             </div>
@@ -91,7 +91,7 @@
             autocomplete.addListener("place_changed", () => {
                 const place = autocomplete.getPlace();
                 if (!place.geometry) {
-                    alert("Dirección no válida");
+                    alert("Dirección no válida");
                     return;
                 }
 
