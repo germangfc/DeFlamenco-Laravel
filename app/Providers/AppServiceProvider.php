@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Http\Controllers\Api\UserApiController;
+use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
@@ -23,10 +24,6 @@ class AppServiceProvider extends ServiceProvider
     {
         parent::boot();
 
-        // Aquí puedes registrar tus middleware
-        Route::middleware('admin')->group(function () {
-            // Definir rutas que requieren el middleware de admin
-            Route::apiResource('usuarios', UserApiController::class);
-        });
+        app('router')->aliasMiddleware('admin', AdminMiddleware::class);
     }
 }
