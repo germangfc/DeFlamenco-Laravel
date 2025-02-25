@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -10,26 +11,24 @@ class LoginControllerApi extends Controller
 {
     public function __invoke(Request $request): JsonResponse
     {
-        // Validación de los datos de entrada
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|string|min:8',
         ]);
 
         $user = User::where('email', $request->email)->first();
-
-        if (!$user || !$user->hasRole('admin')) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        if (!$user) {
+            return response()->json(['error' => 'User not Found'], 404);
         }
-
-        // Intentar autenticar al usuario
+        if ($user->tipo !== 'admin') {
+            return response()->json(['error' => 'Unauthorized, you are not an admin'], 401);
+        }
         $credentials = $request->only('email', 'password');
 
-        if (!$token = Auth::attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        if (!$token = auth('api')->attempt($credentials)) {
+            return response()->json(['error' => 'Unauthorized, wrong credentials'], 401);
         }
 
-        // Devolver el token en la respuesta
         return response()->json([
             'token' => $token,
         ]);
