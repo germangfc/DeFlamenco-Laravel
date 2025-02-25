@@ -23,10 +23,10 @@
 {{-- Esto es el contenido --}}
 <div class="container flex-grow">
 @yield('content')
-    <form action="/checkout" method="POST">
+    {{-- <form action="/checkout" method="POST">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <button type="submit" class="btn btn-primary">Pagar</button>
-    </form>
+    </form> --}}
 </div>
 {{-- Esto es el footer --}}
 @include('footer')

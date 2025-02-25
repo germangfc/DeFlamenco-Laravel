@@ -1,7 +1,7 @@
 <header class="">
     <div class="navbar bg-base-300">
         <div class="flex-1">
-            <a href="/" class="btn btn-ghost text-2xl" style="font-family: 'Dancing Script', cursive;">Tablao Pass</a>
+            <a href="/" class="btn btn-ghost text-2xl"><h3 class="text-2xl"> Tablao Pass</h3></a>
         </div>
         <div class="flex-none">
             {{--menu--}}
