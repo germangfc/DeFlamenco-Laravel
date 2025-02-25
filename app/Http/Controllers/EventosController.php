@@ -18,14 +18,25 @@ class EventosController extends Controller
             ->orderBy('id', 'ASC')
             ->paginate(12);
 
-        return view('card', compact('eventos'));
+        return view('eventos.index', compact('eventos'));
+    }
+
+    public function index(Request $request)
+    {
+        $eventos = Evento::search($request->only([
+            'query', 'fecha', 'precio_min', 'precio_max'
+        ]))
+            ->orderBy('id', 'ASC')
+            ->paginate(12);
+
+        return view('eventos.index-admin', compact('eventos'));
     }
 
 
 
     public function create()
     {
-        return view('eventos.store');
+        return view('eventos.create');
     }
 
     public function store(Request $request)
