@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\ClienteBienvenido;
 use App\Mail\EmpresaBienvenida;
 use App\Models\Empresa;
 use App\Models\User;
@@ -13,16 +12,22 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Facades\Validator;
 
 class EmpresaController extends Controller
 {
-   public function index(Request $request)
-   {
-       $empresas = Empresa::search($request->nombre)->orderBy('id', 'ASC')->paginate(5);
+    public function index(Request $request)
+    {
+        $empresas = Empresa::search($request->nombre)->orderBy('id', 'ASC')->paginate(8);
 
-       return view('empresas.index')->with('empresas', $empresas);
-   }
+        // Si el usuario está autenticado y es admin, mostrar la vista de admin
+        if (auth()->check() && auth()->user()->getRoleNames()->first() === 'admin') {
+            return view('empresas.admin')->with('empresas', $empresas);
+        }
+
+        // Si el usuario no está autenticado o es cliente, mostrar la vista de guest
+        return view('empresas.user')->with('empresas', $empresas);
+    }
+
 
     public function show($id)
     {
