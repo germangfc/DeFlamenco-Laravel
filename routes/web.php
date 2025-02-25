@@ -43,13 +43,13 @@ Route::prefix('empresa')->group(function () {
         ->name('empresas.showByNombre');
     // Ruta para buscar por CIF
     Route::get('/cif/{cif}', [EmpresaController::class, 'showByCif'])
-        ->where('cif', '[A-Za-z0-9]+') // Regla básica para CIF
+        ->where('cif', '[A-Za-z0-9]+')
         ->name('empresas.showByCif');
 });
+
 Route::get('/', [EventosController::class, 'getAll'])->name('eventos');
 Route::prefix('eventos')->group(function () {
-    Route::get('/create', [EventosController::class, 'create'])->name('eventos.create');
-    Route::post('/store', [EventosController::class, 'store'])->name('eventos.store');
+    Route::post('/create', [EventosController::class, 'create'])->name('eventos.create');
     Route::get('/', [EventosController::class, 'index'])->name('eventos.index');
     Route::get('/index-admin', [EventosController::class, 'index'])->name('eventos.index-admin');
     Route::get('/{id}', [EventosController::class, 'show'])->name('eventos.show');
@@ -57,7 +57,6 @@ Route::prefix('eventos')->group(function () {
     Route::put('/{id}', [EventosController::class, 'update'])->name('eventos.update');
     Route::delete('/{id}', [EventosController::class, 'destroy'])->name('eventos.destroy');
 });
-
 
 Route::prefix('clientes')->group(function () {
     Route::post('/', [ClienteController::class, 'store'])->name('clientes.store');
