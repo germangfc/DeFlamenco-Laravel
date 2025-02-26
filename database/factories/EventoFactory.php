@@ -20,7 +20,7 @@ class EventoFactory extends Factory
             'nombre' => $this->faker->sentence(3),
             'stock' => $this->faker->numberBetween(0, 100),
             'fecha' => $this->faker->date(),
-            'hora' => $this->faker->time(),
+            'hora' => $this->faker->dateTime()->format('H:i'),
             'direccion' => 'IES Luis Vives',
             'ciudad' => 'Leganes',
             'precio' => $this->faker->randomFloat(2, 5, 500),

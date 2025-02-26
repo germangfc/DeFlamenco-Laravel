@@ -55,7 +55,8 @@ Route::prefix('eventos')->group(function () {
     Route::get('/', [EventosController::class, 'getAll'])->name('eventos.index');
     Route::get('/index-admin', [EventosController::class, 'index'])->name('eventos.index-admin');
     Route::get('/{id}', [EventosController::class, 'show'])->name('eventos.show');
-    Route::put('/{id}/edit', [EventosController::class, 'edit'])->name('eventos.edit');
+    Route::get('/{id}/edit', [EventosController::class, 'edit'])->name('eventos.edit');
+    Route::get('/' , [EventosController::class, 'update'])->name('eventos.update');
     Route::put('/{id}', [EventosController::class, 'update'])->name('eventos.update');
     Route::delete('/{id}', [EventosController::class, 'destroy'])->name('eventos.destroy');
 });
