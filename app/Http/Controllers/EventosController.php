@@ -170,7 +170,7 @@ class EventosController extends Controller
             Cache::forget($cacheKey);
             Cache::put($cacheKey, $evento, 60);
 
-            return redirect()->route('eventos.index')
+            return redirect()->route('eventos.show', $id)
                 ->with('success', '¡Evento actualizado exitosamente!');
         } catch (Exception $e) {
             return redirect()->route('eventos.edit', $id)

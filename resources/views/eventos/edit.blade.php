@@ -1,7 +1,9 @@
 @extends('main')
 
 @section("content")
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAToojCJw_9KvxDrlkEbwR9YkQ-Ib4sVxA&libraries=places"></script>
+
+
 
     <x-edit>
         <div>
@@ -18,14 +20,14 @@
                                 </svg>
                                 <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
                             </div>
-                            <input id="dropzone-file" type="file" name="foto" accept="image/*" class="hidden" onchange="previewImage(event)" />
                         </label>
                     </div>
 
                     <div class="text-lg space-y-6">
                         <div>
-                            <x-text-input id="evento" placeholder="Introduce el nombre del evento." class="block mt-1 w-full" type="text" name="evento" :value="old('evento', $evento->nombre)" required autofocus autocomplete="evento" />
-                            <x-input-error :messages="$errors->get('evento')" class="mt-2" />
+                            <x-input-label for="nombre" :value="__('Nombre del Evento')" />
+                            <x-text-input id="nombre" placeholder="Introduce el nombre del evento." class="block mt-1 w-full" type="text" name="nombre" :value="old('nombre', $evento->nombre)" required autofocus autocomplete="nombre" />
+                            <x-input-error :messages="$errors->get('nombre')" class="mt-2" />
                         </div>
 
                         <div class="grid grid-cols-2 gap-4">
@@ -36,7 +38,7 @@
                             </div>
                             <div>
                                 <x-input-label for="hora" :value="__('Hora')" />
-                                <x-text-input id="hora" placeholder="" class="block mt-1 w-full" type="time" name="hora" :value="old('hora', $evento->hora)" required autofocus autocomplete="hora" />
+                                <x-text-input id="hora" placeholder="HH:mm" class="block mt-1 w-full" type="time" name="hora" :value="old('hora', $evento->hora)" required autofocus autocomplete="hora" />
                                 <x-input-error :messages="$errors->get('hora')" class="mt-2" />
                             </div>
                         </div>
@@ -60,9 +62,9 @@
                                 <x-input-error :messages="$errors->get('precio')" class="mt-2" />
                             </div>
                             <div>
-                                <x-input-label for="aforo" :value="__('Aforo')" />
-                                <x-text-input id="aforo" placeholder="Introduce el aforo." class="block mt-1 w-full" type="number" name="aforo" :value="old('aforo', $evento->aforo)" required autofocus autocomplete="aforo" />
-                                <x-input-error :messages="$errors->get('aforo')" class="mt-2" />
+                                <x-input-label for="stock" :value="__('Aforo')" />
+                                <x-text-input id="stock" placeholder="Introduce el aforo." class="block mt-1 w-full" type="number" name="stock" :value="old('stock', $evento->stock)" required autofocus autocomplete="stock" />
+                                <x-input-error :messages="$errors->get('stock')" class="mt-2" />
                             </div>
                         </div>
                     </div>
