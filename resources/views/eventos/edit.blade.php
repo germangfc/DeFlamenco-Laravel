@@ -2,9 +2,6 @@
 
 @section("content")
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAToojCJw_9KvxDrlkEbwR9YkQ-Ib4sVxA&libraries=places"></script>
-
-
-
     <x-edit>
         <div>
             <div>
