@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\ClienteController;
@@ -14,8 +15,6 @@ Route::get('/', function () {
 })->name('main');
 
 
-Route::post('/checkout', [StripeController::class, "checkout"])->name('checkout');
-Route::get('/success', [StripeController::class, 'success'])->name('success');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -28,8 +27,10 @@ Route::prefix('venta')->group(function () {
 
 Route::prefix('empresa')->group(function () {
     Route::get('/create', [EmpresaController::class, 'create'])->name('empresas.create');
-    Route::post('/store', [EmpresaController::class, 'store'])->name('empresas.store');    Route::get('/', [EmpresaController::class, 'index'])->name('empresas.index');
+    Route::post('/store', [EmpresaController::class, 'store'])->name('empresas.store');
+    Route::get('/', [EmpresaController::class, 'index'])->name('empresas.index');
     Route::get('/actualizar/{id}', [EmpresaController::class, 'edit'])->name('empresas.edit');//->middleware("can:admin");
+    Route::post('/empresas/validate', [EmpresaController::class, 'validateField'])->name('empresas.validate');
 
     Route::put('/{id}', [EmpresaController::class, 'update'])->name('empresas.update');
     Route::delete('/{id}', [EmpresaController::class, 'destroy'])->name('empresas.destroy');
@@ -48,26 +49,14 @@ Route::prefix('empresa')->group(function () {
 });
 Route::get('/', [EventosController::class, 'getAll'])->name('eventos');
 Route::prefix('eventos')->group(function () {
-    Route::get('/', [EventosController::class, 'getAll'])->name('eventos');
     Route::get('/create', [EventosController::class, 'create'])->name('eventos.create');
     Route::post('/', [EventosController::class, 'store'])->name('eventos.store');
+    Route::get('/', [EventosController::class, 'getAll'])->name('eventos.index');
+    Route::get('/index-admin', [EventosController::class, 'index'])->name('eventos.index-admin');
     Route::get('/{id}', [EventosController::class, 'show'])->name('eventos.show');
-    Route::get('/{id}/edit', [EventosController::class, 'edit'])->name('eventos.edit');
+    Route::put('/{id}/edit', [EventosController::class, 'edit'])->name('eventos.edit');
     Route::put('/{id}', [EventosController::class, 'update'])->name('eventos.update');
     Route::delete('/{id}', [EventosController::class, 'destroy'])->name('eventos.destroy');
-    Route::get('/search', [EventosController::class, 'search'])->name('eventos.search');
-});
-
-Route::get('/', [EventosController::class, 'getAll'])->name('eventos');
-Route::prefix('eventos')->group(function () {
-    Route::get('/', [EventosController::class, 'getAll'])->name('eventos');
-    Route::get('/create', [EventosController::class, 'create'])->name('eventos.create');
-    Route::post('/store', [EventosController::class, 'store'])->name('eventos.store');
-    Route::get('/{id}', [EventosController::class, 'show'])->name('eventos.show');
-    Route::get('/{id}/edit', [EventosController::class, 'edit'])->name('eventos.edit');
-    Route::put('/{id}', [EventosController::class, 'update'])->name('eventos.update');
-    Route::delete('/{id}', [EventosController::class, 'destroy'])->name('eventos.destroy');
-    Route::get('/search', [EventosController::class, 'search'])->name('eventos.search');
 });
 
 
@@ -87,6 +76,18 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 });
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+Route::post('/cart/update/{idEvent}', [CartController::class, 'update'])->name('cart.update');
+Route::delete('/cart/remove/{idEvent}', [CartController::class, 'remove'])->name('cart.remove');
+
+Route::middleware('auth')->group(function () {
+    Route::post('/checkout/stripe', [StripeController::class, 'checkout'])->name('stripe.checkout');
+    Route::get('/checkout/success', [StripeController::class, 'success'])->name('stripe.success');
+});
+
+
 require __DIR__.'/auth.php';
 
 

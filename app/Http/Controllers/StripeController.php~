@@ -1,0 +1,88 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Mail\PagoConfirmado;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Stripe\Stripe;
+use Stripe\Checkout\Session as StripeSession;
+
+class StripeController extends Controller
+{
+    /**
+     * Muestra la vista del checkout con el resumen del carrito.
+     */
+    public function index()
+    {
+        $cart = session()->get('cart', []);
+        return view('cart.index', compact('cart'));
+    }
+
+    /**
+     * Genera una sesión de Stripe Checkout a partir del carrito.
+     */
+    public function checkout()
+    {
+        // Obtener el carrito de la sesión
+        $cart = session()->get('cart', []);
+
+        if (empty($cart)) {
+            return redirect()->back()->with('error', 'El carrito está vacío.');
+        }
+
+        // Configura la API Key de Stripe
+        Stripe::setApiKey(config('services.stripe.sk'));
+
+        // Convertir los items del carrito en line items para Stripe.
+        // Se asume que cada item del carrito tiene: idEvent, price y quantity.
+        $lineItems = [];
+        foreach ($cart as $item) {
+            $lineItems[] = [
+                'price_data' => [
+                    'currency' => 'eur',
+                    // Puedes adaptar el nombre a lo que necesites; aquí usamos el idEvent.
+                    'product_data' => [
+                        'name' => 'Evento: ' . $item['idEvent'],
+                    ],
+                    // Stripe espera el precio en céntimos, por lo que se multiplica por 100.
+                    'unit_amount' => $item['price'] * 100,
+                ],
+                'quantity' => $item['quantity'],
+            ];
+        }
+
+        // Crear la sesión de Stripe Checkout
+        $session = StripeSession::create([
+            'line_items' => $lineItems,
+            'mode' => 'payment',
+            // Define la URL a la que Stripe redirigirá en caso de éxito
+            'success_url' => route('stripe.success'),
+            // Define la URL a la que Stripe redirigirá en caso de cancelar el pago
+            'cancel_url'  => route('eventos'),
+        ]);
+
+        // Redirige al usuario a la sesión de Stripe Checkout
+        return redirect()->away($session->url);
+    }
+
+    /**
+     * Maneja el caso de pago exitoso.
+     */
+    public function success()
+    {
+        // Aquí puedes realizar acciones adicionales, por ejemplo:
+        // - Registrar la venta en MongoDB.
+        // - Crear los tickets correspondientes.
+        // - Notificar al usuario (envío de email, etc.).
+
+        // Enviar correo de confirmación
+        Mail::to('yahyaelhadricgs@gmail.com')->send(new PagoConfirmado());
+
+        // Limpiar el carrito de la sesión
+        session()->forget('cart');
+
+        // Redirigir a una ruta (por ejemplo, la lista de eventos) con mensaje de éxito
+        return redirect()->route('eventos')->with('success', 'Pago confirmado');
+    }
+}

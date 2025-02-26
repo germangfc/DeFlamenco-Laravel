@@ -66,6 +66,20 @@
             </div>
         </div>
     </div>
+    <form action="{{ route('cart.add') }}" method="POST">
+        @csrf
+        <!-- Supongamos que $event es el objeto que representa el evento o producto -->
+        <input type="hidden" name="idEvent" value="{{ $evento->id }}">
+        <input type="hidden" name="price" value="{{ $evento->precio }}">
+
+        <div class="form-group">
+            <label for="quantity">Cantidad:</label>
+            <input type="number" name="quantity" id="quantity" value="1" min="1" class="form-control" style="width: 80px;">
+        </div>
+
+        <button type="submit" class="btn btn-success">Añadir al carrito</button>
+    </form>
+
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>

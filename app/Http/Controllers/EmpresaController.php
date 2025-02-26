@@ -2,21 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\EmpresaBienvenida;
 use App\Models\Empresa;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class EmpresaController extends Controller
 {
-   public function index(Request $request)
-   {
-       $empresas = Empresa::search($request->nombre)->orderBy('id', 'ASC')->paginate(5);
+    public function index(Request $request)
+    {
+        $empresas = Empresa::search($request->nombre)->orderBy('id', 'ASC')->paginate(8);
 
-       return view('empresas.index')->with('empresas', $empresas);
-   }
+        // Si el usuario está autenticado y es admin, mostrar la vista de admin
+        if (auth()->check() && auth()->user()->getRoleNames()->first() === 'admin') {
+            return view('empresas.admin')->with('empresas', $empresas);
+        }
+
+        // Si el usuario no está autenticado o es cliente, mostrar la vista de guest
+        return view('empresas.user')->with('empresas', $empresas);
+    }
+
 
     public function show($id)
     {
@@ -84,8 +95,8 @@ class EmpresaController extends Controller
                 'name' => 'required|string|max:255',
                 'cif' => ['required', 'regex:/^[A-HJNP-SUVW][0-9]{7}[0-9]$/'],
                 'direccion' => 'required|max:255',
-                'email' => 'required|string|email|unique:users,email',
-                'cuentaBancaria' => ['required', 'regex:/^ES\d{2}\s?\d{4}\s?\d{4}\s?\d{2}/'],
+                'email' => 'required|string|email',
+                'cuentaBancaria' => ['required', 'regex:/^ES\d{2}\s?\d{4}(\s?\d{4}){3,4}\s?\d{2}/'],
                 'telefono' => ['required', 'regex:/^(\+34|0034)?[679]\d{8}$/'],
                 'imagen' => 'nullable|image|max:2048'
             ]);
@@ -101,7 +112,8 @@ class EmpresaController extends Controller
             $user->assignRole('empresa');
 
             // 🔹 Crear la empresa y asignarle el usuario recién creado
-            $empresa = new Empresa($validatedEmpresaData);
+            $empresa = new Empresa();
+            $empresa->fill($validatedEmpresaData);
             $empresa->usuario_id = $user->id;
             $empresa->isDeleted = false;
 
@@ -110,12 +122,16 @@ class EmpresaController extends Controller
                 $empresa->imagen = $request->file('imagen')->store('empresas', 'public');
             }
 
+
+            Mail::to($user->email)->send(new EmpresaBienvenida($empresa, $user));
+
             // 🔹 Guardar la empresa en la BD
             $empresa->save();
-
+            Auth::login($user);
             return redirect()->route('empresas.index')->with('status', 'Empresa creada correctamente');
-        } catch (\Exception $e) {
-            return redirect()->route('empresas.create')->with('error', 'Error al crear la empresa: ' . $e->getMessage());
+        } catch (ValidationException $e) {
+            dd($e -> getMessage());
+            return redirect()->back()->withErrors($e->errors())->withInput();
         }
     }
 
@@ -123,17 +139,15 @@ class EmpresaController extends Controller
     {
         $cacheKey = "empresa_{$id}_edit";
 
-        $empresa = Cache::get($cacheKey);
+        Cache::forget($cacheKey);
+
+        $empresa = Empresa::find($id);
 
         if (!$empresa) {
-            $empresa = Empresa::find($id);
-
-            if (!$empresa) {
-                return redirect()->route('empresas.index')->with('error', 'Empresa no encontrada');
-            }
-
-            Cache::put($cacheKey, $empresa, 20);
+            return redirect()->route('empresas.index')->with('error', 'Empresa no encontrada');
         }
+
+        Cache::put($cacheKey, $empresa, 20);
 
         return view('empresas.edit')->with('empresa', $empresa);
     }
@@ -142,11 +156,11 @@ class EmpresaController extends Controller
     {
         $request->validate([
             'cif' => ['required', 'regex:/^[A-HJNP-SUVW][0-9]{7}[0-9A-J]$/'],
-            'name'=> 'required|max:255',
-            'direccion'=> 'required|max:255',
-            'cuentaBancaria' => ['required', 'regex:/^ES\d{2}\s?\d{4}\s?\d{4}\s?\d{2}\s?\d{10}$/'],
+            'name' => 'required|max:255',
+            'direccion' => 'required|max:255',
+            'cuentaBancaria' => ['required', 'regex:/^ES\d{2}\s?\d{4}(\s?\d{4}){3,4}\s?\d{2}/'],
             'telefono' => ['required', 'regex:/^(\+34|0034)?[679]\d{8}$/'],
-            'email'=> 'required|email|max:255'
+            'email' => 'required|email|max:255'
         ]);
 
         try {
@@ -158,7 +172,7 @@ class EmpresaController extends Controller
 
             $empresa->fill($request->all());
 
-            if($request->hasFile('imagen')) {
+            if ($request->hasFile('imagen')) {
                 if (Storage::exists($empresa->imagen)) {
                     Storage::delete($empresa->imagen);
                 }
@@ -168,11 +182,9 @@ class EmpresaController extends Controller
             $empresa->save();
 
             Cache::forget("empresa_{$id}");
+            Cache::forget("empresa_{$id}_edit");
 
-            $html = view('empresas.show', compact('empresa'))->render();
-            Cache::put("empresa_{$id}", $html, 60);
-
-            return redirect()->route('empresas.index')->with('status', 'Empresa actualizada correctamente');
+            return redirect()->route('empresas.index', $id)->with('status', 'Empresa actualizada correctamente');
         } catch (\Exception $e) {
             return redirect()->route('empresas.edit', $id)->with('error', 'Error al actualizar la empresa: '.$e->getMessage());
         }
@@ -201,7 +213,5 @@ class EmpresaController extends Controller
 
         return redirect()->route('empresas.index')->with('error', 'No se ha encontrado la empresa');
     }
-
-
 
 }
