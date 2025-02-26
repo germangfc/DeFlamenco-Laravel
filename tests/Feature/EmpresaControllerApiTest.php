@@ -12,6 +12,7 @@ use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class EmpresaControllerApiTest extends TestCase
 {
@@ -31,15 +32,23 @@ class EmpresaControllerApiTest extends TestCase
     #[Test]
     public function test_puede_obtener_todas_las_empresas()
     {
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
 
-        $response = $this->getJson('/api/empresas');
+        $response = $this->getJson('/api/empresas', [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
+        // Verificar el estado de la respuesta y los datos
         $response->assertStatus(200)
             ->assertJsonPath('data', fn ($data) => count($data) === 5);
     }
 
     public function test_empresa_en_cache()
     {
+
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
         $empresa = Empresa::factory()->create();
 
         Cache::shouldReceive('get')
@@ -47,7 +56,9 @@ class EmpresaControllerApiTest extends TestCase
             ->with("empresa_{$empresa->id}")
             ->andReturn($empresa);
 
-        $response = $this->getJson("/api/empresas/{$empresa->id}");
+        $response = $this->getJson("/api/empresas/{$empresa->id}", [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
         $response->assertStatus(200)
             ->assertJson([
@@ -57,6 +68,8 @@ class EmpresaControllerApiTest extends TestCase
     }
     public function test_empresa_no_en_cache()
     {
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
         $empresa = Empresa::factory()->create();
 
         Cache::shouldReceive('get')
@@ -71,7 +84,9 @@ class EmpresaControllerApiTest extends TestCase
                 return $arg instanceof Empresa && $arg->id === $empresa->id;
             }), 20);
 
-        $response = $this->getJson("/api/empresas/{$empresa->id}");
+        $response = $this->getJson("/api/empresas/{$empresa->id}", [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
         $response->assertStatus(200)
             ->assertJson([
@@ -84,11 +99,15 @@ class EmpresaControllerApiTest extends TestCase
     #[Test]
     public function test_puede_obtener_una_empresa_por_id()
     {
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
         $empresa = Empresa::first();
 
         $this->assertNotNull($empresa, 'No se encontró ninguna empresa en la base de datos.');
 
-        $response = $this->getJson("/api/empresas/{$empresa->id}");
+        $response = $this->getJson("/api/empresas/{$empresa->id}", [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
         $response->assertStatus(200)
             ->assertJson([
@@ -100,13 +119,17 @@ class EmpresaControllerApiTest extends TestCase
 
     public function test_empresa_not_found()
     {
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
         Cache::shouldReceive('get')
             ->once()
             ->with("empresa_999")
             ->andReturnNull();
 
 
-        $response = $this->getJson("/api/empresas/999");
+        $response = $this->getJson("/api/empresas/999", [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
         $response->assertStatus(404)
             ->assertJson([
@@ -116,6 +139,8 @@ class EmpresaControllerApiTest extends TestCase
 
     #[Test]
     public function test_get_by_nombre_en_cache(){
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
         $empresa = Empresa::factory()->create();
 
         Cache::shouldReceive('get')
@@ -123,7 +148,9 @@ class EmpresaControllerApiTest extends TestCase
             ->with("empresa_nombre_{$empresa->name}")
             ->andReturn($empresa);
 
-        $response = $this->getJson("/api/empresas/nombre/{$empresa->name}");
+        $response = $this->getJson("/api/empresas/nombre/{$empresa->name}", [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
         $response->assertStatus(200)
             ->assertJson([
@@ -134,6 +161,8 @@ class EmpresaControllerApiTest extends TestCase
 
     #[Test]
     public function test_get_by_nombre_no_en_cache(){
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
         $empresa = Empresa::factory()->create();
 
         Cache::shouldReceive('get')
@@ -149,7 +178,9 @@ class EmpresaControllerApiTest extends TestCase
             }), 20);
 
 
-        $response = $this->getJson("/api/empresas/nombre/{$empresa->name}");
+        $response = $this->getJson("/api/empresas/nombre/{$empresa->name}", [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
         $response->assertStatus(200)
             ->assertJson([
@@ -160,12 +191,16 @@ class EmpresaControllerApiTest extends TestCase
 
     public function test_get_by_name_not_found()
     {
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
         Cache::shouldReceive('get')
             ->once()
             ->with('empresa_nombre_lalala')
             ->andReturn(null);
 
-        $response = $this->getJson("/api/empresas/nombre/lalala");
+        $response = $this->getJson("/api/empresas/nombre/lalala", [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
         $response->assertStatus(404)
             ->assertJson([
@@ -175,6 +210,8 @@ class EmpresaControllerApiTest extends TestCase
 
     #[Test]
     public function test_get_by_cif_en_cache(){
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
         $empresa = Empresa::factory()->create();
 
         Cache::shouldReceive('get')
@@ -182,7 +219,9 @@ class EmpresaControllerApiTest extends TestCase
             ->with("empresa_cif_{$empresa->cif}")
             ->andReturn($empresa);
 
-        $response = $this->getJson("/api/empresas/cif/{$empresa->cif}");
+        $response = $this->getJson("/api/empresas/cif/{$empresa->cif}", [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
         $response->assertStatus(200)
             ->assertJson([
@@ -193,6 +232,8 @@ class EmpresaControllerApiTest extends TestCase
 
     #[Test]
     public function test_get_by_cif_no_en_cache(){
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
         $empresa = Empresa::factory()->create();
 
         Cache::shouldReceive('get')
@@ -208,7 +249,9 @@ class EmpresaControllerApiTest extends TestCase
             }), 20);
 
 
-        $response = $this->getJson("/api/empresas/cif/{$empresa->cif}");
+        $response = $this->getJson("/api/empresas/cif/{$empresa->cif}", [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
         $response->assertStatus(200)
             ->assertJson([
@@ -219,12 +262,16 @@ class EmpresaControllerApiTest extends TestCase
 
     public function test_get_by_cif_not_found()
     {
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
         Cache::shouldReceive('get')
             ->once()
             ->with('empresa_cif_lalala')
             ->andReturn(null);
 
-        $response = $this->getJson("/api/empresas/cif/lalala");
+        $response = $this->getJson("/api/empresas/cif/lalala", [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
         $response->assertStatus(404)
             ->assertJson([
@@ -237,6 +284,8 @@ class EmpresaControllerApiTest extends TestCase
     #[Test]
     public function test_puede_crear_una_empresa()
     {
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
         $user = User::factory()->create();
 
         $empresaData = Empresa::factory()->make()->toArray();
@@ -248,7 +297,9 @@ class EmpresaControllerApiTest extends TestCase
         $empresaData['cuentaBancaria'] = 'ES12 34567890123456789012';
         $empresaData['telefono'] = '669843935';
 
-        $response = $this->postJson('/api/empresas', $empresaData);
+        $response = $this->postJson('/api/empresas', $empresaData, [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
         $response->assertStatus(201)
             ->assertJsonFragment(['message' => 'Empresa creada']);
@@ -260,7 +311,11 @@ class EmpresaControllerApiTest extends TestCase
     #[Test]
     public function test_no_puede_crear_una_empresa_con_datos_invalidos()
     {
-        $response = $this->postJson('/api/empresas', []);
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
+        $response = $this->postJson('/api/empresas', [], [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['cif', 'name', 'direccion', 'cuentaBancaria', 'telefono', 'email', 'password']);
@@ -268,6 +323,8 @@ class EmpresaControllerApiTest extends TestCase
 
     #[Test]
     public function test_no_puede_crear_una_empresa_cif_erroneo(){
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
         $response = $this->postJson('/api/empresas', [
             'cif' => 'B1234567890',
             'name' => 'Empresa Test',
@@ -276,6 +333,8 @@ class EmpresaControllerApiTest extends TestCase
             'telefono' => '669843935',
             'email' => 'juanMA@example.com',
             'password' => 'password123',
+        ], [
+            'Authorization' => 'Bearer ' . $token
         ]);
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['cif']);
@@ -283,10 +342,14 @@ class EmpresaControllerApiTest extends TestCase
 
     #[Test]
     public function test_no_puede_crear_una_empresa_nombre_no_Unico(){
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
         $empresa = Empresa::factory()->create(['name' => 'Empresa Test']);
         $nuevaData = ['name' => 'Empresa Test'];
 
-        $response = $this->postJson('/api/empresas', $nuevaData);
+        $response = $this->postJson('/api/empresas', $nuevaData, [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['name']);
@@ -294,6 +357,8 @@ class EmpresaControllerApiTest extends TestCase
 
     #[Test]
     public function test_no_puede_crear_una_empresa_cuenta_incorrecta(){
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
         $response = $this->postJson('/api/empresas', [
             'cif' => 'B1234567J',
             'name' => 'Empresa Test',
@@ -302,6 +367,8 @@ class EmpresaControllerApiTest extends TestCase
             'telefono' => '669843935',
             'email' => 'juanMA@example.com',
             'password' => 'password123',
+        ], [
+            'Authorization' => 'Bearer ' . $token
         ]);
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['cuentaBancaria']);
@@ -309,6 +376,8 @@ class EmpresaControllerApiTest extends TestCase
 
     #[Test]
     public function test_no_puede_crear_una_empresa_telefono_incorrecto(){
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
         $response = $this->postJson('/api/empresas', [
             'cif' => 'B1234567J',
             'name' => 'Empresa Test',
@@ -317,6 +386,8 @@ class EmpresaControllerApiTest extends TestCase
             'telefono' => '+469876543',
             'email' => 'juanMA@example.com',
             'password' => 'password123',
+        ], [
+            'Authorization' => 'Bearer ' . $token
         ]);
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['telefono']);
@@ -324,6 +395,8 @@ class EmpresaControllerApiTest extends TestCase
 
     #[Test]
     public function test_no_puede_crear_una_empresa_email_incorrecto(){
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
         $response = $this->postJson('/api/empresas', [
             'cif' => 'B1234567J',
             'name' => 'Empresa Test',
@@ -332,6 +405,8 @@ class EmpresaControllerApiTest extends TestCase
             'telefono' => '669843935',
             'email' => 'juanmaexample.com',
             'password' => 'password123',
+        ], [
+            'Authorization' => 'Bearer ' . $token
         ]);
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['email']);
@@ -339,6 +414,8 @@ class EmpresaControllerApiTest extends TestCase
 
     #[Test]
     public function test_no_puede_crear_una_empresa_email_existente(){
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
         Empresa::factory()->create(['email' => 'juanMA@example.com']);
 
         $response = $this->postJson('/api/empresas', [
@@ -349,6 +426,8 @@ class EmpresaControllerApiTest extends TestCase
             'telefono' => '669843935',
             'email' => 'juanMA@example.com',
             'password' => 'password123',
+        ], [
+            'Authorization' => 'Bearer ' . $token
         ]);
 
 
@@ -359,6 +438,8 @@ class EmpresaControllerApiTest extends TestCase
     #[Test]
     public function test_puede_actualizar_una_empresa()
     {
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
         Cache::spy(); // Espiar la caché para verificar interacciones
 
         // Crear usuario y empresa con valores fijos
@@ -370,7 +451,9 @@ class EmpresaControllerApiTest extends TestCase
 
         $nuevaData = ['name' => 'Empresa Actualizada'];
 
-        $response = $this->putJson("/api/empresas/{$empresa->id}", $nuevaData);
+        $response = $this->putJson("/api/empresas/{$empresa->id}", $nuevaData, [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('empresas', ['id' => $empresa->id, 'name' => 'Empresa Actualizada']);
@@ -389,13 +472,19 @@ class EmpresaControllerApiTest extends TestCase
 
     #[Test]
     public function test_no_puede_actualizar_una_empresa_not_found(){
-        $response = $this->putJson('/api/empresas/999', ['name' => 'Empresa Actualizada']);
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
+        $response = $this->putJson('/api/empresas/999', ['name' => 'Empresa Actualizada'], [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
         $response->assertStatus(404);
     }
 
     #[Test]
     public function test_no_puede_actualizar_una_empresa_con_nombre_no_unico(){
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
         $empresa = Empresa::factory()->create(['name' => 'Empresa Test']);
         $nuevaData = [
             'cif' => 'B1234567J',
@@ -407,7 +496,9 @@ class EmpresaControllerApiTest extends TestCase
             'password' => 'password123'
             ];
 
-        $response = $this->putJson("/api/empresas/{$empresa->id}", $nuevaData);
+        $response = $this->putJson("/api/empresas/{$empresa->id}", $nuevaData, [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['name']);
@@ -416,6 +507,8 @@ class EmpresaControllerApiTest extends TestCase
     #[Test]
     public function test_no_puede_actualizar_cuenta_invalida()
     {
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
         $empresa = Empresa::factory()->create();
         $nuevaData = [
             'cif' => 'B1234567J',
@@ -427,7 +520,9 @@ class EmpresaControllerApiTest extends TestCase
             'password' => 'password123'
         ];
 
-        $response = $this->putJson("/api/empresas/{$empresa->id}", $nuevaData);
+        $response = $this->putJson("/api/empresas/{$empresa->id}", $nuevaData, [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['cuentaBancaria']);
@@ -435,6 +530,8 @@ class EmpresaControllerApiTest extends TestCase
 
     #[Test]
     public function test_no_puede_actualizar_cif_invalido(){
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
         $empresa = Empresa::factory()->create();
         $nuevaData = [
             'cif' => "ajajaja",
@@ -445,7 +542,9 @@ class EmpresaControllerApiTest extends TestCase
             'email' => 'juanMA@example.com',
             'password' => 'password123'];
 
-        $response = $this->putJson("/api/empresas/{$empresa->id}", $nuevaData);
+        $response = $this->putJson("/api/empresas/{$empresa->id}", $nuevaData, [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['cif']);
@@ -453,6 +552,8 @@ class EmpresaControllerApiTest extends TestCase
 
     #[Test]
     public function test_no_puede_actualizar_telefono_invalido(){
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
         $empresa = Empresa::factory()->create();
         $nuevaData = ['cif' => 'B1234567J',
             'name' => 'Empresa Test',
@@ -462,7 +563,9 @@ class EmpresaControllerApiTest extends TestCase
             'email' => 'juanMA@example.com',
             'password' => 'password123'];
 
-        $response = $this->putJson("/api/empresas/{$empresa->id}", $nuevaData);
+        $response = $this->putJson("/api/empresas/{$empresa->id}", $nuevaData, [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['telefono']);
@@ -470,6 +573,8 @@ class EmpresaControllerApiTest extends TestCase
 
     #[Test]
     public function test_no_puede_actualizar_email_invalido(){
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
         $empresa = Empresa::factory()->create();
         $nuevaData = ['cif' => 'B1234567J',
             'name' => 'Empresa Test',
@@ -479,7 +584,9 @@ class EmpresaControllerApiTest extends TestCase
             'email' => 'juanmaexample.com',
             'password' => 'password123'];
 
-        $response = $this->putJson("/api/empresas/{$empresa->id}", $nuevaData);
+        $response = $this->putJson("/api/empresas/{$empresa->id}", $nuevaData, [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['email']);
@@ -488,9 +595,13 @@ class EmpresaControllerApiTest extends TestCase
     #[Test]
     public function test_no_puede_eliminar_una_empresa_not_found()
     {
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
         Cache::spy(); // Simula el comportamiento de la caché
 
-        $response = $this->deleteJson('/api/empresas/999');
+        $response = $this->deleteJson('/api/empresas/999', [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
         $response->assertStatus(404);
 
@@ -501,6 +612,8 @@ class EmpresaControllerApiTest extends TestCase
     #[Test]
     public function test_puede_eliminar_una_empresa()
     {
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
         Cache::spy(); // Simula la caché
 
         $empresa = Empresa::factory()->create();
@@ -509,7 +622,9 @@ class EmpresaControllerApiTest extends TestCase
         Cache::put("empresa_{$empresa->id}", $empresa, 20);
         Cache::put("user_{$empresa->usuario_id}",$empresa, 20);
 
-        $response = $this->deleteJson("/api/empresas/{$empresa->id}");
+        $response = $this->deleteJson("/api/empresas/{$empresa->id}", [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
         $response->assertStatus(204);
 
