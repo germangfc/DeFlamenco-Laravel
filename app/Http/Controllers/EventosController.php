@@ -88,19 +88,18 @@ class EventosController extends Controller
     {
         $cacheKey = "evento_{$id}";
 
-        $evento = Cache::get($cacheKey);
+        $evento = Cache::remember($cacheKey, 60, function () use ($id) {
+            return Evento::find($id);
+        });
 
         if (!$evento) {
-            $evento = Evento::find($id);
-
-            if (!$evento) {
-                return response()->json(['message' => 'Evento no encontrado'], 404);
-            }
-
-            Cache::put($cacheKey, $evento, 60);
+            return response()->json(['message' => 'Evento no encontrado'], 404);
         }
 
-        return view('eventos.show', compact('evento'));
+        $eventoAnterior = Evento::where('id', '<', $evento->id)->orderBy('id', 'desc')->first();
+        $eventoSiguiente = Evento::where('id', '>', $evento->id)->orderBy('id', 'asc')->first();
+
+        return view('eventos.show', compact('evento', 'eventoAnterior', 'eventoSiguiente'));
     }
 
 
@@ -128,14 +127,14 @@ class EventosController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nombre' => 'required|string|max:255',
+            'nombre' => 'required|string|max:255|unique:eventos,nombre,' . $id,
             'stock' => 'required|integer',
             'fecha' => 'required|date',
-            'hora' => 'required|date_format:H:i:s',
+            'hora' => 'required|date_format:H:i',
             'direccion' => 'required|string|max:255',
             'ciudad' => 'required|string|max:255',
             'precio' => 'required|numeric',
-            'foto' =>'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
 
         $evento = Evento::find($id);
@@ -144,24 +143,40 @@ class EventosController extends Controller
             return response()->json(['message' => 'Evento no encontrado'], 404);
         }
 
-        $evento->nombre = $request->nombre;
-        $evento->stock = $request->stock;
-        $evento->fecha = $request->fecha;
-        $evento->hora = $request->hora;
-        $evento->direccion = $request->direccion;
-        $evento->ciudad = $request->ciudad;
-        $evento->precio = $request->precio;
-        $evento->foto = $request->foto;
-        $evento->save();
+        try {
+            $fotoPath = $evento->foto;
+            if ($request->hasFile('foto')) {
+                $image = $request->file('foto');
 
-        $cacheKey = "evento_{$id}";
-        Cache::forget($cacheKey);
+                $timestamp = now()->timestamp;
+                $customName = 'evento_' . $request->nombre . "_" . $timestamp . '.' . $image->getClientOriginalExtension();
 
-        Cache::put($cacheKey, $evento, 60);
+                $image->storeAs('images', $customName, 'public');
+                $fotoPath = $customName;
+            }
 
-        return redirect()->route('eventos.index');
+            $evento->update([
+                'nombre' => $request->nombre,
+                'stock' => $request->stock,
+                'fecha' => $request->fecha,
+                'hora' => $request->hora,
+                'direccion' => $request->direccion,
+                'ciudad' => $request->ciudad,
+                'precio' => $request->precio,
+                'foto' => $fotoPath,
+            ]);
+
+            $cacheKey = "evento_{$id}";
+            Cache::forget($cacheKey);
+            Cache::put($cacheKey, $evento, 60);
+
+            return redirect()->route('eventos.show', $id)
+                ->with('success', '¡Evento actualizado exitosamente!');
+        } catch (Exception $e) {
+            return redirect()->route('eventos.edit', $id)
+                ->with('error', 'Hubo un problema al actualizar el evento');
+        }
     }
-
 
 
     public function destroy($id)
