@@ -29,6 +29,8 @@ Route::group([
 
     Route::get('eventos/nombre/{nombre}', [EventosApiController::class, 'getByNombre']);
 
+Route::apiResource('/eventos', EventosApiController::class);
+Route::get('eventos/nombre/{nombre}', [EventosApiController::class, 'getByNombre']);
     Route::get('empresas',[EmpresaControllerApi::class, 'getAll']);
     Route::get('empresas/{id}', [EmpresaControllerApi::class, 'getById']);
     Route::get('empresas/nombre/{nombre}', [EmpresaControllerApi::class, 'getByNombre']);
