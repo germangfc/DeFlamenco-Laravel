@@ -184,9 +184,10 @@ class EmpresaController extends Controller
             Cache::forget("empresa_{$id}");
             Cache::forget("empresa_{$id}_edit");
 
-            return redirect()->route('empresas.index', $id)->with('status', 'Empresa actualizada correctamente');
+            return redirect()->route('empresas.index')->with('status', 'Empresa actualizada correctamente');
         } catch (\Exception $e) {
-            return redirect()->route('empresas.edit', $id)->with('error', 'Error al actualizar la empresa: '.$e->getMessage());
+            dd($e -> getMessage());
+            return redirect()->back()->withErrors($e->errors())->withInput();
         }
     }
     public function destroy($id)
