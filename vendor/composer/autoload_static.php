@@ -43,6 +43,7 @@ class ComposerStaticInit626b9e7ddd47fb7eff9aaa53cce0c9ad
         'ce9671a430e4846b44e1c68c7611f9f5' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery.php',
         'a1cfe24d14977df6878b9bf804af2d1c' => __DIR__ . '/..' . '/nunomaduro/collision/src/Adapters/Phpunit/Autoload.php',
         'ec07570ca5a812141189b1fa81503674' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
+        'd7d2249221e8f706679d508baca33c36' => __DIR__ . '/..' . '/spatie/laravel-flash/src/helpers.php',
         '377b22b161c09ed6e5152de788ca020a' => __DIR__ . '/..' . '/spatie/laravel-permission/src/helpers.php',
     );
 
@@ -55,6 +56,10 @@ class ComposerStaticInit626b9e7ddd47fb7eff9aaa53cce0c9ad
         array (
             'Whoops\\' => 7,
             'Webmozart\\Assert\\' => 17,
+        ),
+        'U' => 
+        array (
+            'Utils\\' => 6,
         ),
         'T' => 
         array (
@@ -102,6 +107,7 @@ class ComposerStaticInit626b9e7ddd47fb7eff9aaa53cce0c9ad
             'Svg\\' => 4,
             'Stripe\\' => 7,
             'Spatie\\Permission\\' => 18,
+            'Spatie\\Flash\\' => 13,
             'SimpleSoftwareIO\\QrCode\\' => 24,
             'Sabberworm\\CSS\\' => 15,
         ),
@@ -237,6 +243,10 @@ class ComposerStaticInit626b9e7ddd47fb7eff9aaa53cce0c9ad
         'Webmozart\\Assert\\' => 
         array (
             0 => __DIR__ . '/..' . '/webmozart/assert/src',
+        ),
+        'Utils\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/app/utils',
         ),
         'Tymon\\JWTAuth\\' => 
         array (
@@ -401,6 +411,10 @@ class ComposerStaticInit626b9e7ddd47fb7eff9aaa53cce0c9ad
         'Spatie\\Permission\\' => 
         array (
             0 => __DIR__ . '/..' . '/spatie/laravel-permission/src',
+        ),
+        'Spatie\\Flash\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spatie/laravel-flash/src',
         ),
         'SimpleSoftwareIO\\QrCode\\' => 
         array (
@@ -727,6 +741,7 @@ class ComposerStaticInit626b9e7ddd47fb7eff9aaa53cce0c9ad
         'App\\Http\\Controllers\\Api\\EmpresaControllerApi' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/EmpresaControllerApi.php',
         'App\\Http\\Controllers\\Api\\EventosApiController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/EventosApiController.php',
         'App\\Http\\Controllers\\Api\\ImagenController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/ImagenController.php',
+        'App\\Http\\Controllers\\Api\\LoginControllerApi' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/LoginControllerApi.php',
         'App\\Http\\Controllers\\Api\\TicketApiController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/TicketApiController.php',
         'App\\Http\\Controllers\\Api\\UserApiController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/UserApiController.php',
         'App\\Http\\Controllers\\Api\\VentasApiController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/VentasApiController.php',
@@ -739,6 +754,7 @@ class ComposerStaticInit626b9e7ddd47fb7eff9aaa53cce0c9ad
         'App\\Http\\Controllers\\Auth\\PasswordResetLinkController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/PasswordResetLinkController.php',
         'App\\Http\\Controllers\\Auth\\RegisteredUserController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/RegisteredUserController.php',
         'App\\Http\\Controllers\\Auth\\VerifyEmailController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/VerifyEmailController.php',
+        'App\\Http\\Controllers\\CartController' => __DIR__ . '/../..' . '/app/Http/Controllers/CartController.php',
         'App\\Http\\Controllers\\ClienteController' => __DIR__ . '/../..' . '/app/Http/Controllers/ClienteController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\EmpresaController' => __DIR__ . '/../..' . '/app/Http/Controllers/EmpresaController.php',
@@ -748,11 +764,13 @@ class ComposerStaticInit626b9e7ddd47fb7eff9aaa53cce0c9ad
         'App\\Http\\Controllers\\StripeController' => __DIR__ . '/../..' . '/app/Http/Controllers/StripeController.php',
         'App\\Http\\Controllers\\TicketController' => __DIR__ . '/../..' . '/app/Http/Controllers/TicketController.php',
         'App\\Http\\Controllers\\VentaController' => __DIR__ . '/../..' . '/app/Http/Controllers/VentaController.php',
+        'App\\Http\\Middleware\\AdminMiddleware' => __DIR__ . '/../..' . '/app/Http/Middleware/AdminMiddleware.php',
         'App\\Http\\Requests\\Auth\\LoginRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Auth/LoginRequest.php',
         'App\\Http\\Requests\\ProfileUpdateRequest' => __DIR__ . '/../..' . '/app/Http/Requests/ProfileUpdateRequest.php',
         'App\\Mail\\ActualizacionDatos' => __DIR__ . '/../..' . '/app/Mail/ActualizacionDatos.php',
         'App\\Mail\\ClienteBienvenido' => __DIR__ . '/../..' . '/app/Mail/ClienteBienvenido.php',
         'App\\Mail\\EliminacionCuenta' => __DIR__ . '/../..' . '/app/Mail/EliminacionCuenta.php',
+        'App\\Mail\\EmpresaBienvenida' => __DIR__ . '/../..' . '/app/Mail/EmpresaBienvenida.php',
         'App\\Mail\\PagoConfirmado' => __DIR__ . '/../..' . '/app/Mail/PagoConfirmado.php',
         'App\\Models\\Cliente' => __DIR__ . '/../..' . '/app/Models/Cliente.php',
         'App\\Models\\Empresa' => __DIR__ . '/../..' . '/app/Models/Empresa.php',
@@ -763,6 +781,7 @@ class ComposerStaticInit626b9e7ddd47fb7eff9aaa53cce0c9ad
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
         'App\\View\\Components\\AppLayout' => __DIR__ . '/../..' . '/app/View/Components/AppLayout.php',
         'App\\View\\Components\\GuestLayout' => __DIR__ . '/../..' . '/app/View/Components/GuestLayout.php',
+        'App\\utils\\GuuidGenerator' => __DIR__ . '/../..' . '/app/utils/GuuidGenerator.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'BaconQrCode\\Common\\BitArray' => __DIR__ . '/..' . '/bacon/bacon-qr-code/src/Common/BitArray.php',
         'BaconQrCode\\Common\\BitMatrix' => __DIR__ . '/..' . '/bacon/bacon-qr-code/src/Common/BitMatrix.php',
@@ -7283,6 +7302,8 @@ class ComposerStaticInit626b9e7ddd47fb7eff9aaa53cce0c9ad
         'SimpleSoftwareIO\\QrCode\\Image' => __DIR__ . '/..' . '/simplesoftwareio/simple-qrcode/src/Image.php',
         'SimpleSoftwareIO\\QrCode\\ImageMerge' => __DIR__ . '/..' . '/simplesoftwareio/simple-qrcode/src/ImageMerge.php',
         'SimpleSoftwareIO\\QrCode\\QrCodeServiceProvider' => __DIR__ . '/..' . '/simplesoftwareio/simple-qrcode/src/QrCodeServiceProvider.php',
+        'Spatie\\Flash\\Flash' => __DIR__ . '/..' . '/spatie/laravel-flash/src/Flash.php',
+        'Spatie\\Flash\\Message' => __DIR__ . '/..' . '/spatie/laravel-flash/src/Message.php',
         'Spatie\\Permission\\Commands\\CacheReset' => __DIR__ . '/..' . '/spatie/laravel-permission/src/Commands/CacheReset.php',
         'Spatie\\Permission\\Commands\\CreatePermission' => __DIR__ . '/..' . '/spatie/laravel-permission/src/Commands/CreatePermission.php',
         'Spatie\\Permission\\Commands\\CreateRole' => __DIR__ . '/..' . '/spatie/laravel-permission/src/Commands/CreateRole.php',

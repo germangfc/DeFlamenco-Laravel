@@ -17,6 +17,7 @@
         "laravel/tinker": "^2.9",
         "mongodb/laravel-mongodb": "^5.1",
         "simplesoftwareio/simple-qrcode": "^4.2",
+        "spatie/laravel-flash": "^1.10",
         "spatie/laravel-permission": "^6.15",
         "stripe/stripe-php": "^16.5",
         "tymon/jwt-auth": "^2.1"
