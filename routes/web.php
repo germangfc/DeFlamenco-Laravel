@@ -51,14 +51,14 @@ Route::prefix('empresa')->group(function () {
 Route::get('/', [EventosController::class, 'getAll'])->name('eventos');
 Route::prefix('eventos')->group(function () {
     Route::get('/create', [EventosController::class, 'create'])->name('eventos.create');
-    Route::post('/', [EventosController::class, 'store'])->name('eventos.store');
+    Route::post('/', [EventosController::class, 'store'])->name('eventos.store')->middleware(['auth','admin']);
     Route::get('/', [EventosController::class, 'getAll'])->name('eventos.index');
-    Route::get('/index-admin', [EventosController::class, 'index'])->name('eventos.index-admin');
+    Route::get('/index-admin', [EventosController::class, 'index'])->name('eventos.index-admin')->middleware(['auth','admin']);
     Route::get('/{id}', [EventosController::class, 'show'])->name('eventos.show');
-    Route::get('/{id}/edit', [EventosController::class, 'edit'])->name('eventos.edit');
-    Route::get('/' , [EventosController::class, 'update'])->name('eventos.update');
-    Route::put('/{id}', [EventosController::class, 'update'])->name('eventos.update');
-    Route::delete('/{id}', [EventosController::class, 'destroy'])->name('eventos.destroy');
+    Route::get('/{id}/edit', [EventosController::class, 'edit'])->name('eventos.edit')->middleware(['auth','admin']);
+    Route::get('/' , [EventosController::class, 'update'])->name('eventos.update')->middleware(['auth','admin']);
+    Route::put('/{id}', [EventosController::class, 'update'])->name('eventos.update')->middleware(['auth','admin']);
+    Route::delete('/{id}', [EventosController::class, 'destroy'])->name('eventos.destroy')->middleware(['auth','admin']);
 });
 
 Route::prefix('clientes')->group(function () {
