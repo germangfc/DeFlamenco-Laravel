@@ -597,15 +597,15 @@ class EmpresaControllerApiTest extends TestCase
     {
         $admin = User::where('email', 'admin@example.com')->first();
         $token = JWTAuth::fromUser($admin);
-        Cache::spy(); // Simula el comportamiento de la caché
+        Cache::spy();
 
-        $response = $this->deleteJson('/api/empresas/999', [
+        $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token
-        ]);
+        ])->deleteJson('/api/empresas/999');
+
 
         $response->assertStatus(404);
 
-        // Asegurar que no se intentó eliminar caché de una empresa inexistente
         Cache::shouldNotHaveReceived('forget');
     }
 
@@ -614,25 +614,25 @@ class EmpresaControllerApiTest extends TestCase
     {
         $admin = User::where('email', 'admin@example.com')->first();
         $token = JWTAuth::fromUser($admin);
-        Cache::spy(); // Simula la caché
+        Cache::spy();
+        dump($admin);
 
         $empresa = Empresa::factory()->create();
 
-        // Guardamos en caché antes de la prueba
         Cache::put("empresa_{$empresa->id}", $empresa, 20);
         Cache::put("user_{$empresa->usuario_id}",$empresa, 20);
 
-        $response = $this->deleteJson("/api/empresas/{$empresa->id}", [
+        $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token
-        ]);
+        ])->deleteJson("/api/empresas/{$empresa->id}");
+
+
 
         $response->assertStatus(204);
 
-        // Verificar que la empresa y el usuario están marcados como eliminados
         $this->assertDatabaseHas('empresas', ['id' => $empresa->id, 'isDeleted' => true]);
         $this->assertDatabaseHas('users', ['id' => $empresa->usuario_id, 'isDeleted' => true]);
 
-        // Verificar que las claves de caché fueron eliminadas
         Cache::shouldHaveReceived('forget')->with("empresa_{$empresa->id}");
         Cache::shouldHaveReceived('forget')->with("user_{$empresa->usuario_id}");
     }
