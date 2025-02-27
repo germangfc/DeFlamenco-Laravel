@@ -10,7 +10,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('clientes', function (Blueprint $table) {
-            $table->id()->primary();
+            $table->string('id')->primary();
             $table->unsignedBigInteger('user_id');
             $table->string('dni')->unique();
             $table->string('foto_dni')->nullable();

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('empresas', function (Blueprint $table) {
-            $table->increments('id');
+            $table->string('id')->primary();
             $table->string('cif');
             $table->string('name');
             $table->string('direccion');
@@ -20,10 +20,9 @@ return new class extends Migration
             $table->string('telefono');
             $table->string('email');
             $table->string('cuentaBancaria');
-            $table->unsignedInteger('usuario_id')->unique(); // Asegura que un usuario solo tenga una empresa
+            $table->unsignedInteger('usuario_id')->unique();
             $table->foreign('usuario_id')->references('id')->on('users');
             $table->json('lista_eventos')->default(json_encode([]));
-            // $table->foreign('evento_id')->references('id')->on('eventos');
             $table->boolean('isDeleted')->default(false);
             $table->timestamps();
         });
