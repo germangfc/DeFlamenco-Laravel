@@ -14,6 +14,7 @@ class VentaService
     public function generarVenta($ticketList, User $user){
         $guidVenta = (string) Str::uuid();
         $lineasVenta = [];
+        $evento = new Evento();
 
         // Para cada ticket de la lista creamos una línea de venta y la añadimos a la lista
         foreach ($ticketList as $ticket) {
@@ -22,6 +23,7 @@ class VentaService
                 Log::error('Error al generar venta: El evento no existe');
                 return null;
             }
+            $evento = $event;
             /*$lineaVenta=[];
             array_push($lineaVenta, $ticket->_id, $ticket->precio, $event->nombre, $event->fecha, $event->hora, $event->ciudad);
             $lineasVenta[]= $lineaVenta;*/
@@ -35,14 +37,17 @@ class VentaService
         $venta->lineasVenta = $lineasVenta;
         $venta->save();
 
+        $evento->stock--;
+        return $venta;
+
     }
     public function generarTickets($cart, $user){
         $ticketList=[];
 
-        if (!$cart) {
+       /* if (!$cart) {
             Log::error('Error al generar tickets: El carrito está vacío');
             return null;
-        }
+        }*/
 
         //Generar tickets, uno por cada línea del carrito, y tantas como indique el campo cantidad de esa línea del carrito
         foreach ($cart as $item) {
@@ -76,7 +81,7 @@ class VentaService
         if (!$cliente) {
             Log::info('Error al generar ticket de evento: El cliente no existe');
             return null;
-        } else { Log::info('Cliente encontrado'); Log::info('Tipo de cliente: ' . get_class($cliente));}
+        } else { Log::info('Cliente encontrado');}// Log::info('Tipo de cliente: ' . get_class($cliente));}
 
         //Generar ticket
         $ticket = new Ticket;
