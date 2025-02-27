@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cliente;
 use App\Models\Evento;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Validation\ValidationException;
 
 class EventosController extends Controller
 {
@@ -41,27 +41,25 @@ class EventosController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'nombre' => 'required|string|max:255|unique:eventos',
-            'stock' => 'required|integer',
-            'fecha' => 'required|date',
-            'hora' => 'required|date_format:H:i',
-            'direccion' => 'required|string|max:255',
-            'ciudad' => 'required|string|max:255',
-            'precio' => 'required|numeric',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
-        ]);
-
         try {
+            $request->validate([
+                'nombre' => 'required|string|max:255|unique:eventos|min:3',
+                'stock' => 'required|integer',
+                'fecha' => 'required|date',
+                'hora' => 'required|date_format:H:i',
+                'direccion' => 'required|string|max:255',
+                'ciudad' => 'required|string|max:255',
+                'precio' => 'required|numeric',
+                'foto' => 'required|nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            ]);
+
             $fotoPath = "";
             if ($request->hasFile('foto')) {
                 $image = $request->file('foto');
-
                 $timestamp = now()->timestamp;
-                $customName = 'evento_' . $request->nombre . "_" . $timestamp. '.' . $image->getClientOriginalExtension();
-
+                $customName = 'evento_' . $request->nombre . "_" . $timestamp . '.' . $image->getClientOriginalExtension();
                 $image->storeAs('images', $customName, 'public');
-                $fotoPath=$customName;
+                $fotoPath = $customName;
             }
 
             $evento = Evento::create([
@@ -75,8 +73,15 @@ class EventosController extends Controller
                 'foto' => $fotoPath,
             ]);
 
+            $cacheKey = "evento_{$evento->id}";
+            Cache::put($cacheKey, $evento, 60);
+
             return redirect()->route('eventos')
                 ->with('success', '¡Evento creado exitosamente!');
+        } catch (ValidationException $e) {
+            return redirect()->route('eventos.create')
+                ->withErrors($e->errors())
+                ->withInput();
         } catch (Exception $e) {
             return redirect()->route('eventos.create')
                 ->with('error', 'Hubo un problema al crear el evento');
@@ -126,24 +131,24 @@ class EventosController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'nombre' => 'required|string|max:255|unique:eventos,nombre,' . $id,
-            'stock' => 'required|integer',
-            'fecha' => 'required|date',
-            'hora' => 'required|date_format:H:i',
-            'direccion' => 'required|string|max:255',
-            'ciudad' => 'required|string|max:255',
-            'precio' => 'required|numeric',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
-        ]);
-
-        $evento = Evento::find($id);
-
-        if (!$evento) {
-            return response()->json(['message' => 'Evento no encontrado'], 404);
-        }
-
         try {
+            $request->validate([
+                'nombre' => 'required|string|max:255|unique:eventos,nombre,' . $id . '|min:3',
+                'stock' => 'required|integer|min:1',
+                'fecha' => 'required|date',
+                'hora' => 'required|date_format:H:i',
+                'direccion' => 'required|string|max:255',
+                'ciudad' => 'required|string|max:255',
+                'precio' => 'required|numeric|min:0',
+                'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            ]);
+
+            $evento = Evento::find($id);
+
+            if (!$evento) {
+                return response()->json(['message' => 'Evento no encontrado'], 404);
+            }
+
             $fotoPath = $evento->foto;
             if ($request->hasFile('foto')) {
                 $image = $request->file('foto');
@@ -172,6 +177,10 @@ class EventosController extends Controller
 
             return redirect()->route('eventos.show', $id)
                 ->with('success', '¡Evento actualizado exitosamente!');
+        } catch (ValidationException $e) {
+            return redirect()->route('eventos.edit', $id)
+                ->withErrors($e->errors())
+                ->withInput();
         } catch (Exception $e) {
             return redirect()->route('eventos.edit', $id)
                 ->with('error', 'Hubo un problema al actualizar el evento');
