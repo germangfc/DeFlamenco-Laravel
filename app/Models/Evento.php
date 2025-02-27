@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use App\utils\GuuidGenerator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Evento extends Model
 {
     use HasFactory;
+
+    public $incrementing = false;
+    protected $keyType = 'string';
 
     protected $table = 'eventos';
 
@@ -21,6 +25,17 @@ class Evento extends Model
         'precio',
         'foto',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function($evento){
+            if (empty($evento->id)){
+                $evento->id = GuuidGenerator::generateHash();
+            }
+        });
+    }
+
     protected $primarykey = 'id';
 
     public function scopeSearch($query, array $filters)
