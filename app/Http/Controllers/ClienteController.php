@@ -72,7 +72,7 @@ class ClienteController extends Controller
             if ($request->hasFile('foto_dni')) {
                 $image = $request->file('foto_dni');
 
-                $customName = 'dni_' . $validatedClientData['dni'] . '.' . $image->getClientOriginalExtension();
+                $customName = 'perfil_' . $validatedClientData['dni'] . '.' . $image->getClientOriginalExtension();
 
                 $image->storeAs('images', $customName, 'public');
                 $fotoDniPath=$customName;

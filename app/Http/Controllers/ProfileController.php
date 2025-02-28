@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -26,16 +27,36 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $cliente = $user->cliente;
+
+        $user->fill($request->validated());
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
 
-        $request->user()->save();
+        if ($request->hasFile('profile_photo')) {
+            $image = $request->file('profile_photo');
+
+            $customName = 'perfil_' . $cliente->dni . '.' . $image->getClientOriginalExtension();
+
+            $image->storeAs('images', $customName, 'public');
+
+            if ($cliente->foto_dni) {
+                Storage::disk('public')->delete($cliente->foto_dni);
+            }
+
+            $cliente->foto_dni = $customName;
+        }
+
+        $user->save();
+        $cliente->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
+
 
     /**
      * Delete the user's account.
