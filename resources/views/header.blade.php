@@ -82,10 +82,10 @@
                     tabindex="0"
                     class="card card-compact dropdown-content bg-base-300 z-[1] mt-3 w-52 shadow">
                     <div class="card-body">
-                        <span class="text-lg font-bold">{{ count(session('cart', [])) > 0 ? count(session('cart', [])) : 0 }} Items</span>
+                        <span class="text-lg font-bold">{{ count(session('cart', [])) > 0 ? count(session('cart', [])) : 0 }} Entradas</span>
                         <span class="text-info">Subtotal: {{ number_format($subtotal, 2) }}€</span>
                         <div class="card-actions">
-                            <a href="{{ route('cart.index') }}" class="btn btn-primary btn-block">View cart</a>
+                            <a href="{{ route('cart.index') }}" class="btn btn-primary btn-block">Ver Carrito</a>
                         </div>
                     </div>
                 </div>
@@ -121,10 +121,10 @@
                             tabindex="0"
                             class="card card-compact dropdown-content bg-base-300 z-[1] mt-3 w-52 shadow">
                             <div class="card-body">
-                                <span class="text-lg font-bold">{{ count(session('cart', [])) > 0 ? count(session('cart', [])) : 0 }} Items</span>
+                                <span class="text-lg font-bold">{{ count(session('cart', [])) > 0 ? count(session('cart', [])) : 0 }} Entradas</span>
                                 <span class="text-info">Subtotal: {{ number_format($subtotal, 2) }}€</span>
                                 <div class="card-actions">
-                                    <a href="{{ route('cart.index') }}" class="btn btn-primary btn-block">View cart</a>
+                                    <a href="{{ route('cart.index') }}" class="btn btn-primary btn-block">Ver Carrito</a>
                                 </div>
                             </div>
                         </div>
