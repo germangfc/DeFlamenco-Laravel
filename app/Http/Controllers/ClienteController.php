@@ -88,7 +88,7 @@ class ClienteController extends Controller
 
             $user->assignRole('cliente');
             Auth::login($user);
-            return redirect()->route('clientes.index')->with('success', 'Cliente creado con éxito');
+            return redirect()->route('eventos')->with('success', 'Cliente creado con éxito');
         } catch (ValidationException $e) {
             return redirect()->back()->withErrors($e->errors())->withInput();
         }
