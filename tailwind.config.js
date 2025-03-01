@@ -11,6 +11,8 @@ export default {
         fontFamily: {
             cormorant: ['Cormorant', 'serif'],
             cinzel: ['Cinzel', 'serif'],
+            marcellus: ['Marcellus', 'serif'],
+            quicksand: ['Quicksand', 'serif'],
         },
         extend: {
             colors: {
@@ -23,6 +25,7 @@ export default {
                     700: 'var(--color-base-700)',
                     800: 'var(--color-base-800)',
                 },
+                customBeige: '#f4dea8',
             }
         },
     },

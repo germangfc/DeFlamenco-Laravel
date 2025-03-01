@@ -23,9 +23,7 @@ class DatabaseSeeder extends Seeder
         Ticket::truncate();  // Vacía la colección de Ticket
         Venta::truncate();   // Vacía la colección de Venta
 
-        Ticket::factory(12)->create();
-        Venta::factory()->count(5)->create();
-        Venta::where('lineasVenta', 'size', 0)->delete();
+
 
         $this->call([
             UserSeeder::class,
@@ -33,5 +31,9 @@ class DatabaseSeeder extends Seeder
         Cliente::factory()->count(25)->create();
         Empresa::factory()->count(25)->create();
         Evento::factory()->count(50)->create();
+
+        Ticket::factory(12)->create();
+        Venta::factory()->count(5)->create();
+        Venta::where('lineasVenta', 'size', 0)->delete();
     }
 }
