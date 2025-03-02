@@ -59,26 +59,26 @@
                         </div>
                     </div>
 
-                    <div class="flex justify-center md:justify-start md:w-1/3">
-                        <div class="p-6 flex items-center space-x-4 ">
-                            <form action="{{ route('cart.add') }}" method="POST" class="w-full flex items-center space-x-4">
-                                @csrf
-                                <input type="hidden" name="idEvent" value="{{ $evento->id }}">
-                                <input type="hidden" name="price" value="{{ $evento->precio }}">
+                    <div class="md:w-1/3 p-6 border rounded-lg shadow-lg text-center">
+                        <h3 class="text-lg font-semibold mb-3">Cantidad</h3>
+                        <form action="{{ route('cart.add') }}" method="POST" class="w-full">
+                            @csrf
+                            <input type="hidden" name="idEvent" value="{{ $evento->id }}">
+                            <input type="hidden" name="price" value="{{ $evento->precio }}">
 
-                                <label for="quantity" class="text-lg font-semibold">Cantidad:</label>
-                                <input type="number" name="quantity" id="quantity" value="1" min="1"
-                                       class="w-16 px-2 py-1 border rounded-lg text-center">
+                            <div class="flex items-center justify-center space-x-4 mb-4">
+                                <button type="button" id="decrease" class="px-3 py-1">-</button>
+                                <input type="number" name="quantity" id="quantity" value="1" min="1" class="w-16 text-center border rounded-lg">
+                                <button type="button" id="increase" class="px-3 py-1 ">+</button>
+                            </div>
 
-                                <button type="submit">
-                                    Añadir al carrito
-                                </button>
-                            </form>
-                        </div>
+                            <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold">
+                                Comprar ahora $<span id="totalPrice">{{ $evento->precio }}</span>
+                            </button>
+                        </form>
                     </div>
                 </div>
 
-                <!-- Ubicación y mapa -->
                 <div class="mt-8">
                     <h3 class="text-xl font-semibold mb-3 text-center">Ubicación en el mapa</h3>
                     <div id="map" class="w-full h-64 rounded-lg shadow-md"></div>
@@ -113,6 +113,30 @@
                         document.getElementById("map").innerHTML = "<p class='text-red-500 text-center'>No se pudo encontrar la ubicación.</p>";
                     }
                 });
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const quantityInput = document.getElementById("quantity");
+            const totalPrice = document.getElementById("totalPrice");
+            const price = {{ $evento->precio }};
+            const increaseBtn = document.getElementById("increase");
+            const decreaseBtn = document.getElementById("decrease");
+
+            increaseBtn.addEventListener("click", function () {
+                quantityInput.value = parseInt(quantityInput.value) + 1;
+                updateTotal();
+            });
+
+            decreaseBtn.addEventListener("click", function () {
+                if (parseInt(quantityInput.value) > 1) {
+                    quantityInput.value = parseInt(quantityInput.value) - 1;
+                    updateTotal();
+                }
+            });
+
+            function updateTotal() {
+                totalPrice.textContent = (quantityInput.value * price).toFixed(2);
+            }
         });
     </script>
 @endsection
