@@ -68,7 +68,7 @@
     </div>
     <form action="{{ route('cart.add') }}" method="POST">
         @csrf
-        <!-- Supongamos que $event es el objeto que representa el evento o producto -->
+
         <input type="hidden" name="idEvent" value="{{ $evento->id }}">
         <input type="hidden" name="price" value="{{ $evento->precio }}">
 
