@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Evento;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Ticket;
 use Illuminate\Support\Str;
@@ -38,10 +39,14 @@ class VentaFactory extends Factory
         // Extraer los tickets para esta venta
         $lineasVenta = [];
         for ($i = 0; $i < $numLineasVenta; $i++) {
-            $lineasVenta[] = [
+            $ticket = Ticket::find(array_shift(self::$availableTicketsIds)); // Busca el ticket en la base de datos por su ID
+            $event = Evento::find($ticket->idEvent);
+            $lineasVenta[]=[$ticket->_id, $ticket->price, $event->nombre, $event->fecha, $event->hora, $event->ciudad]; // se añade una línea de venta a la lista de lineas de venta
+            /*            $lineasVenta[] = [
                 'idTicket' => array_shift(self::$availableTicketsIds), // Elimina el ticket del array
                 'precioUnitario' => fake()->randomFloat(2, 1, 100),
-            ];
+            ];*/
+            //$lineasVenta[]=[$ticket->_id, $ticket->precio, $event->nombre, $event->fecha, $event->hora, $event->ciudad]; // se añade una línea de venta a la lista de lineas de venta
         }
 
         return [
