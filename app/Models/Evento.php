@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use App\utils\GuuidGenerator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Evento extends Model
 {
     use HasFactory;
+
+    public $incrementing = false;
+    protected $keyType = 'string';
 
     protected $table = 'eventos';
 
@@ -21,7 +25,19 @@ class Evento extends Model
         'precio',
         'foto',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function($evento){
+            if (empty($evento->id)){
+                $evento->id = GuuidGenerator::generateHash();
+            }
+        });
+    }
+
     protected $primarykey = 'id';
+    protected $primaryKey = 'id';
 
     public function scopeSearch($query, array $filters)
     {
@@ -29,7 +45,7 @@ class Evento extends Model
             ->when($filters['query'] ?? null, function ($q, $term) {
                 $term = strtolower($term);
                 $q->where(function ($q2) use ($term) {
-                    $q2->whereRaw('LOWER(nombre) LIKE ?', ["%{$term}%"])
+                    $q2->whereRaw('LOWER(evento) LIKE ?', ["%{$term}%"])
                         ->orWhereRaw('LOWER(ciudad) LIKE ?', ["%{$term}%"])
                         ->orWhereRaw('LOWER(direccion) LIKE ?', ["%{$term}%"]);
                 });

@@ -19,7 +19,7 @@
                                 </div>
                             </td>
                             <td>{{ $evento->fecha }}</td>
-                            <td>{{ $evento->hora }}</td>
+                            <td>{{ \Carbon\Carbon::parse($evento->hora)->format('H:i') }}</td>
                             <td>{{ $evento->ciudad }}</td>
                             <td>{{$evento->precio}}</td>
                             <td>

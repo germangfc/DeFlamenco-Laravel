@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\utils\GuuidGenerator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -9,6 +10,9 @@ class Cliente extends Model
 {
 
     use HasFactory;
+
+    public $incrementing = false;
+    protected $keyType ='string';
     protected $fillable = [
         'user_id',
         'dni',
@@ -21,6 +25,16 @@ class Cliente extends Model
     protected $casts = [
         'lista_entradas' => 'array'
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function($cliente){
+            if (empty($cliente->id)){
+                $cliente->id = GuuidGenerator::generateHash();
+            }
+        });
+    }
 
     public function scopeFindByDni($query, $dni)
     {
