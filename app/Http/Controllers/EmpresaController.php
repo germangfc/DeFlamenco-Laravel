@@ -128,7 +128,7 @@ class EmpresaController extends Controller
             // 🔹 Guardar la empresa en la BD
             $empresa->save();
             Auth::login($user);
-            return redirect()->route('empresas.index')->with('status', 'Empresa creada correctamente');
+            return redirect()->route('empresas.index')->with('success','Empresa creada con éxito');
         } catch (ValidationException $e) {
             dd($e -> getMessage());
             return redirect()->back()->withErrors($e->errors())->withInput();
@@ -184,7 +184,7 @@ class EmpresaController extends Controller
             Cache::forget("empresa_{$id}");
             Cache::forget("empresa_{$id}_edit");
 
-            return redirect()->route('empresas.index')->with('status', 'Empresa actualizada correctamente');
+            return redirect()->route('empresas.index')->with('success', 'Empresa actualizada correctamente');
         } catch (\Exception $e) {
             dd($e -> getMessage());
             return redirect()->back()->withErrors($e->errors())->withInput();
@@ -209,7 +209,7 @@ class EmpresaController extends Controller
 
             $empresa->delete();
 
-            return redirect()->route('empresas.index')->with('status', 'Empresa eliminada correctamente');
+            return redirect()->route('empresas.index')->with('success', 'Empresa eliminada correctamente');
         }
 
         return redirect()->route('empresas.index')->with('error', 'No se ha encontrado la empresa');
