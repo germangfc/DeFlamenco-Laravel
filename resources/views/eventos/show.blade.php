@@ -33,10 +33,8 @@
         <div class="max-w-5xl w-full ">
 
             <div class="p-6">
-                <!-- Contenedor principal con flex para la información y el formulario -->
                 <div class="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-12 text-center md:text-left">
 
-                    <!-- Información del evento -->
                     <div class="flex-1">
                         <div class="flex items-center space-x-3 justify-center md:justify-start">
                             <span class="text-2xl"></span>
@@ -86,23 +84,6 @@
             </div>
         </div>
     </div>
-<<<<<<< HEAD
-    <form action="{{ route('cart.add') }}" method="POST">
-        @csrf
-
-        <input type="hidden" name="idEvent" value="{{ $evento->id }}">
-        <input type="hidden" name="price" value="{{ $evento->precio }}">
-
-        <div class="form-group">
-            <label for="quantity">Cantidad:</label>
-            <input type="number" name="quantity" id="quantity" value="1" min="1" class="form-control" style="width: 80px;">
-        </div>
-
-        <button type="submit" class="btn btn-success">Añadir al carrito</button>
-    </form>
-
-=======
->>>>>>> feature/Vistas
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
