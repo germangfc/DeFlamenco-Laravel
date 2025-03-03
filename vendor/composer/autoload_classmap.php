@@ -49,6 +49,7 @@ return array(
     'App\\Models\\User' => $baseDir . '/app/Models/User.php',
     'App\\Models\\Venta' => $baseDir . '/app/Models/Venta.php',
     'App\\Providers\\AppServiceProvider' => $baseDir . '/app/Providers/AppServiceProvider.php',
+    'App\\Services\\VentaService' => $baseDir . '/app/Services/VentaService.php',
     'App\\View\\Components\\AppLayout' => $baseDir . '/app/View/Components/AppLayout.php',
     'App\\View\\Components\\GuestLayout' => $baseDir . '/app/View/Components/GuestLayout.php',
     'App\\utils\\GuuidGenerator' => $baseDir . '/app/utils/GuuidGenerator.php',

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{{ asset('resources/images/foto_login_flamenco.svg') }}" rel="icon" type="image/svg+xml">
     @vite('resources/css/app.css')
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&display=swap&family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
 </head>
 <body class="flex flex-col min-h-screen">
 
