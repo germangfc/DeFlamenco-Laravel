@@ -28,6 +28,12 @@ class EmpresaControllerTest extends TestCase
         Empresa::factory(5)->create(); // Crea 5 empresas en la base de datos
     }
 
+    public function test_database_connection()
+    {
+        //dump(config('database.connections.pgsql.database'));
+        $this->assertEquals('testing', config('database.connections.pgsql.database'));
+    }
+
 
     public function index()
     {
@@ -44,6 +50,7 @@ class EmpresaControllerTest extends TestCase
     public function testShow()
     {
 
+        config(['vite.hot_file' => null]);
         // Recupera una empresa existente desde la base de datos
         $empresa = Empresa::first();
 
@@ -159,7 +166,6 @@ class EmpresaControllerTest extends TestCase
 
     public function testUpdate()
     {
-
         // Recupera una empresa existente desde la base de datos
         $empresa = Empresa::first();
 
@@ -167,17 +173,22 @@ class EmpresaControllerTest extends TestCase
             'name' => 'Nuevo Nombre',
             'cif' => 'B12345678',
             'direccion' => 'Calle Falsa 124',
-            'cuentaBancaria' => 'ES1234567890123456789012',
+            'cuentaBancaria' => 'ES12 3456 7890 1234 5678 9012',
             'telefono' => '600123456',
-            'email' => 'empresa@test.com'];
+            'email' => 'empresa2@test.com'
+        ];
 
         $response = $this->put(route('empresas.update', $empresa->id), $data);
 
+        // Verificar redirección correcta
         $response->assertRedirect(route('empresas.index'))
             ->assertSessionHas('status', 'Empresa actualizada correctamente');
 
+        // Verificar que los datos se guardaron
         $this->assertDatabaseHas('empresas', ['id' => $empresa->id, 'name' => 'Nuevo Nombre']);
     }
+
+
 
     public function testDestroy()
     {
