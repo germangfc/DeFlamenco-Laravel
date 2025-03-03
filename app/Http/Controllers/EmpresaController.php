@@ -96,7 +96,7 @@ class EmpresaController extends Controller
                 'cif' => ['required', 'regex:/^[A-HJNP-SUVW][0-9]{7}[0-9]$/'],
                 'direccion' => 'required|max:255',
                 'email' => 'required|string|email',
-                'cuentaBancaria' => ['required', 'regex:/^ES\d{2}\s?\d{4}(\s?\d{4}){3,4}\s?\d{2}/'],
+                'cuentaBancaria' => ['required', 'regex:/^ES\d{2}\d{20}$/'],
                 'telefono' => ['required', 'regex:/^(\+34|0034)?[679]\d{8}$/'],
                 'imagen' => 'nullable|image|max:2048'
             ]);
@@ -130,8 +130,11 @@ class EmpresaController extends Controller
             Auth::login($user);
             return redirect()->route('empresas.index')->with('success','Empresa creada con éxito');
         } catch (ValidationException $e) {
-            dd($e -> getMessage());
-            return redirect()->back()->withErrors($e->errors())->withInput();
+
+            return redirect()->back()->withErrors($e->validator)->withInput();
+        } catch (\Exception $e) {
+
+            return redirect()->back()->withErrors($e->getMessage())->withInput();
         }
     }
 
@@ -158,7 +161,7 @@ class EmpresaController extends Controller
             'cif' => ['required', 'regex:/^[A-HJNP-SUVW][0-9]{7}[0-9A-J]$/'],
             'name' => 'required|max:255',
             'direccion' => 'required|max:255',
-            'cuentaBancaria' => ['required', 'regex:/^ES\d{2}\s?\d{4}(\s?\d{4}){3,4}\s?\d{2}/'],
+            'cuentaBancaria' => ['required', 'regex:/^ES\d{2}\d{20}$/'],
             'telefono' => ['required', 'regex:/^(\+34|0034)?[679]\d{8}$/'],
             'email' => 'required|email|max:255'
         ]);
@@ -185,9 +188,12 @@ class EmpresaController extends Controller
             Cache::forget("empresa_{$id}_edit");
 
             return redirect()->route('empresas.index')->with('success', 'Empresa actualizada correctamente');
+        } catch (ValidationException $e) {
+
+            return redirect()->back()->withErrors($e->validator)->withInput();
         } catch (\Exception $e) {
-            dd($e -> getMessage());
-            return redirect()->back()->withErrors($e->errors())->withInput();
+
+            return redirect()->back()->withErrors($e->getMessage())->withInput();
         }
     }
     public function destroy($id)
