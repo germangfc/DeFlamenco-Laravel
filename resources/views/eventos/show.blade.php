@@ -5,20 +5,26 @@
 @extends('main')
 
 @section("content")
-    <div class="min-h-screen w-full relative flex flex-col items-center py-10">
-
-        <div class="w-full max-w-6xl flex justify-between items-center px-4 mb-6">
+    <div class="w-full max-w-6xl flex flex-col items-center px-4 mb-6 mt-12">
+        <div class="flex w-full justify-between items-center">
             @if ($eventoAnterior)
                 <a href="{{ route('eventos.show', $eventoAnterior->id) }}"
                    class="text-3xl transition duration-300">
                     ⬅
                 </a>
+            @else
+                <div class="w-8"></div>
             @endif
 
-            <div class="flex-1 flex justify-center">
+            <div class="flex-1 flex flex-col items-center">
                 <img class="object-cover w-72 h-72 rounded-xl"
                      src='{{ Str::startsWith($evento->foto, "http") ? $evento->foto : asset("storage/images/" . $evento->foto) }}'
                      alt="Evento" />
+                <div class="w-full md:w-2/3 text-center md:text-left px-6 mt-4">
+                    <h2 class="text-4xl md:text-5xl font-bold leading-tight mb-4">
+                        {{ $evento->nombre }}
+                    </h2>
+                </div>
             </div>
 
             @if ($eventoSiguiente)
@@ -26,9 +32,11 @@
                    class="text-3xl transition duration-300">
                     ➡
                 </a>
+            @else
+                <div class="w-8"></div>
             @endif
         </div>
-
+    </div>
 
         <div class="max-w-5xl w-full ">
 
