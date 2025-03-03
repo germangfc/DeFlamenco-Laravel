@@ -147,6 +147,7 @@
                     <li><a href="{{ route('clientes.index') }}">Clientes</a> </li>
                     <li><a href="{{ route('eventos.index-admin') }}">Eventos</a></li>
                     <li><a href="{{ route('profile.edit') }}">Perfil</a></li>
+                    <li><a href="{{ route('ventas.index') }}">Ventas</a></li>
                     <li><form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button id="cerrarSesioncliente" type="submit" >Cerrar Sesión</button>

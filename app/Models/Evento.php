@@ -37,6 +37,7 @@ class Evento extends Model
     }
 
     protected $primarykey = 'id';
+    protected $primaryKey = 'id';
 
     public function scopeSearch($query, array $filters)
     {
@@ -44,7 +45,7 @@ class Evento extends Model
             ->when($filters['query'] ?? null, function ($q, $term) {
                 $term = strtolower($term);
                 $q->where(function ($q2) use ($term) {
-                    $q2->whereRaw('LOWER(nombre) LIKE ?', ["%{$term}%"])
+                    $q2->whereRaw('LOWER(evento) LIKE ?', ["%{$term}%"])
                         ->orWhereRaw('LOWER(ciudad) LIKE ?', ["%{$term}%"])
                         ->orWhereRaw('LOWER(direccion) LIKE ?', ["%{$term}%"]);
                 });
