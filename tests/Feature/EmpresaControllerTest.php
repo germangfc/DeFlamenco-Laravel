@@ -50,7 +50,6 @@ class EmpresaControllerTest extends TestCase
     public function testShow()
     {
 
-        config(['vite.hot_file' => null]);
         // Recupera una empresa existente desde la base de datos
         $empresa = Empresa::first();
 

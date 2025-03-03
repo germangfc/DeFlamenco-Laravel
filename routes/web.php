@@ -36,7 +36,6 @@ Route::prefix('empresa')->group(function () {
     Route::delete('/{id}', [EmpresaController::class, 'destroy'])->name('empresas.destroy');
     // Ruta para buscar por ID
     Route::get('/{id}', [EmpresaController::class, 'show'])
-        ->where('id', '[0-9]+') // Solo acepta números para ID
         ->name('empresas.show');
     // Ruta para buscar por nombre
     Route::get('/nombre/{nombre}', [EmpresaController::class, 'showByNombre'])
