@@ -59,7 +59,7 @@ class ClienteController extends Controller
                 'foto_dni' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
             ]);
 
-
+            
             $user = User::create([
                 'name' => $validatedData['name'],
                 'email' => $validatedData['email'],
@@ -91,7 +91,7 @@ class ClienteController extends Controller
 
             return redirect()->route('clientes.index')->with('success', 'Cliente creado con éxito');
         } catch (ValidationException $e) {
-            return redirect()->route('register')->withErrors($e->errors())->withInput();
+            return redirect()->back()->withErrors($e->errors())->withInput();
         }
     }
 

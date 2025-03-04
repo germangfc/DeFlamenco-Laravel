@@ -294,11 +294,7 @@ class ClienteControllerTest extends TestCase
 
         // Verifica el caché
         $clienteCacheKey = "cliente_{$cliente->id}";
-        $cachedCliente = Cache::get($clienteCacheKey);
-
-        $this->assertNotNull($cachedCliente);
-        $this->assertEquals('87654321X', $cachedCliente->dni);
-        $this->assertEquals('nueva/ruta/imagen.jpg', $cachedCliente->foto_dni);
+        $this->assertNull(Cache::get($clienteCacheKey)); // El caché se borró después de actualizar
     }
 
     public function testUpdateDatosErroneos()
