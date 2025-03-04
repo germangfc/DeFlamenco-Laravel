@@ -1,7 +1,7 @@
 @extends('main')
 
 @section("content")
-    <div class="container">
+    <div class="container mt-4">
         <h1>Carrito de Compras</h1>
 
         @if(session('success'))
@@ -14,7 +14,7 @@
             <table class="table table-bordered">
                 <thead>
                 <tr>
-                    <th>ID del Evento</th>
+                    <th>Evento</th>
                     <th>Precio</th>
                     <th>Cantidad</th>
                     <th>Subtotal</th>
@@ -26,16 +26,18 @@
                 @foreach($cart as $item)
                     @php $subtotal = $item['price'] * $item['quantity']; @endphp
                     <tr>
-                        <td>{{ $item['idEvent'] }}</td>
-                        <td>${{ number_format($item['price'], 2) }}</td>
+                        <td>{{ $item['name'] }}</td>
+                        <td>{{ number_format($item['price'], 2) }} €</td>
                         <td>
                             <form action="{{ route('cart.update', $item['idEvent']) }}" method="POST" class="form-inline">
                                 @csrf
-                                <input type="number" name="quantity" value="{{ $item['quantity'] }}" min="1" class="form-control" style="width: 70px;">
-                                <button type="submit" class="btn btn-primary btn-sm ml-2">Actualizar</button>
+                                <div class="flex items-center justify-between">
+                                    <input type="number" name="quantity" value="{{ $item['quantity'] }}" min="1" max="5" class="form-control" style="width: 70px;">
+                                    <button type="submit" class="btn btn-primary btn-sm ml-2">Actualizar</button>
+                                </div>
                             </form>
                         </td>
-                        <td>${{ number_format($subtotal, 2) }}</td>
+                        <td>{{ number_format($subtotal, 2) }} €</td>
                         <td>
                             <form action="{{ route('cart.remove', $item['idEvent']) }}" method="POST">
                                 @csrf
@@ -48,11 +50,13 @@
                 @endforeach
                 </tbody>
             </table>
-            <h3>Total: ${{ number_format($total, 2) }}</h3>
-            <form action="{{ route('stripe.checkout') }}" method="POST">
-                @csrf
-                <button type="submit" class="btn btn-primary">Proceder al Pago con Stripe</button>
-            </form>
+            <div class="flex items-center justify-between mb-4 mt-4 w-2/4 mx-auto">
+                <h3>Total: {{ number_format($total, 2) }} €</h3>
+                <form action="{{ route('stripe.checkout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-primary">Proceder al Pago con Stripe</button>
+                </form>
+            </div>
         @else
             <p>No tienes items en el carrito.</p>
         @endif

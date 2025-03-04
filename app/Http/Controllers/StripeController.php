@@ -46,7 +46,7 @@ class StripeController extends Controller
                 'price_data' => [
                     'currency' => 'eur',
                     'product_data' => [
-                        'name' => 'Evento: ' . $item['idEvent'],
+                        'name' => 'Evento: ' . $item['name'],
                     ],
                     'unit_amount' => $item['price'] * 100,
                 ],
