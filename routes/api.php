@@ -19,7 +19,11 @@ Route::post('/login', [LoginControllerApi::class, '__invoke']);
 Route::group([
     'middleware' => ['auth:api', 'admin']
 ], function () {
-    Route::apiResource('/ticket', TicketApiController::class);
+    Route::get('tickets', [TicketApiController::class, 'index']);
+    Route::get('tickets/{id}', [TicketApiController::class, 'show']);
+    Route::post('tickets', [TicketApiController::class,'store']);
+    Route::delete('tickets/{id}', [TicketApiController::class, 'destroy']);
+
     Route::apiResource('clientes', ClienteApiController::class);
     Route::get('clientes/dni/{dni}', [ClienteApiController::class, 'searchByDni']);
     Route::post('/clientes/email', [ClienteApiController::class, 'searchByEmail']);
@@ -29,8 +33,9 @@ Route::group([
 
     Route::get('eventos/nombre/{nombre}', [EventosApiController::class, 'getByNombre']);
 
-Route::apiResource('/eventos', EventosApiController::class);
-Route::get('eventos/nombre/{nombre}', [EventosApiController::class, 'getByNombre']);
+    Route::apiResource('/eventos', EventosApiController::class);
+    Route::get('eventos/nombre/{nombre}', [EventosApiController::class, 'getByNombre']);
+
     Route::get('empresas',[EmpresaControllerApi::class, 'getAll']);
     Route::get('empresas/{id}', [EmpresaControllerApi::class, 'getById']);
     Route::get('empresas/nombre/{nombre}', [EmpresaControllerApi::class, 'getByNombre']);
