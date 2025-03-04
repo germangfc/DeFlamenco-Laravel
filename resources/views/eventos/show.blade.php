@@ -62,6 +62,7 @@
                         <form action="{{ route('cart.add') }}" method="POST" class="w-full">
                             @csrf
                             <input type="hidden" name="idEvent" value="{{ $evento->id }}">
+                            <input type="hidden" name="name" value="{{ $evento->nombre }}">
                             <input type="hidden" name="price" value="{{ $evento->precio }}">
 
                             <div class="flex items-center justify-center space-x-4 mb-4">

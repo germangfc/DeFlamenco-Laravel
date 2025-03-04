@@ -49,7 +49,7 @@ class StripeController extends Controller
                     'currency' => 'eur',
                     // Puedes adaptar el nombre a lo que necesites; aquí usamos el idEvent.
                     'product_data' => [
-                        'name' => 'Evento: ' . $item['idEvent'],
+                        'name' => 'Evento: ' . $item['name'],
                     ],
                     // Stripe espera el precio en céntimos, por lo que se multiplica por 100.
                     'unit_amount' => $item['price'] * 100,
