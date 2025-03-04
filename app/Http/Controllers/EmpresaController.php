@@ -75,10 +75,15 @@ class EmpresaController extends Controller
         return redirect()->route('empresas.show',['id' => $empresa->id]);
     }
 
-   public function create()
-   {
-       return view ('empresas.create');
-   }
+    public function create()
+    {
+        if (Auth::check() && Auth::user()->hasRole('admin')) {
+            return view('empresas.create-admin');
+        }
+
+        return view('empresas.create');
+    }
+
 
     public function store(Request $request)
     {
@@ -98,10 +103,10 @@ class EmpresaController extends Controller
                 'email' => 'required|string|email',
                 'cuentaBancaria' => ['required', 'regex:/^ES\d{2}\d{20}$/'],
                 'telefono' => ['required', 'regex:/^(\+34|0034)?[679]\d{8}$/'],
-                'imagen' => 'nullable|image|max:2048'
+                'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
             ]);
 
-            // 🔹 Crear el usuario en la BD
+            // 🔹 Crear el usuario
             $user = User::create([
                 'name' => $validatedUserData['name'],
                 'email' => $validatedUserData['email'],
@@ -111,32 +116,46 @@ class EmpresaController extends Controller
             // 🔹 Asignar rol al usuario
             $user->assignRole('empresa');
 
-            // 🔹 Crear la empresa y asignarle el usuario recién creado
-            $empresa = new Empresa();
-            $empresa->fill($validatedEmpresaData);
-            $empresa->usuario_id = $user->id;
-            $empresa->isDeleted = false;
-
-            // 🔹 Guardar la imagen si está presente
+            // 🔹 Procesar imagen de empresa
+            $imagenPath = null;
             if ($request->hasFile('imagen')) {
-                $empresa->imagen = $request->file('imagen')->store('empresas', 'public');
+                $image = $request->file('imagen');
+                $customName = 'empresa_' . str_replace(' ', '_', strtolower($validatedEmpresaData['name'])) . '.' . $image->getClientOriginalExtension();
+                $image->storeAs('empresas', $customName, 'public');
+                $imagenPath = $customName;
             }
 
+            // 🔹 Crear la empresa
+            $empresa = Empresa::create([
+                'usuario_id' => $user->id,
+                'name' => $validatedEmpresaData['name'],
+                'cif' => $validatedEmpresaData['cif'],
+                'direccion' => $validatedEmpresaData['direccion'],
+                'email' => $validatedEmpresaData['email'],
+                'cuentaBancaria' => $validatedEmpresaData['cuentaBancaria'],
+                'telefono' => $validatedEmpresaData['telefono'],
+                'imagen' => $imagenPath,
+                'isDeleted' => false
+            ]);
 
+            // 🔹 Enviar correo de bienvenida
             Mail::to($user->email)->send(new EmpresaBienvenida($empresa, $user));
 
-            // 🔹 Guardar la empresa en la BD
-            $empresa->save();
-            Auth::login($user);
-            return redirect()->route('empresas.index')->with('success','Empresa creada con éxito');
-        } catch (ValidationException $e) {
+            // 🔹 Redirección según el rol
+            if (Auth::check() && Auth::user()->hasRole('admin')) {
+                return redirect()->route('empresas.index')->with('success', 'Empresa creada con éxito por el administrador');
+            }
 
+            Auth::login($user);
+            return redirect()->route('empresas.index')->with('success', 'Empresa creada con éxito');
+
+        } catch (ValidationException $e) {
             return redirect()->back()->withErrors($e->validator)->withInput();
         } catch (\Exception $e) {
-
             return redirect()->back()->withErrors($e->getMessage())->withInput();
         }
     }
+
 
     public function edit($id)
     {

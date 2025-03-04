@@ -50,48 +50,51 @@ class ClienteController extends Controller
     public function store(Request $request)
     {
         try {
-            $validatedUserData = $request->validate([
+
+            $validatedData = $request->validate([
                 'name' => 'required|string|max:255|min:3',
                 'email' => 'required|string|email|unique:users,email',
-                'password' => 'required'
-            ]);
-
-            $validatedClientData = $request->validate([
-                'dni' => 'nullable|string|regex:/^[0-9]{8}[A-Z]$/|unique:clientes,dni,',
+                'password' => 'required',
+                'dni' => 'required|string|unique:clientes,dni',
                 'foto_dni' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
             ]);
 
+
             $user = User::create([
-                'name' => $validatedUserData['name'],
-                'email' => $validatedUserData['email'],
-                'password' => Hash::make($validatedUserData['password']),
+                'name' => $validatedData['name'],
+                'email' => $validatedData['email'],
+                'password' => Hash::make($validatedData['password']),
             ]);
+
 
             $fotoDniPath = "";
             if ($request->hasFile('foto_dni')) {
                 $image = $request->file('foto_dni');
-
-                $customName = 'perfil_' . $validatedClientData['dni'] . '.' . $image->getClientOriginalExtension();
-
+                $customName = 'dni_' . $validatedData['dni'] . '.' . $image->getClientOriginalExtension();
                 $image->storeAs('images', $customName, 'public');
                 $fotoDniPath = $customName;
             }
 
+
             $cliente = Cliente::create([
                 'user_id' => $user->id,
-                'dni' => $validatedClientData['dni'],
+                'dni' => $validatedData['dni'],
                 'foto_dni' => $fotoDniPath
             ]);
 
+
             Mail::to($user->email)->send(new ClienteBienvenido($cliente, $user));
+
 
             $user->assignRole('cliente');
             Auth::login($user);
-            return redirect()->route('eventos')->with('success', 'Cliente creado con éxito');
+
+            return redirect()->route('clientes.index')->with('success', 'Cliente creado con éxito');
         } catch (ValidationException $e) {
             return redirect()->route('register')->withErrors($e->errors())->withInput();
         }
     }
+
 
     public function edit($id)
     {
