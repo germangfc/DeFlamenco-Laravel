@@ -20,6 +20,8 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/ticket/validar/{id}', [TicketController::class, 'validar'])->name('ticket.validar');
+
 Route::prefix('venta')->group(function () {
     Route::get('/{id}',[VentaController::class, 'show'])->name('ventas.show'); //->middleware(['auth','admin']);
     Route::get('/', [VentaController::class,'index'])->name('ventas.index'); //->middleware(['auth','admin']);
