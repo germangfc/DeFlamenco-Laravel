@@ -59,7 +59,7 @@ class ClienteController extends Controller
                 'foto_dni' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
             ]);
 
-
+            
             $user = User::create([
                 'name' => $validatedData['name'],
                 'email' => $validatedData['email'],
