@@ -20,7 +20,8 @@ class CartController extends Controller
         $data = $request->validate([
             'idEvent'  => 'required',
             'price'    => 'required|numeric',
-            'quantity' => 'sometimes|numeric|min:1'
+            'quantity' => 'sometimes|numeric|min:1|max:5',
+            'name'     => 'required|'
         ]);
 
         $data['quantity'] = $data['quantity'] ?? 1;
