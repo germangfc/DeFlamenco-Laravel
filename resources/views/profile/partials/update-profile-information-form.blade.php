@@ -52,7 +52,7 @@
 
                 <div>
                     <x-input-label for="profile_photo" :value="__('Cambiar Foto de Perfil')" />
-                    <x-text-input id="profile_photo" name="profile_photo" type="file" class="mt-1 block w-full" />
+                    <x-file-input-basico id="profile_photo" name="profile_photo" type="file" class="mt-1 w-full" />
                     <x-input-error class="mt-2" :messages="$errors->get('profile_photo')" />
                 </div>
             </div>
