@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Http\Controllers\Api;
+namespace Tests\Feature;
 
 use App\Models\Ticket;
 use Illuminate\Foundation\Testing\RefreshDatabase;
