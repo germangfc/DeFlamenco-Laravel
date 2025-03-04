@@ -3,12 +3,12 @@
 use App\Http\Controllers\Api\ClienteApiController;
 use App\Http\Controllers\Api\EmpresaControllerApi;
 use App\Http\Controllers\Api\EventosApiController;
-use App\Http\Controllers\Api\ImagenController;
+
 use App\Http\Controllers\Api\LoginControllerApi;
 use App\Http\Controllers\Api\TicketApiController;
 use App\Http\Controllers\Api\UserApiController;
 use App\Http\Controllers\Api\VentasApiController;
-use App\Http\Controllers\MailController;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -41,11 +41,7 @@ Route::get('eventos/nombre/{nombre}', [EventosApiController::class, 'getByNombre
 
     Route::apiResource('ventas', VentasApiController::class);
 
-    Route::post('/upload-image', [ImagenController::class, 'uploadImage']);
-    Route::delete('/delete-image/{filePath}', [ImagenController::class, 'deleteImage']);
-    Route::get('/show-image/{filePath}', [ImagenController::class, 'showImage']);
 
-    Route::post('/admin/send-email', [MailController::class, 'sendEmail']);
 
 });
 

@@ -70,7 +70,9 @@ class ClienteController extends Controller
             $fotoDniPath = "";
             if ($request->hasFile('foto_dni')) {
                 $image = $request->file('foto_dni');
-                $customName = 'dni_' . $validatedClientData['dni'] . '.' . $image->getClientOriginalExtension();
+
+                $customName = 'perfil_' . $validatedClientData['dni'] . '.' . $image->getClientOriginalExtension();
+
                 $image->storeAs('images', $customName, 'public');
                 $fotoDniPath = $customName;
             }
@@ -85,7 +87,7 @@ class ClienteController extends Controller
 
             $user->assignRole('cliente');
             Auth::login($user);
-            return redirect()->route('clientes.index')->with('success', 'Cliente creado con éxito');
+            return redirect()->route('eventos')->with('success', 'Cliente creado con éxito');
         } catch (ValidationException $e) {
             return redirect()->route('register')->withErrors($e->errors())->withInput();
         }
