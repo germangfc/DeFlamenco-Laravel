@@ -56,9 +56,8 @@ class ClienteController extends Controller
                 'password' => 'required'
             ]);
 
-
             $validatedClientData = $request->validate([
-                'dni' => 'required|string|unique:clientes,dni',
+                'dni' => 'nullable|string|regex:/^[0-9]{8}[A-Z]$/|unique:clientes,dni,',
                 'foto_dni' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
             ]);
 
@@ -75,10 +74,10 @@ class ClienteController extends Controller
                 $customName = 'perfil_' . $validatedClientData['dni'] . '.' . $image->getClientOriginalExtension();
 
                 $image->storeAs('images', $customName, 'public');
-                $fotoDniPath=$customName;
+                $fotoDniPath = $customName;
             }
 
-            $cliente=Cliente::create([
+            $cliente = Cliente::create([
                 'user_id' => $user->id,
                 'dni' => $validatedClientData['dni'],
                 'foto_dni' => $fotoDniPath
@@ -90,7 +89,7 @@ class ClienteController extends Controller
             Auth::login($user);
             return redirect()->route('eventos')->with('success', 'Cliente creado con éxito');
         } catch (ValidationException $e) {
-            return redirect()->back()->withErrors($e->errors())->withInput();
+            return redirect()->route('register')->withErrors($e->errors())->withInput();
         }
     }
 
