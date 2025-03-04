@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Dto\Cliente\ClienteResponse;
 use App\Http\Controllers\Controller;
 use App\Mail\ActualizacionDatos;
 use App\Mail\ClienteBienvenido;
@@ -71,7 +70,7 @@ class ClienteApiController extends Controller
             }
         }
 
-        return response()->json(new ClienteResponse($user, $cliente), 200);
+        return response()->json( $cliente, 200);
     }
 
 
@@ -110,7 +109,7 @@ class ClienteApiController extends Controller
             Cache::put($clienteCacheKey, $cliente, 60);
         }
 
-        return response()->json([new ClienteResponse($user, $cliente)], 200);
+        return response()->json( $cliente, 200);
     }
 
 
@@ -144,7 +143,7 @@ class ClienteApiController extends Controller
 
 
             return response()->json([
-                new ClienteResponse($user,$cliente),
+                $cliente,
             ], 201);
 
         } catch (ValidationException $e) {
@@ -215,7 +214,7 @@ class ClienteApiController extends Controller
         Cache::put($userCacheKey, $user, 20);
 
         Mail::to($user->email)->send(new ActualizacionDatos($user));
-        return response()->json(new ClienteResponse($user, $cliente), 200);
+        return response()->json( $cliente, 200);
     }
 
 
@@ -286,38 +285,6 @@ class ClienteApiController extends Controller
             'path' => $customName
         ]);
     }
-
-    public function uploadAvatar(Request $request, $clienteId)
-    {
-        $request->validate([
-            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
-
-        $cliente = Cliente::find($clienteId);
-
-        if (!$cliente) {
-            return response()->json(['message' => 'Cliente no encontrado'], 404);
-        }
-
-        if (!empty($cliente->avatar)) {
-            Storage::disk('public')->delete('avatars/' . $cliente->avatar);
-        }
-
-        $image = $request->file('avatar');
-        $customName = 'avatar_' . $cliente->id . '.' . $image->getClientOriginalExtension();
-
-        $image->storeAs('avatars', $customName, 'public');
-
-        $cliente->avatar = $customName;
-        $cliente->save();
-
-        return response()->json([
-            'message' => 'Avatar actualizado correctamente',
-            'path' => $customName
-        ]);
-    }
-
-
 
 
 }

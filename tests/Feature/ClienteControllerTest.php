@@ -1,13 +1,10 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Feature;
 
-use App\Http\Controllers\Api\ClienteApiController;
 use App\Models\Cliente;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\JsonResponse;
-use Mockery;
 use PHPUnit\Framework\TestCase;
 
 class ClienteControllerTest extends TestCase

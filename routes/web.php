@@ -20,6 +20,8 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/ticket/validar/{id}', [TicketController::class, 'validar'])->name('ticket.validar');
+
 Route::prefix('venta')->group(function () {
     Route::get('/{id}',[VentaController::class, 'show'])->name('ventas.show'); //->middleware(['auth','admin']);
     Route::get('/', [VentaController::class,'index'])->name('ventas.index'); //->middleware(['auth','admin']);
@@ -28,6 +30,7 @@ Route::prefix('venta')->group(function () {
 Route::prefix('empresa')->group(function () {
     Route::get('/create', [EmpresaController::class, 'create'])->name('empresas.create');
     Route::post('/store', [EmpresaController::class, 'store'])->name('empresas.store');
+    Route::get('/createadmin', [EmpresaController::class, 'create'])->name('empresas.create-admin');
     Route::get('/', [EmpresaController::class, 'index'])->name('empresas.index');
     Route::get('/actualizar/{id}', [EmpresaController::class, 'edit'])->name('empresas.edit');//->middleware("can:admin");
     Route::post('/empresas/validate', [EmpresaController::class, 'validateField'])->name('empresas.validate');
@@ -36,7 +39,6 @@ Route::prefix('empresa')->group(function () {
     Route::delete('/{id}', [EmpresaController::class, 'destroy'])->name('empresas.destroy');
     // Ruta para buscar por ID
     Route::get('/{id}', [EmpresaController::class, 'show'])
-        ->where('id', '[0-9]+') // Solo acepta números para ID
         ->name('empresas.show');
     // Ruta para buscar por nombre
     Route::get('/nombre/{nombre}', [EmpresaController::class, 'showByNombre'])
