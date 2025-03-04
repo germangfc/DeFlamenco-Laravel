@@ -2,94 +2,327 @@
 
 namespace Tests\Feature;
 
+use App\Mail\ClienteBienvenido;
 use App\Models\Cliente;
 use App\Models\User;
+use Database\Seeders\UserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use PHPUnit\Framework\TestCase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
+use Tests\TestCase;
+
+
 
 class ClienteControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_index_returns_all_clients()
+
+    protected function setUp(): void
     {
-        Cliente::factory()->count(3)->create();
-
-        $response = $this->getJson(route('clientes.index'));
-
-        $response->assertStatus(200)
-            ->assertJsonCount(3);
+        parent::setUp();
+        $this->seed(UserSeeder::class);
+        Cliente::factory(5)->create();
     }
 
-    public function test_show_returns_client()
+
+    public function testindex()
     {
+
+        $response = $this->get(route('clientes.index'));
+
+        $response->assertStatus(200)
+            ->assertViewIs('clientes.index')
+            ->assertViewHas('clientes');
+
+        $clientes = $response->viewData('clientes');
+        $clientes->load('user');
+
+        foreach ($clientes as $cliente) {
+            $this->assertNotNull($cliente->user, "El cliente con ID {$cliente->id} no tiene un usuario asociado.");
+            $this->assertTrue($cliente->user->hasRole('cliente'), "El usuario asociado al cliente con ID {$cliente->id} no tiene el rol 'cliente'.");
+        }
+
+    }
+
+    public function testShowCacheaDespuesDeLaPrimeraPeticion()
+    {
+        // Creamos un cliente en la base de datos
         $cliente = Cliente::factory()->create();
+        // Forzamos a que la relación 'user' esté cargada si es necesaria en la vista
+        $cliente->load('user');
 
-        $response = $this->getJson(route('clientes.show', $cliente->id));
+        // Aseguramos que la caché esté limpia
+        Cache::flush();
 
+        // Realizamos la petición GET a la ruta 'clientes.show'
+        $response = $this->get(route('clientes.show', $cliente->id));
+
+        // Verificamos que se retorna la vista correcta con la variable 'cliente'
         $response->assertStatus(200)
-            ->assertJson(['id' => $cliente->id]);
+            ->assertViewIs('clientes.show')
+            ->assertViewHas('cliente');
+
+        $clienteFromView = $response->viewData('cliente');
+        $this->assertEquals($cliente->id, $clienteFromView->id);
+
+        // Verificamos que se haya almacenado en caché con la key esperada
+        $cacheKey = "cliente_{$cliente->id}";
+        $cachedCliente = Cache::get($cacheKey);
+        $this->assertNotNull($cachedCliente, "El cliente no fue almacenado en caché.");
+        $this->assertEquals($cliente->id, $cachedCliente->id);
     }
 
-    public function test_search_by_dni()
+    public function testShowUtilizaLaCache()
     {
+        // Creamos un cliente en la base de datos
         $cliente = Cliente::factory()->create();
+        $cliente->load('user'); // Aseguramos que la relación user esté disponible
 
-        $response = $this->getJson(route('clientes.searchByDni', $cliente->dni));
+        // Guardamos el cliente en la caché manualmente
+        Cache::put("cliente_{$cliente->id}", $cliente, 60);
 
+        // Simulamos que la base de datos no tiene clientes
+        Cliente::where('id', $cliente->id)->delete();
+
+        // Hacemos la petición
+        $response = $this->get(route('clientes.show', $cliente->id));
+
+        // Verificamos que el cliente proviene de la caché
         $response->assertStatus(200)
-            ->assertJsonStructure(['user', 'cliente']);
+            ->assertViewIs('clientes.show')
+            ->assertViewHas('cliente', $cliente);
     }
 
-    public function test_search_by_email()
+    public function testShowClienteNotFound()
     {
-        $user = User::factory()->create();
-        $cliente = Cliente::factory()->create();
+        // Elegimos un ID que no existe
+        $nonexistentId = 9999;
+        $response = $this->get(route('clientes.show', $nonexistentId));
 
-        $response = $this->postJson(route('clientes.searchByEmail'), ['email' => $user->email]);
-
-        $response->assertStatus(200)
-            ->assertJsonStructure([['user', 'cliente']]);
+        // Verificamos que se redirige a la ruta 'clientes.index' con el mensaje de error esperado
+        $response->assertRedirect(route('clientes.index'));
+        $response->assertSessionHas('error', 'Cliente no encontrado');
     }
 
-    public function test_store_creates_client()
+    public function testCreate()
     {
+        $response = $this->get(route('clientes.create'));
+        $response->assertStatus(200)
+            ->assertViewIs('clientes.create');
+    }
+
+    public function testStoreValidoGuardaImagenEnviaCorreoTieneRolPermaneceAuth()
+    {
+        Storage::fake('public');
+        Mail::fake();
+
+        $dni = '12345678X';
+        $image = UploadedFile::fake()->image('dni.jpg');
+
         $data = [
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'Juan Pérez',
+            'email' => 'juan@example.com',
             'password' => 'password123',
-            'dni' => '12345678A',
-            'foto_dni' => 'foto.jpg',
-            'lista_entradas' => ['entrada1', 'entrada2']
+            'dni' => $dni,
+            'foto_dni' => $image,
         ];
 
-        $response = $this->postJson('api/clientes', $data);
+        $response = $this->post(route('clientes.store'), $data);
 
-        $response->assertStatus(201)
-            ->assertJsonStructure([['user', 'cliente']]);
+        // Verificamos que se haya creado el usuario
+        $this->assertDatabaseHas('users', [
+            'name' => 'Juan Pérez',
+            'email' => 'juan@example.com',
+        ]);
+
+        // Verificamos que se haya creado el cliente con el user_id correcto
+        $user = User::where('email', 'juan@example.com')->first();
+        $this->assertDatabaseHas('clientes', [
+            'user_id' => $user->id,
+            'dni' => $dni,
+        ]);
+
+        // Verificamos que la imagen se haya guardado
+        Storage::disk('public')->assertExists("images/dni_{$dni}.jpg");
+
+        // Verificamos que se haya enviado el correo
+        Mail::assertSent(ClienteBienvenido::class, function ($mail) use ($user) {
+            return $mail->hasTo($user->email);
+        });
+
+        // Verificamos que el usuario tenga el rol de "cliente"
+        $this->assertTrue($user->hasRole('cliente'));
+
+        // Verificamos la redirección
+        $response->assertRedirect(route('clientes.index'))
+            ->assertSessionHas('success', 'Cliente creado con éxito');
     }
 
-    public function test_update_modifies_client()
+    public function testStoreDatosErroneos()
+    {
+        $response = $this->post(route('clientes.store'), [
+            'name' => '',
+            'email' => '',
+            'password' => '',
+            'dni' => '',
+            'foto_dni' => null // Asegura que la validación del archivo se ejecute
+        ]);
+
+        $response->assertSessionHasErrors(['name', 'email', 'password', 'dni', 'foto_dni']);
+    }
+
+
+
+    public function testStoreEmailExistente()
+    {
+        User::factory()->create(['email' => 'juan@example.com']);
+
+        $data = [
+            'name' => 'Juan Pérez',
+            'email' => 'juan@example.com', // Ya existe
+            'password' => 'password123',
+            'dni' => '12345678X',
+            'foto_dni' => UploadedFile::fake()->image('dni.jpg'),
+        ];
+
+        $response = $this->post(route('clientes.store'), $data);
+
+        $response->assertSessionHasErrors(['email']);
+    }
+
+    public function teststoreDniExistente()
+    {
+        Cliente::factory()->create(['dni' => '12345678X']);
+
+        $response = $this->post(route('clientes.store'), [
+            'name' => 'Juan Pérez',
+            'email' => 'juan@example.com',
+            'password' => 'password123',
+            'dni' => '12345678X',
+            'foto_dni' => UploadedFile::fake()->image('dni.jpg')
+        ]);
+
+        $response->assertSessionHasErrors(['dni']);
+    }
+
+    public function testEditBuscaEnDBYGuerdaEnCache(){
+        $cliente = Cliente::factory()->create();
+        // Forzamos a que la relación 'user' esté cargada si es necesaria en la vista
+        $cliente->load('user');
+
+        // Aseguramos que la caché esté limpia
+        Cache::flush();
+
+        // Realizamos la petición GET a la ruta 'clientes.show'
+        $response = $this->get(route('clientes.edit', $cliente->id));
+
+        // Verificamos que se retorna la vista correcta con la variable 'cliente'
+        $response->assertStatus(200)
+            ->assertViewIs('clientes.edit')
+            ->assertViewHas('cliente');
+
+        $clienteFromView = $response->viewData('cliente');
+        $this->assertEquals($cliente->id, $clienteFromView->id);
+
+        // Verificamos que se haya almacenado en caché con la key esperada
+        $cacheKey = "cliente_{$cliente->id}";
+        $cachedCliente = Cache::get($cacheKey);
+        $this->assertNotNull($cachedCliente, "El cliente no fue almacenado en caché.");
+        $this->assertEquals($cliente->id, $cachedCliente->id);
+    }
+
+    public function testEditUtilizaLaCache()
+    {
+        // Creamos un cliente en la base de datos
+        $cliente = Cliente::factory()->create();
+        $cliente->load('user'); // Aseguramos que la relación user esté disponible
+
+        // Guardamos el cliente en la caché manualmente
+        Cache::put("cliente_{$cliente->id}", $cliente, 60);
+
+        // Simulamos que la base de datos no tiene clientes
+        Cliente::where('id', $cliente->id)->delete();
+
+        // Hacemos la petición
+        $response = $this->get(route('clientes.edit', $cliente->id));
+
+        // Verificamos que el cliente proviene de la caché
+        $response->assertStatus(200)
+            ->assertViewIs('clientes.edit')
+            ->assertViewHas('cliente', $cliente);
+    }
+
+    public function testEditClienteNotFound()
+    {
+        $response = $this->get(route('clientes.edit', 9999));
+        $response->assertSessionHas('error', 'Cliente no encontrado');
+    }
+
+    public function testUpdateClienteSuccess()
+    {
+        $cliente = Cliente::factory()->create();
+        $user = User::find($cliente->user_id);
+
+        $nuevosDatos = [
+            'name' => 'Nuevo Nombre',
+            'email' => 'nuevo@example.com',
+            'password' => 'nuevacontraseña123',
+            'dni' => '87654321X',
+            'foto_dni' => 'nueva/ruta/imagen.jpg'
+        ];
+
+        $response = $this->put(route('clientes.update', $cliente->id), $nuevosDatos);
+
+        $response->assertRedirect(route('clientes.index'));
+        $response->assertSessionHas('success');
+
+        // Verifica la base de datos
+        $this->assertDatabaseHas('clientes', [
+            'id' => $cliente->id,
+            'dni' => '87654321X',
+            'foto_dni' => 'nueva/ruta/imagen.jpg'
+        ]);
+
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'name' => 'Nuevo Nombre',
+            'email' => 'nuevo@example.com'
+        ]);
+
+        // Verifica el caché
+        $clienteCacheKey = "cliente_{$cliente->id}";
+        $cachedCliente = Cache::get($clienteCacheKey);
+
+        $this->assertNotNull($cachedCliente);
+        $this->assertEquals('87654321X', $cachedCliente->dni);
+        $this->assertEquals('nueva/ruta/imagen.jpg', $cachedCliente->foto_dni);
+    }
+
+    public function testUpdateDatosErroneos()
     {
         $cliente = Cliente::factory()->create();
 
-        $data = ['dni' => '87654321B'];
+        $datosInvalidos = [
+            'dni' => '1234', // Formato DNI incorrecto
+            'email' => 'no-es-un-email', // Email inválido
+            'password' => 'corto', // Menos de 8 caracteres
+            'name' => str_repeat('a', 256), // Excede máximo de 255 caracteres
+            'foto_dni' => UploadedFile::fake()->create('documento.pdf') // No es una imagen
+        ];
 
-        $response = $this->putJson(route('clientes.update', $cliente->id), $data);
+        $response = $this->put(route('clientes.update', $cliente->id), $datosInvalidos);
 
-        $response->assertStatus(200);
-        $this->assertDatabaseHas('clientes', ['id' => $cliente->id, 'dni' => '87654321B']);
+        $response->assertSessionHasErrors([
+            'dni',
+            'email',
+            'password',
+            'name',
+            'foto_dni'
+        ]);
     }
 
-    public function test_destroy_soft_deletes_client()
-    {
-        $cliente = Cliente::factory()->create();
-        $user = User::factory()->create(['id' => $cliente->user_id]);
 
-        $response = $this->deleteJson(route('clientes.destroy', $cliente->id));
-
-        $response->assertStatus(200);
-        $this->assertDatabaseHas('clientes', ['id' => $cliente->id, 'is_deleted' => true]);
-        $this->assertDatabaseHas('users', ['id' => $user->id, 'is_deleted' => true]);
-    }
 }
