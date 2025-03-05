@@ -17,7 +17,7 @@
                                  alt="Empresa {{ $empresa->id }}" />
                         </figure>
                         <div class="p-4 text-center font-serif">
-                            <h3 class="text-lg font-semibold">{{ $empresa->name }}</h3>
+                            <h3 class="text-lg font-semibold">{{ $empresa->name }} </h3>
                             <p class="text-sm flex items-center justify-center mt-1">
                                 <i class="fas fa-phone mr-1"></i> {{ $empresa->telefono }}
                             </p>
