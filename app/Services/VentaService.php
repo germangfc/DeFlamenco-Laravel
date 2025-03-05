@@ -28,7 +28,7 @@ class VentaService
             array_push($lineaVenta, $ticket->_id, $ticket->precio, $event->nombre, $event->fecha, $event->hora, $event->ciudad);
             $lineasVenta[]= $lineaVenta;*/
             $lineasVenta[]=[
-                $ticket->_id, $ticket->precio, $event->nombre, $event->fecha, $event->hora, $event->ciudad
+                $ticket->_id, $ticket->price, $event->nombre, $event->fecha, $event->hora, $event->ciudad
             ]; // se añade una línea de venta a la lista de lineas de venta
         }
 
@@ -87,7 +87,7 @@ class VentaService
         $ticket = new Ticket;
         $ticket->idEvent = $idEvent;
         $ticket->idClient = $cliente->id;
-        $ticket->precio = $event->precio;
+        $ticket->price = $event->precio;
         $ticket->isReturned = false;
         $ticket->save();
 

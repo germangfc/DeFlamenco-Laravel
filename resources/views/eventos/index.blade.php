@@ -18,7 +18,6 @@
                                  src='{{ Str::startsWith($evento->foto, 'http') ? $evento->foto : asset("storage/images/" . $evento->foto) }}'
                                  alt="Evento {{ $evento->id }}" />
                         </figure>
-                    </a>
                     <div class="p-4  text-center font-serif">
                         <h3 class="text-lg font-semibold">{{ $evento->nombre }}</h3>
                         <p class="text-sm flex items-center justify-center mt-1">
@@ -28,6 +27,7 @@
                             <i class="fas fa-tag mr-1"></i> {{ $evento->precio }}€
                         </p>
                     </div>
+                    </a>
                 </div>
             @endforeach
         </div>

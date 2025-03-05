@@ -161,6 +161,7 @@
                         tabindex="0"
                         class="menu menu-sm dropdown-content bg-base-300 rounded-box z-[1] mt-3 w-52 p-2 shadow">
                         <li><a href="{{ route('profile.edit') }}">Perfil</a></li>
+                        <li><a href="{{ route('tickets.index') }}">Ver mis entradas</a></li>
                         <li><form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button id="cerrarSesioncliente" type="submit" >Cerrar Sesión</button>

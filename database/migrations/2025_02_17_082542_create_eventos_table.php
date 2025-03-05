@@ -21,7 +21,8 @@ return new class extends Migration
             $table->string('direccion');
             $table->string('ciudad');
             $table->decimal('precio', 8, 2);
-            $table->string('foto');
+            $table->string('foto')->nullable()->default('https://granadateguia.com/wp-content/uploads/2023/02/baile-flamenco-870x480.jpg');
+            $table->text('descripcion')->nullable();
         });
     }
 

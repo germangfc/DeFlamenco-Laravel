@@ -34,12 +34,12 @@
                     </div>
                     @if ($cliente->foto_dni)
                         <div class="col-md-4 text-center">
-                            <h5 class="card-title">Foto DNI:</h5>
-                            <img src="{{ asset('storage/' . $cliente->foto_dni) }}" alt="Foto DNI" class="img-fluid rounded">
+                            <h5 class="card-title">Foto Perfil:</h5>
+                            <img src="{{ asset('storage/images/' . $cliente->foto_dni) }}" alt="Foto Perfil" class="img-fluid rounded">
                         </div>
                     @else
                         <div class="col-md-4 text-center">
-                            <h5 class="card-title">Foto DNI:</h5>
+                            <h5 class="card-title">Foto Perfil:</h5>
                             <p class="card-text">No disponible</p>
                         </div>
                     @endif
