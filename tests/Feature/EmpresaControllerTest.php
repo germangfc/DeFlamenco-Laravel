@@ -7,8 +7,6 @@ use App\Models\User;
 use Database\Seeders\UserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
@@ -35,13 +33,13 @@ class EmpresaControllerTest extends TestCase
     }
 
 
-    public function index()
+    public function testIndex()
     {
 
         $response = $this->get(route('empresas.index'));
 
         $response->assertStatus(200)
-            ->assertViewIs('empresas.index')
+            ->assertViewIs('empresas.user')
             ->assertViewHas('empresas');
     }
 
@@ -61,7 +59,7 @@ class EmpresaControllerTest extends TestCase
     }
 
 
-    public function showNotFound()
+    public function testShowNotFound()
     {
         $response = $this->get(route('empresas.show', 999));
 
@@ -112,7 +110,7 @@ class EmpresaControllerTest extends TestCase
     }
 
 
-    public function showByNombreNotFound()
+    public function testShowByNombreNotFound()
     {
         $response = $this->get(route('empresas.showByNombre', 'Empresa Inexistente'));
 
@@ -159,9 +157,12 @@ class EmpresaControllerTest extends TestCase
             'cuentaBancaria' => 'ES1234567890123456789012',
         ]);
 
-        // Verificar que la imagen se ha guardado correctamente en la carpeta 'public/empresas'
-        Storage::disk('public')->assertExists('empresas/' . $file->hashName());
+        // 🔹 Ajustar la verificación de la imagen con el mismo nombre que se usa en el controlador
+        $customName = 'empresa_' . str_replace(' ', '_', strtolower($data['name'])) . '.' . $file->getClientOriginalExtension();
+
+        Storage::disk('public')->assertExists('empresas/' . $customName);
     }
+
 
     public function testStoreBadName()
     {

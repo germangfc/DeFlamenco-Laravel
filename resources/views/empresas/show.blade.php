@@ -7,7 +7,7 @@
         <div class="card">
             <div class="card-body">
                 <img class="object-cover h-64 w-full transition-transform duration-300 hover:scale-110 rounded-lg"
-                     src='{{ Str::startsWith($empresa->imagen, 'http') ? $empresa->imagen : asset("storage/images/" . $empresa->imagen) }}'
+                     src='{{ Str::startsWith($empresa->imagen, 'http') ? $empresa->imagen : asset("storage/empresas/" . $empresa->imagen) }}'
                      alt="Empresa {{ $empresa->id }}" />
                 <h2>{{ $empresa->name }}</h2>
                 <p><strong>CIF:</strong> {{ $empresa->cif }}</p>
