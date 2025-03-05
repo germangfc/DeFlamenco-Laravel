@@ -20,7 +20,7 @@
                 <img class="object-cover w-72 h-72 rounded-xl"
                      src='{{ Str::startsWith($evento->foto, "http") ? $evento->foto : asset("storage/images/" . $evento->foto) }}'
                      alt="Evento" />
-                <div class="w-full md:w-2/3 text-center md:text-left px-6 mt-4">
+                <div class="w-full text-center px-6 mt-4">
                     <h2 class="text-4xl md:text-5xl font-bold leading-tight mb-4">
                         {{ $evento->nombre }}
                     </h2>
@@ -47,18 +47,12 @@
                         {{$evento->descripcion}}
                     </p>
 
-                    <h3 class="text-2xl font-semibold mb-4">Detalles del Evento</h3>
-                    <div class="flex items-center space-x-3 justify-start mb-4">
-                        <p class="text-lg">
-                            <strong>📅 Fecha:</strong> <span role="img" aria-label="calendar"</span> El {{ $evento->fecha }} a las {{ $evento->hora }}
-                        </p>
-                    </div>
 
-                    <div class="flex items-center space-x-3 justify-start mb-4">
-                        <p class="text-lg">
-                            <strong>📍 Lugar:</strong> <span role="img" aria-label="location"></span> {{ $evento->direccion }}, {{ $evento->ciudad }}
-                        </p>
-                    </div>
+                <h3 class="text-2xl font-semibold mb-4">Detalles del Evento</h3>
+                <p class="text-lg"><strong>📅 Fecha:</strong> {{ $evento->fecha }} a las {{ $evento->hora }}</p>
+                <p class="text-lg"><strong>📍 Lugar:</strong> {{ $evento->direccion }}, {{ $evento->ciudad }}</p>
+                <p class="text-lg font-bold"><strong>Precio:</strong> {{ $evento->precio }}€</p>
+            </div>
 
                     <div class="flex items-center space-x-3 justify-start mb-4 font-bold">
                         <p class="text-lg">
@@ -103,9 +97,8 @@
     </div>
 
     <div class="mt-8">
-            <h3 class="text-xl font-semibold mb-3 text-center">Ubicación en el mapa</h3>
-            <div id="map" class="w-full h-64 rounded-lg shadow-md"></div>
-        </div>
+        <h3 class="text-xl font-semibold mb-3 text-center">Ubicación en el mapa</h3>
+        <div id="map" class="w-full h-64 rounded-lg shadow-md"></div>
     </div>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />

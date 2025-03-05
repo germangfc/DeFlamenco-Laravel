@@ -14,14 +14,14 @@ use App\Models\Venta;
  */
 class VentaFactory extends Factory
 {
-    //protected $model = Venta::class;
     protected static $availableTicketsIds = null;
 
     public function definition()
     {
         // Si es la primera vez que se ejecuta, inicializamos los tickets
         if (self::$availableTicketsIds === null) {
-            self::$availableTicketsIds = Ticket::pluck('id')->toArray();
+            // Aseguramos que hay tickets válidos con eventos asociados
+            self::$availableTicketsIds = Ticket::whereNotNull('idEvent')->pluck('id')->toArray();
             shuffle(self::$availableTicketsIds);
         }
 
@@ -39,14 +39,31 @@ class VentaFactory extends Factory
         // Extraer los tickets para esta venta
         $lineasVenta = [];
         for ($i = 0; $i < $numLineasVenta; $i++) {
-            $ticket = Ticket::find(array_shift(self::$availableTicketsIds)); // Busca el ticket en la base de datos por su ID
+            // Buscar ticket por ID
+            $ticket = Ticket::find(array_shift(self::$availableTicketsIds));
+
+            // Verificar si el ticket existe
+            if (!$ticket) {
+                continue; // Si el ticket no existe, pasamos al siguiente
+            }
+
+            // Buscar evento asociado al ticket
             $event = Evento::find($ticket->idEvent);
-            $lineasVenta[]=[$ticket->_id, $ticket->price, $event->nombre, $event->fecha, $event->hora, $event->ciudad]; // se añade una línea de venta a la lista de lineas de venta
-            /*            $lineasVenta[] = [
-                'idTicket' => array_shift(self::$availableTicketsIds), // Elimina el ticket del array
-                'precioUnitario' => fake()->randomFloat(2, 1, 100),
-            ];*/
-            //$lineasVenta[]=[$ticket->_id, $ticket->precio, $event->nombre, $event->fecha, $event->hora, $event->ciudad]; // se añade una línea de venta a la lista de lineas de venta
+
+            // Verificar si el evento existe
+            if (!$event) {
+                continue; // Si el evento no existe, pasamos al siguiente
+            }
+
+            // Agregar la línea de venta con datos del ticket y evento
+            $lineasVenta[] = [
+                'idTicket' => $ticket->_id,
+                'precioUnitario' => $ticket->price,
+                'nombre' => $event->nombre,
+                'fecha' => $event->fecha,
+                'hora' => $event->hora,
+                'ciudad' => $event->ciudad,
+            ];
         }
 
         return [
@@ -54,5 +71,4 @@ class VentaFactory extends Factory
             'lineasVenta' => $lineasVenta, // Se asignan las líneas de venta
         ];
     }
-
 }

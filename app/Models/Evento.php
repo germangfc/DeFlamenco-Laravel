@@ -37,7 +37,6 @@ class Evento extends Model
         });
     }
 
-    protected $primarykey = 'id';
     protected $primaryKey = 'id';
 
     public function scopeSearch($query, array $filters)
