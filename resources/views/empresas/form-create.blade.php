@@ -7,7 +7,7 @@
                 <div class="text-center">
                     <h6>Sube una foto de perfil</h6>
                     <div class="form-group">
-                        <x-file-input-basico name="imagen" id="imagen" class="form-control text-center center-block well well-sm" accept="image/jpeg"/>
+                        <x-file-input-basico name="imagen" id="imagen" class="form-control text-center center-block well well-sm" accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml"/>
                         <x-input-error class="mt-2" :messages="$errors->get('imagen')" />
                     </div>
                 </div>

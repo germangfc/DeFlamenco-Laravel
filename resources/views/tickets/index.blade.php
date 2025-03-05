@@ -1,50 +1,56 @@
+@php
+    use Illuminate\Support\Str;
+    use Carbon\Carbon;
+@endphp
 @extends('main')
 
 @section('content')
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">Mis Tickets</h1>
-        <div class="card">
-            <div class="card-body">
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th>Flyer</th>
-                        <th>Evento</th>
-                        <th>Precio</th>
-                        <th>Estado</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach ($tickets as $ticket)
-                        <tr>
-                            @foreach($eventos as $evento)
-                                @if ($ticket->event_id == $evento->id)
-                                    <td>
-                                        <img class="object-cover h-16 w-24 rounded-lg"
-                                             src='{{ asset("storage/images/" . $evento->foto) }}'
-                                             alt="Evento {{ $evento->id }}" />
-                                    </td>
-                                    <td>{{ $evento->name }}</td>
-                                    <td>{{ $evento->fecha }}</td>
-                                @endif
-                            @endforeach
-                            <td>{{ number_format($ticket->price, 2) }} €</td>
-                            <td>
-                                @if ($ticket->isDeleted)
-                                    <span class="badge bg-danger">Eliminado</span>
-                                @else
-                                    <span class="badge bg-success">Activo</span>
-                                @endif
-                            </td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
+    <div class="container mx-auto p-6">
+        <h1 class="text-3xl font-bold text-center mb-6">🎟️ Mis Entradas</h1>
 
-                <div class="d-flex justify-content-center mt-4">
-                    {{ $tickets->links() }}
-                </div>
+        @if($tickets->isEmpty())
+            <p class="text-center text-gray-500">No tienes entradas compradas.</p>
+        @else
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach($tickets as $ticket)
+                    @php
+                        $imageSrc = Str::startsWith($ticket->evento->foto, 'http')
+                                    ? $ticket->evento->foto
+                                    : asset('storage/images/' . ($ticket->evento->foto ?? 'default.jpg'));
+
+                        $isExpired = isset($ticket->evento->fecha) && Carbon::parse($ticket->evento->fecha)->isPast();
+                    @endphp
+
+                    <div class="rounded-lg overflow-hidden shadow-lg
+                        {{ $isExpired ? 'bg-gray-200 text-gray-500' : 'bg-white' }}">
+
+                        <img src="{{ $imageSrc }}"
+                             alt="{{ $ticket->evento->nombre ?? 'Evento' }}"
+                             class="w-full h-64 object-cover object-center transition
+                             {{ $isExpired ? 'grayscale brightness-75' : '' }}">
+
+
+                        <div class="p-4">
+                            <h2 class="text-xl font-semibold">{{ $ticket->evento->nombre ?? 'Evento no disponible' }}</h2>
+                            <p>{{ $ticket->evento->ciudad ?? 'Ubicación desconocida' }}</p>
+                            <p class="mt-2">
+                                📅 {{ date('d M Y', strtotime($ticket->evento->fecha ?? now())) }}
+                                ⏰ {{ date('H:i', strtotime($ticket->evento->hora ?? '00:00')) }}
+                            </p>
+                            <p>📍 {{ $ticket->evento->direccion ?? 'Dirección no disponible' }}</p>
+                            <p class="text-lg font-bold mt-2">💶 {{ number_format($ticket->price, 2, ',', '.') }} €</p>
+
+                            @if($isExpired)
+                                <p class="mt-3 text-sm font-bold text-gray-700">⚠️ Caducada</p>
+                            @else
+                                <p class="mt-3 text-sm font-semibold {{ $ticket->isReturned ? 'text-red-500' : 'text-green-500' }}">
+                                    {{ $ticket->isReturned ? '❌ Entrada Devuelta' : '✅ Entrada Válida' }}
+                                </p>
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
             </div>
-        </div>
+        @endif
     </div>
 @endsection

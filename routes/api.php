@@ -15,11 +15,16 @@ use Illuminate\Support\Facades\Route;
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
+Route::apiResource('clientes', ClienteApiController::class);
+Route::apiResource('users', UserApiController::class);
+
+Route::get('empresas',[EmpresaControllerApi::class, 'getAll']);
 Route::post('/login', [LoginControllerApi::class, '__invoke']);
+Route::get('tickets', [TicketApiController::class, 'index']);
 Route::group([
     'middleware' => ['auth:api', 'admin']
 ], function () {
-    Route::get('tickets', [TicketApiController::class, 'index']);
+
     Route::get('tickets/{id}', [TicketApiController::class, 'show']);
     Route::post('tickets', [TicketApiController::class,'store']);
     Route::delete('tickets/{id}', [TicketApiController::class, 'destroy']);
@@ -36,7 +41,7 @@ Route::group([
     Route::apiResource('/eventos', EventosApiController::class);
     Route::get('eventos/nombre/{nombre}', [EventosApiController::class, 'getByNombre']);
 
-    Route::get('empresas',[EmpresaControllerApi::class, 'getAll']);
+
     Route::get('empresas/{id}', [EmpresaControllerApi::class, 'getById']);
     Route::get('empresas/nombre/{nombre}', [EmpresaControllerApi::class, 'getByNombre']);
     Route::get('empresas/cif/{cif}', [EmpresaControllerApi::class,'getByCif']);

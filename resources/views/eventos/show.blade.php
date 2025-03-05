@@ -39,15 +39,13 @@
     </div>
 
     <div class="p-6 mb-8 rounded-lg">
-        <div class="w-full flex flex-col md:flex-row justify-between">
-            <div class="flex-1 p-6 text-left">
-                <h3 class="text-2xl font-semibold mb-6">Información del Evento</h3>
-                <p class="mb-4 text-lg leading-relaxed">
-                    <span class="hidden-text">El mayor evento de música flamenca de 2025 en España 🔥</span><br>
-                    <span class="hidden-text">Un line up inmejorable con los mejores artistas y DJs de la escena repartidos en 4 áreas musicales 🎵</span><br>
-                    <span class="hidden-text">El ambientazo que solo encuentras en {{ $evento->nombre }} con una fiesta non-stop de más de 6 horas 🕺🏼</span><br>
-                    <span class="hidden-text">Todas las fiestas de {{ $evento->nombre }} en exclusiva en De Flamenco 🎁</span>
-                </p>
+        <div class="max-w-5xl w-full mt-8">
+            <div class="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-12 text-center md:text-left">
+                <div class="flex-1 p-6">
+                    <h3 class="text-2xl font-semibold mb-6">Información del Evento</h3>
+                    <p class="flex items-center space-x-3 justify-start mb-4">
+                        {{$evento->descripcion}}
+                    </p>
 
 
                 <h3 class="text-2xl font-semibold mb-4">Detalles del Evento</h3>
@@ -56,28 +54,44 @@
                 <p class="text-lg font-bold"><strong>Precio:</strong> {{ $evento->precio }}€</p>
             </div>
 
-            <div class="p-10 w-full md:w-auto flex flex-col items-center text-white rounded-xl shadow-lg">
-                <h3 class="text-sm font-bold text-center border-2 border-blue-500 bg-blue-600 text-white py-1 px-4 rounded-lg w-full shadow-md">
-                    {{ $evento->fecha }}
-                </h3>
-
-                <p class="mt-3 text-lg font-medium text-center">Entrada general para <strong>{{ $evento->nombre }}</strong></p>
-
-                <form action="{{ route('cart.add') }}" method="POST" class="w-full mt-6">
-                    @csrf
-                    <input type="hidden" name="idEvent" value="{{ $evento->id }}">
-                    <input type="hidden" name="price" value="{{ $evento->precio }}">
-
-                    <div class="flex items-center justify-center space-x-4 mb-6">
-                        <button type="button" id="decrease" class="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition shadow-md">-</button>
-                        <input type="number" name="quantity" id="quantity" value="1" min="1" class="w-16 text-center border rounded-lg text-lg font-semibold bg-gray-800 text-white shadow-md">
-                        <button type="button" id="increase" class="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition shadow-md">+</button>
+                    <div class="flex items-center space-x-3 justify-start mb-4 font-bold">
+                        <p class="text-lg">
+                            <strong>Precio:</strong> <span role="img" aria-label="money"></span> {{ $evento->precio }}€
+                        </p>
                     </div>
+                </div>
+                @if(!Auth::check() || (!Auth::user()->hasRole('admin') && !Auth::user()->hasRole('empresa')))                    <div class="flex-1 p-10 ml-auto w-full md:w-1/2">
+                        <div class="relative">
+                            <h3 class="text-lg font-semibold mt-6 text-center border-2 border-blue-600 bg-blue-600 text-white py-2 px-4 rounded-lg">
+                                {{ $evento->fecha }}
+                            </h3>
 
-                    <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold text-lg shadow-lg hover:bg-blue-700 transition transform hover:scale-105">
-                        Comprar ahora - <span id="totalPrice">{{ $evento->precio }}€</span>
-                    </button>
-                </form>
+                            <p class="mt-2 font-medium text-center">Entrada general para <strong>{{ $evento->nombre }}</strong></p>
+
+                            <form action="{{ route('cart.add') }}" method="POST" class="w-full mt-4">
+                                @csrf
+                                <input type="hidden" name="idEvent" value="{{ $evento->id }}">
+                                <input type="hidden" name="name" value="{{ $evento->nombre }}">
+                                <input type="hidden" name="price" value="{{ $evento->precio }}">
+
+                                <div class="flex items-center justify-center space-x-4 mb-4">
+                                    <button type="button" id="decrease" class="px-4 py-2">
+                                        -
+                                    </button>
+                                    <input type="number" name="quantity" id="quantity" value="1" min="1" class="w-16 text-center border rounded-lg text-lg font-semibold">
+                                    <button type="button" id="increase" class="px-4 py-2">
+                                        +
+                                    </button>
+                                </div>
+
+                                <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold text-lg shadow-md hover:bg-blue-700 transition">
+                                    Comprar ahora - $<span id="totalPrice">{{ $evento->precio }}</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                @endif
+
             </div>
         </div>
     </div>

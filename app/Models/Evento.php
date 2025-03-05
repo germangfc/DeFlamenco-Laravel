@@ -17,6 +17,7 @@ class Evento extends Model
 
     protected $fillable = [
         'nombre',
+        'descripcion',
         'stock',
         'fecha',
         'hora',

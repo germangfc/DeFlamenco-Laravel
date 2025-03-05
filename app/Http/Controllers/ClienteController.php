@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\ClienteBienvenido;
+use App\Mail\EliminacionCuenta;
 use App\Models\Cliente;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
 class ClienteController extends Controller
@@ -89,7 +91,7 @@ class ClienteController extends Controller
             $user->assignRole('cliente');
             Auth::login($user);
 
-            return redirect()->route('clientes.index')->with('success', 'Cliente creado con éxito');
+            return redirect()->route('eventos')->with('success', 'Cliente creado con éxito');
         } catch (ValidationException $e) {
             return redirect()->route('register')->withErrors($e->errors())->withInput();
         }
@@ -133,7 +135,7 @@ class ClienteController extends Controller
 
         $validatedData = $request->validate([
             'dni' => 'nullable|string|regex:/^[0-9]{8}[A-Z]$/|unique:clientes,dni,' . $cliente->id,
-            'foto_dni' => 'nullable|string',
+            'foto_dni' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'name' => 'nullable|string|max:255',
             'email' => 'nullable|string|email|unique:users,email,' . $cliente->user_id,
             'password' => 'nullable|string|min:8',
@@ -141,8 +143,20 @@ class ClienteController extends Controller
 
         $cliente->update([
             'dni' => $validatedData['dni'] ?? $cliente->dni,
-            'foto_dni' => $validatedData['foto_dni'] ?? $cliente->foto_dni,
         ]);
+
+        if ($request->hasFile('foto_dni')) {
+            $image = $request->file('foto_dni');
+            $customName = 'perfil_' . $cliente->dni . '.' . $image->getClientOriginalExtension();
+            if ($cliente->foto_dni) {
+                Storage::disk('public')->delete('images/' .$cliente->foto_dni);
+            }
+            $image->storeAs('images', $customName, 'public');
+
+            $cliente->foto_dni = $customName;
+            $cliente->save();
+
+        }
 
         $user = User::find($cliente->user_id);
         if ($user) {
@@ -179,13 +193,12 @@ class ClienteController extends Controller
 
         if (!$user) {
             $user = User::find($cliente->user_id);
-            if ($user) {
-                Cache::put($userCacheKey, $user, 20);
-            }
         }
 
+        // Eliminar el cliente
         $cliente->delete();
 
+        // Si el usuario existe, proceder con su eliminación
         if ($user) {
             $user->delete();
         }
@@ -193,6 +206,8 @@ class ClienteController extends Controller
         Cache::forget($clienteCacheKey);
         Cache::forget($userCacheKey);
 
-        return redirect()->route('clientes.index')->with('success', 'Cliente eliminado correctamente');
+        return redirect()->route('clientes.index')->with('success', 'Cliente y usuario eliminados correctamente');
     }
+
+
 }

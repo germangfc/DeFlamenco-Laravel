@@ -23,17 +23,17 @@ Route::get('/dashboard', function () {
 Route::get('/ticket/validar/{id}', [TicketController::class, 'validar'])->name('ticket.validar');
 
 Route::prefix('venta')->group(function () {
-    Route::get('/{id}',[VentaController::class, 'show'])->name('ventas.show'); //->middleware(['auth','admin']);
-    Route::get('/', [VentaController::class,'index'])->name('ventas.index'); //->middleware(['auth','admin']);
+    Route::get('/{id}',[VentaController::class, 'show'])->name('ventas.show')->middleware('can:admin');
+    Route::get('/', [VentaController::class,'index'])->name('ventas.index')->middleware('can:admin');
 });
 
 Route::prefix('empresa')->group(function () {
     Route::get('/create', [EmpresaController::class, 'create'])->name('empresas.create');
     Route::post('/store', [EmpresaController::class, 'store'])->name('empresas.store');
-    Route::get('/createadmin', [EmpresaController::class, 'create'])->name('empresas.create-admin');
+    Route::get('/createadmin', [EmpresaController::class, 'create'])->name('empresas.create-admin')->middleware("can:admin");
     Route::get('/', [EmpresaController::class, 'index'])->name('empresas.index');
-    Route::get('/actualizar/{id}', [EmpresaController::class, 'edit'])->name('empresas.edit');//->middleware("can:admin");
-    Route::post('/empresas/validate', [EmpresaController::class, 'validateField'])->name('empresas.validate');
+    Route::get('/actualizar/{id}', [EmpresaController::class, 'edit'])->name('empresas.edit')->middleware("can:admin");
+    Route::post('/empresas/validate', [EmpresaController::class, 'validateField'])->name('empresas.validate')->middleware("can:admin");
 
     Route::put('/{id}', [EmpresaController::class, 'update'])->name('empresas.update');
     Route::delete('/{id}', [EmpresaController::class, 'destroy'])->name('empresas.destroy');
@@ -52,32 +52,35 @@ Route::prefix('empresa')->group(function () {
 
 Route::get('/', [EventosController::class, 'getAll'])->name('eventos');
 Route::prefix('eventos')->group(function () {
-    Route::get('/create', [EventosController::class, 'create'])->name('eventos.create');
-    Route::post('/', [EventosController::class, 'store'])->name('eventos.store')->middleware(['auth','admin']);
+    Route::get('/create', [EventosController::class, 'create'])->name('eventos.create')->middleware('can:empresa');
+    Route::post('/', [EventosController::class, 'store'])->name('eventos.store')->middleware('can:empresa');
     Route::get('/', [EventosController::class, 'getAll'])->name('eventos.index');
-    Route::get('/index-admin', [EventosController::class, 'index'])->name('eventos.index-admin')->middleware(['auth','admin']);
+    Route::get('/index-admin', [EventosController::class, 'index'])->name('eventos.index-admin')->middleware('can:admin');
     Route::get('/{id}', [EventosController::class, 'show'])->name('eventos.show');
-    Route::get('/{id}/edit', [EventosController::class, 'edit'])->name('eventos.edit')->middleware(['auth','admin']);
-    Route::put('/{id}', [EventosController::class, 'update'])->name('eventos.update')->middleware(['auth','admin']);
-    Route::delete('/{id}', [EventosController::class, 'destroy'])->name('eventos.destroy')->middleware(['auth','admin']);
+    Route::get('/{id}/edit', [EventosController::class, 'edit'])->name('eventos.edit')->middleware('can:admin');
+    Route::get('/' , [EventosController::class, 'update'])->name('eventos.update')->middleware('can:admin');
+    Route::put('/{id}', [EventosController::class, 'update'])->name('eventos.update')->middleware('can:admin');
+    Route::delete('/{id}', [EventosController::class, 'destroy'])->name('eventos.destroy')->middleware('can:admin');
 });
 
 Route::prefix('clientes')->group(function () {
     Route::post('/', [ClienteController::class, 'store'])->name('clientes.store');
     Route::get('/create', [ClienteController::class, 'create'])->name('clientes.create');
-    Route::get('/', [ClienteController::class, 'index'])->name('clientes.index');
-    Route::get('/{id}', [ClienteController::class, 'show'])->name('clientes.show');
-    Route::get('/{id}/edit', [ClienteController::class, 'edit'])->name('clientes.edit');
-    Route::put('/{id}', [ClienteController::class, 'update'])->name('clientes.update');
-    Route::delete('/{id}', [ClienteController::class, 'destroy'])->name('clientes.destroy');
+    Route::get('/', [ClienteController::class, 'index'])->name('clientes.index')->middleware('can:admin');
+    Route::get('/{id}', [ClienteController::class, 'show'])->name('clientes.show')->middleware('can:admin');
+    Route::get('/{id}/edit', [ClienteController::class, 'edit'])->name('clientes.edit')->middleware('can:admin');
+    Route::put('/{id}', [ClienteController::class, 'update'])->name('clientes.update')->middleware('can:admin');
+    Route::delete('/{id}', [ClienteController::class, 'destroy'])->name('clientes.destroy')->middleware('can:admin');
+
+
 });
-    Route::delete('/{id}', [ClienteController::class, 'destroy'])->name('clientes.destroy');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-});
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
@@ -87,6 +90,10 @@ Route::delete('/cart/remove/{idEvent}', [CartController::class, 'remove'])->name
 Route::middleware('auth')->group(function () {
     Route::post('/checkout/stripe', [StripeController::class, 'checkout'])->name('stripe.checkout');
     Route::get('/checkout/success', [StripeController::class, 'success'])->name('stripe.success');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/tickets/mistickets', [TicketController::class , 'index'])->name('tickets.index');
 });
 
 
