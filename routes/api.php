@@ -44,7 +44,10 @@ Route::group([
     Route::put('empresas/{id}', [EmpresaControllerApi::class, 'update']);
     Route::delete('empresas/{id}', [EmpresaControllerApi::class, 'destroy']);
 
-    Route::apiResource('ventas', VentasApiController::class);
+    Route::get('ventas', [VentasApiController::class, 'index']);
+    Route::get('ventas/{id}', [VentasApiController::class,'show']);
+    Route::post('ventas', [VentasApiController::class,'store']);
+    Route::delete('ventas/{id}', [VentasApiController::class, 'destroy']);
 
 
 

@@ -69,14 +69,14 @@ class VentasApiController extends Controller
             // Validación estándar
             $request->validate([
                 'guid' => 'required|unique:mongodb.ventas',
-                'lineasVenta' => 'required|array|min:1',
-                'lineasVenta.*' => 'array|size:6', // Cada línea de venta debe tener exactamente 6 elementos
+                'lineasVenta' => ['required|array|min:1'],
+                'lineasVenta.*' => ['array|size:6'], // Cada línea de venta debe tener exactamente 6 elementos
                 'lineasVenta.*.0' => 'required', // idTicket
-                'lineasVenta.*.1' => 'required|numeric|min:0.01', // precioUnitario
-                'lineasVenta.*.2' => 'required|string', // descripción
-                'lineasVenta.*.3' => 'required|date_format:Y-m-d', // fecha
-                'lineasVenta.*.4' => 'required|date_format:H:i:s', // hora
-                'lineasVenta.*.5' => 'required|string' // ubicación
+                'lineasVenta.*.1' => ['required|numeric|min:0.01'], // precioUnitario
+                'lineasVenta.*.2' => ['required|string'], // descripción
+                'lineasVenta.*.3' => ['required|date_format:Y-m-d'], // fecha
+                'lineasVenta.*.4' => ['required|date_format:H:i:s'], // hora
+                'lineasVenta.*.5' => ['required|string']  // ubicación
             ],[
                     'guid.required'            => 'El campo GUID es obligatorio.',
                     'guid.unique'              => 'El GUID ya existe en la base de datos.',
