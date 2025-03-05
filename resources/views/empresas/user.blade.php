@@ -13,16 +13,17 @@
                     <a href="{{ route('empresas.show', $empresa->id) }}">
                         <figure class="relative overflow-hidden rounded-lg">
                             <img class="object-cover h-64 w-full transition-transform duration-300 hover:scale-110 rounded-lg"
-                                 src='{{ Str::startsWith($empresa->imagen, 'http') ? $empresa->imagen : asset("storage/images/" . $empresa->imagen) }}'
+                                 src='{{ Str::startsWith($empresa->imagen, 'http') ? $empresa->imagen : asset("storage/empresas/" . $empresa->imagen) }}'
                                  alt="Empresa {{ $empresa->id }}" />
                         </figure>
+                        <div class="p-4 text-center font-serif">
+                            <h3 class="text-lg font-semibold">{{ $empresa->name }}</h3>
+                            <p class="text-sm flex items-center justify-center mt-1">
+                                <i class="fas fa-phone mr-1"></i> {{ $empresa->telefono }}
+                            </p>
+                        </div>
                     </a>
-                    <div class="p-4 text-center font-serif">
-                        <h3 class="text-lg font-semibold">{{ $empresa->name }}</h3>
-                        <p class="text-sm flex items-center justify-center mt-1">
-                            <i class="fas fa-phone mr-1"></i> {{ $empresa->telefono }}
-                        </p>
-                    </div>
+
                 </div>
             @endforeach
         </div>

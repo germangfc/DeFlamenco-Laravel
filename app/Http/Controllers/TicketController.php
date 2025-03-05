@@ -11,23 +11,26 @@ class TicketController extends Controller
     public function index()
     {
         $idClient = auth()->user()->cliente()->first()->id;
-        // Buscar los tickets en MongoDB
-        $tickets = Ticket::where('idClient',  $idClient)->get();
 
-        // Obtener los IDs de eventos únicos
+        $tickets = Ticket::where('idClient', $idClient)->get();
+
         $eventIds = $tickets->pluck('idEvent')->toArray();
 
-        // Buscar los eventos en PostgreSQL
-        $eventos = Evento::whereIn('id', $eventIds)->get()->keyBy('id');
+        $eventos = Evento::whereIn('id', $eventIds)
+            ->orderBy('fecha', 'desc') // Ordena por fecha descendente
+            ->get()
+            ->keyBy('id');
 
-        // Agregar los eventos a los tickets
         $tickets = $tickets->map(function ($ticket) use ($eventos) {
             $ticket->evento = $eventos[$ticket->idEvent] ?? null;
             return $ticket;
         });
 
+        $tickets = $tickets->sortByDesc(fn($ticket) => $ticket->evento->fecha ?? '1970-01-01');
+
         return view('tickets.index', compact('tickets'));
     }
+
 
     public function validar($id)
     {

@@ -43,10 +43,11 @@ class EventosController extends Controller
     {
         try {
             $request->validate([
-                'nombre' => 'required|string|max:255|unique:eventos|min:3',
+                'nombre' => 'required|string|max:100|unique:eventos|min:3',
+                'descripcion' => 'required|string|min:5|max:500',
                 'stock' => 'required|integer',
                 'fecha' => 'required|date',
-                'hora' => 'required|date_format:H:i',
+                'hora' => 'required',
                 'direccion' => 'required|string|max:255',
                 'ciudad' => 'required|string|max:255',
                 'precio' => 'required|numeric',
@@ -70,6 +71,7 @@ class EventosController extends Controller
                 'direccion' => $request->direccion,
                 'ciudad' => $request->ciudad,
                 'precio' => $request->precio,
+                'descripcion'=>$request->descripcion,
                 'foto' => $fotoPath,
             ]);
 
@@ -136,7 +138,7 @@ class EventosController extends Controller
                 'nombre' => 'required|string|max:255|unique:eventos,nombre,' . $id . '|min:3',
                 'stock' => 'required|integer|min:1',
                 'fecha' => 'required|date',
-                'hora' => 'required|date_format:H:i',
+                'hora' => 'required',
                 'direccion' => 'required|string|max:255',
                 'ciudad' => 'required|string|max:255',
                 'precio' => 'required|numeric|min:0',

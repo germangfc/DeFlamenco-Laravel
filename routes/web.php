@@ -52,8 +52,8 @@ Route::prefix('empresa')->group(function () {
 
 Route::get('/', [EventosController::class, 'getAll'])->name('eventos');
 Route::prefix('eventos')->group(function () {
-    Route::get('/create', [EventosController::class, 'create'])->name('eventos.create')->middleware('can:empresa|admin');
-    Route::post('/', [EventosController::class, 'store'])->name('eventos.store')->middleware('can:empresa|admin');
+    Route::get('/create', [EventosController::class, 'create'])->name('eventos.create')->middleware('can:empresa');
+    Route::post('/', [EventosController::class, 'store'])->name('eventos.store')->middleware('can:empresa');
     Route::get('/', [EventosController::class, 'getAll'])->name('eventos.index');
     Route::get('/index-admin', [EventosController::class, 'index'])->name('eventos.index-admin')->middleware('can:admin');
     Route::get('/{id}', [EventosController::class, 'show'])->name('eventos.show');

@@ -26,8 +26,9 @@
 
                         <img src="{{ $imageSrc }}"
                              alt="{{ $ticket->evento->nombre ?? 'Evento' }}"
-                             class="w-full h-48 object-cover transition
+                             class="w-full h-64 object-cover object-center transition
                              {{ $isExpired ? 'grayscale brightness-75' : '' }}">
+
 
                         <div class="p-4">
                             <h2 class="text-xl font-semibold">{{ $ticket->evento->nombre ?? 'Evento no disponible' }}</h2>

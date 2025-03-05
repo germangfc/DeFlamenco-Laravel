@@ -44,8 +44,14 @@
 
                         <div>
                             <x-input-label for="direccion" :value="('Direccion')" />
-                            <input type="text" id="autocomplete" name="direccion" class="w-full px-4 py-3 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-400" required>
+                            <input type="text" id="autocomplete" name="direccion" class=" block mt-1 w-full input input-bordered border-base-100 focus:border-base-100 focus:ring-0 rounded-md shadow-sm" required>
                             <x-input-error :messages="$errors->get('direccion')" class="mt-2" />
+                        </div>
+
+                        <div>
+                            <x-input-label for="descripcion" :value="('Descripcion')" />
+                            <x-text-area-input id="descripcion" placeholder="Introduce la descripcion del evento." class="block mt-1 w-full" type="text" name="descripcion" :value="old('descripcion')" required autofocus autocomplete="descripcion" />
+                            <x-input-error :messages="$errors->get('descripcion')" class="mt-2" />
                         </div>
 
                         <div>
