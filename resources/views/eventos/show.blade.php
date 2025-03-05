@@ -54,11 +54,7 @@
                 <p class="text-lg font-bold"><strong>Precio:</strong> {{ $evento->precio }}€</p>
             </div>
 
-                    <div class="flex items-center space-x-3 justify-start mb-4 font-bold">
-                        <p class="text-lg">
-                            <strong>Precio:</strong> <span role="img" aria-label="money"></span> {{ $evento->precio }}€
-                        </p>
-                    </div>
+
                 </div>
                 @if(!Auth::check() || (!Auth::user()->hasRole('admin') && !Auth::user()->hasRole('empresa')))                    <div class="flex-1 p-10 ml-auto w-full md:w-1/2">
                         <div class="relative">
