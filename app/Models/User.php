@@ -80,6 +80,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne(Cliente::class);  // Suponiendo que un usuario tiene un solo cliente
     }
 
+    public function empresa()
+    {
+        return $this->hasOne(Empresa::class);  // Suponiendo que un usuario tiene un solo cliente
+    }
+
 
     public function getJWTIdentifier()
     {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\ClienteBienvenido;
+use App\Mail\EliminacionCuenta;
 use App\Models\Cliente;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -89,7 +90,7 @@ class ClienteController extends Controller
             $user->assignRole('cliente');
             Auth::login($user);
 
-            return redirect()->route('clientes.index')->with('success', 'Cliente creado con éxito');
+            return redirect()->route('eventos')->with('success', 'Cliente creado con éxito');
         } catch (ValidationException $e) {
             return redirect()->route('register')->withErrors($e->errors())->withInput();
         }
@@ -179,13 +180,12 @@ class ClienteController extends Controller
 
         if (!$user) {
             $user = User::find($cliente->user_id);
-            if ($user) {
-                Cache::put($userCacheKey, $user, 20);
-            }
         }
 
+        // Eliminar el cliente
         $cliente->delete();
 
+        // Si el usuario existe, proceder con su eliminación
         if ($user) {
             $user->delete();
         }
@@ -193,6 +193,8 @@ class ClienteController extends Controller
         Cache::forget($clienteCacheKey);
         Cache::forget($userCacheKey);
 
-        return redirect()->route('clientes.index')->with('success', 'Cliente eliminado correctamente');
+        return redirect()->route('clientes.index')->with('success', 'Cliente y usuario eliminados correctamente');
     }
+
+
 }
