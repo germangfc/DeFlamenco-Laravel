@@ -58,7 +58,6 @@ Route::prefix('eventos')->group(function () {
     Route::get('/index-admin', [EventosController::class, 'index'])->name('eventos.index-admin')->middleware(['auth','admin']);
     Route::get('/{id}', [EventosController::class, 'show'])->name('eventos.show');
     Route::get('/{id}/edit', [EventosController::class, 'edit'])->name('eventos.edit')->middleware(['auth','admin']);
-    Route::get('/' , [EventosController::class, 'update'])->name('eventos.update')->middleware(['auth','admin']);
     Route::put('/{id}', [EventosController::class, 'update'])->name('eventos.update')->middleware(['auth','admin']);
     Route::delete('/{id}', [EventosController::class, 'destroy'])->name('eventos.destroy')->middleware(['auth','admin']);
 });
