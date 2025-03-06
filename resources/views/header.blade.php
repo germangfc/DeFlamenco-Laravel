@@ -52,7 +52,7 @@
                     <div class="navbar-center hidden lg:flex">
                         <ul class="menu menu-horizontal px-1">
                             <li><a class="{{ Request::is('/') || Request::is('/eventos') ? 'bg-primary' : '' }}" href=" {{ route("eventos") }}">Eventos</a></li>
-                            <li><a class="{{ Request::is('/empresa') ? 'bg-primary' : '' }}" href=" {{ route("empresas.index") }}" >Empresas</a></li>
+                            <li><a class="{{ Request::is('/empresa') ? 'bg-primary' : '' }}" id="empresa" href=" {{ route("empresas.index") }}" >Empresas</a></li>
 
                         </ul>
                     </div>

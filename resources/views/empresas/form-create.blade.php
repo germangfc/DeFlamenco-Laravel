@@ -67,7 +67,7 @@
                 <!-- Botones -->
                 <div class="form-group mb-3">
                     <a href="{{ route('empresas.index') }}" class="btn btn-secondary">Volver</a>
-                    <x-primary-button class="ml-4">
+                    <x-primary-button class="ml-4" id="registerEmpresa">
                         {{ __('Registrar Empresa') }}
                     </x-primary-button>
                 </div>

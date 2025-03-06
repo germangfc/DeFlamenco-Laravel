@@ -4,7 +4,7 @@
     <div class="container">
         <h1>Listado de Empresas</h1>
 
-        <a href="{{ route('empresas.create-admin') }}" class="btn btn-success mb-3">Crear Nueva Empresa</a>
+        <a href="{{ route('empresas.create-admin') }}" id="empresacrear" class="btn btn-success mb-3">Crear Nueva Empresa</a>
 
         <table class="table table-striped">
             <thead>

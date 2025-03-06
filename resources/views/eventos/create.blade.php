@@ -10,7 +10,7 @@
                     @csrf
                     <div class="flex items-center justify-center w-full">
                         <label for="dropzone-file" class="flex flex-col items-center justify-center w-full min-h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-white hover:bg-gray-300 overflow-hidden">
-                            <div class="relative w-full h-64 flex items-center justify-center">
+                            <div class="relative w-full h-64 flex items-center justify-center" id="imagenEvento">
                                 <img id="preview" class="w-full h-full object-cover rounded-2xl hidden absolute" src="https://via.placeholder.com/800x400" alt="Preview" />
                                 <div id="upload-placeholder" class="flex flex-col items-center justify-center">
                                     <svg id="upload-icon" class="w-8 h-8 mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
@@ -80,7 +80,7 @@
                         <a href="{{ route('eventos') }}" class="underline text-sm hover:text-gray-900 dark:hover:text-gray-100 rounded-md">
                             Volver
                         </a>
-                        <x-primary-button type="submit" class="ms-3">
+                        <x-primary-button type="submit" class="ms-3" id="crearEvento">
                             Crear Evento
                         </x-primary-button>
                     </div>
