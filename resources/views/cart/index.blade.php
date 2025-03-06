@@ -54,7 +54,7 @@
                 <h3>Total: {{ number_format($total, 2) }} €</h3>
                 <form action="{{ route('stripe.checkout') }}" method="POST">
                     @csrf
-                    <button type="submit" class="btn btn-primary">Proceder al Pago con Stripe</button>
+                    <button type="submit" id="pagar" class="btn btn-primary">Proceder al Pago con Stripe</button>
                 </form>
             </div>
         @else
