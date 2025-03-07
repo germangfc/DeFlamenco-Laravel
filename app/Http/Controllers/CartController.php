@@ -21,7 +21,7 @@ class CartController extends Controller
             'idEvent'  => 'required',
             'price'    => 'required|numeric',
             'quantity' => 'sometimes|numeric|min:1|max:5',
-            'name'     => 'required|'
+            'name'     => 'required'
         ]);
 
         $data['quantity'] = $data['quantity'] ?? 1;

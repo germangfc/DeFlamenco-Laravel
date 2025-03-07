@@ -67,30 +67,34 @@
                                 {{ $evento->fecha }}
                             </h3>
 
-        <div class="p-10 w-full md:w-auto flex flex-col items-center text-white rounded-xl shadow-lg md:ml-6">
-            <h3 class="text-sm font-bold text-center border-2 bg-primary border-primary  text-white py-1 px-4 rounded-lg w-full shadow-md">
-                Compra aqui tus entradas
-            </h3>
+                    <div class="p-10 w-full md:w-auto flex flex-col items-center text-white rounded-xl shadow-lg md:ml-6">
+                        <h3 class="text-sm font-bold text-center border-2 bg-primary border-primary  text-white py-1 px-4 rounded-lg w-full shadow-md">
+                            Compra aqui tus entradas
+                        </h3>
 
-            <p class="mt-3 text-lg font-medium text-center">Entrada general para <strong>{{ $evento->nombre }}</strong></p>
+                        <p class="mt-3 text-lg font-medium text-center">Entrada general para <strong>{{ $evento->nombre }}</strong></p>
 
-            <form action="{{ route('cart.add') }}" method="POST" class="w-full mt-6">
-                @csrf
-                <input type="hidden" name="idEvent" value="{{ $evento->id }}">
-                <input type="hidden" name="price" value="{{ $evento->precio }}">
+                        <form action="{{ route('cart.add') }}" method="POST" class="w-full mt-6">
+                            @csrf
 
-                <div class="flex items-center justify-center space-x-4 mb-6">
-                    <button type="button" id="decrease" class="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition shadow-md">-</button>
-                    <input type="number" name="quantity"  id="quantity" value="1" min="1" max="5" class="w-16 text-center border rounded-lg text-lg font-semibold bg-gray-800 text-white shadow-md">
-                    <button type="button" id="increase" class="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition shadow-md">+</button>
+                            <input type="hidden" name="idEvent" value="{{ $evento->id }}">
+                            <input type="hidden" name="price" value="{{ $evento->precio }}">
+                            <input type="hidden" name="name" value="{{ $evento->nombre }}">
+
+
+                            <div class="flex items-center justify-center space-x-4 mb-6">
+                                <button type="button" id="decrease" class="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition shadow-md">-</button>
+                                <input type="number" name="quantity"  id="quantity" value="1" min="1" max="5" class="w-16 text-center border rounded-lg text-lg font-semibold bg-gray-800 text-white shadow-md">
+                                <button type="button" id="increase" class="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition shadow-md">+</button>
+                            </div>
+
+                            <x-primary-button class="ml-4 w-full bg-primary text-primary-content py-3 rounded-lg font-bold text-lg shadow-lg hover:bg-primary-focus transition transform hover:scale-105 text-center">
+                                {{ __('Comprar') }} <span id="totalPrice">{{ $evento->precio }}€</span>
+                            </x-primary-button>
+                        </form>
+                    </div>
                 </div>
-
-                <x-primary-button class="ml-4 w-full bg-primary text-primary-content py-3 rounded-lg font-bold text-lg shadow-lg hover:bg-primary-focus transition transform hover:scale-105 text-center">
-                    {{ __('Comprar') }} <span id="totalPrice">{{ $evento->precio }}€</span>
-                </x-primary-button>
-            </form>
-        </div>
-    </div>
+            @endif
 
     <div class="mt-8">
         <h3 class="text-xl font-semibold mb-3 text-center">Ubicación en el mapa</h3>
