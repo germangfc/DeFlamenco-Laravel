@@ -16,7 +16,7 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased">
+    <body class="font-sans antialiased ">
     @include('header')
     <div class="min-h-screen flex flex-col md:flex-row gap-4">
         <!-- Lado superior (móviles) o lateral (pantallas grandes): Imagen -->
@@ -30,7 +30,7 @@
             </div>
         </div>
         <!-- Lado inferior (móviles) o lateral (pantallas grandes): Formulario de login -->
-        <div class="flex flex-col w-full md:w-1/2 justify-center items-center bg-base-100">
+        <div class="flex flex-col w-full md:w-1/2 justify-center items-center bg-base-100 py-14">
             <!-- Mensaje visible solo en pantallas medianas y superiores -->
             <h2 class="text-3xl hidden md:block">
                 Bienvenido a Tablao Pass

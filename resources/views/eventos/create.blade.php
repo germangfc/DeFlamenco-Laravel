@@ -50,16 +50,18 @@
                             <x-input-error :messages="$errors->get('direccion')" class="mt-2" />
                         </div>
 
-                        <div>
-                            <x-input-label for="descripcion" :value="('Descripcion')" />
-                            <x-text-area-input id="descripcion" placeholder="Introduce la descripcion del evento." class="block mt-1 w-full" type="text" name="descripcion" :value="old('descripcion')" required autofocus autocomplete="descripcion" />
-                            <x-input-error :messages="$errors->get('descripcion')" class="mt-2" />
-                        </div>
+
 
                         <div>
                             <x-input-label for="ciudad" :value="('Ciudad')" />
                             <x-text-input id="ciudad" placeholder="Introduce la ciudad del evento." class="block mt-1 w-full" type="text" name="ciudad" :value="old('ciudad')" required autofocus autocomplete="ciudad" />
                             <x-input-error :messages="$errors->get('ciudad')" class="mt-2" />
+                        </div>
+
+                        <div>
+                            <x-input-label for="descripcion" :value="('Descripcion')" />
+                            <x-text-area-input id="descripcion" placeholder="Introduce la descripcion del evento." class="block mt-1 w-full" type="text" name="descripcion" :value="old('descripcion')" required autofocus autocomplete="descripcion" />
+                            <x-input-error :messages="$errors->get('descripcion')" class="mt-2" />
                         </div>
 
                         <div class="grid grid-cols-2 gap-4">
