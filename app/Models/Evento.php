@@ -61,9 +61,6 @@ class Evento extends Model
             });
     }
 
-
-
-
     public function scopeFindById($query, $id)
     {
         return $query->where('id', $id);

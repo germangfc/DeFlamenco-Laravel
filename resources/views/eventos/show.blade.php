@@ -84,7 +84,7 @@
                                     </button>
                                 </div>
 
-                                <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold text-lg shadow-md hover:bg-blue-700 transition">
+                                <button type="submit" id="comprar" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold text-lg shadow-md hover:bg-blue-700 transition">
                                     Comprar ahora - $<span id="totalPrice">{{ $evento->precio }}</span>
                                 </button>
                             </form>

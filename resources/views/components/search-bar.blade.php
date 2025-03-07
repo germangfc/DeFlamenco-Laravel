@@ -9,10 +9,11 @@
                     <input
                         type="text"
                         name="query"
+                        id="buscador"
                         value="{{ request('query') }}"
                         placeholder="Nombre, Ciudad o Direccion"
                         class="input input-bordered w-full" />
-                    <button type="submit" class="btn btn-primary">Buscar</button>
+                    <button type="submit" id="buscadorEventos" class="btn btn-primary">Buscar</button>
                 </div>
             </form>
         </div>

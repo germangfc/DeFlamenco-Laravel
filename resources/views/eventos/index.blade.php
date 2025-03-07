@@ -15,6 +15,7 @@
                     <a href="{{ route('eventos.show', $evento->id) }}">
                         <figure class="relative overflow-hidden rounded-lg">
                             <img class="object-cover h-64 w-full transition-transform duration-300 hover:scale-110 rounded-lg"
+                                 id="foto-flamenco"
                                  src='{{ Str::startsWith($evento->foto, 'http') ? $evento->foto : asset("storage/images/" . $evento->foto) }}'
                                  alt="Evento {{ $evento->id }}" />
                         </figure>

@@ -19,7 +19,11 @@ class ClienteController extends Controller
 
     public function index(Request $request)
     {
-        $clientes = Cliente::paginate(5);
+        $searchTerm = $request->input('query');
+
+        $clientes = Cliente::search($searchTerm)
+            ->orderBy('id', 'ASC')
+            ->paginate(5);
 
         return view('clientes.index', compact('clientes'));
     }

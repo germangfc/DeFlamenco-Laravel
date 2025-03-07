@@ -3,8 +3,13 @@
 @section('content')
     <div class="container mt-5">
         <h1 class="text-center mb-4">Lista de Clientes</h1>
+
         <div class="card">
             <div class="card-body">
+                <div class="flex justify-end mb-4">
+                    <x-cliente-search class="w-auto" />
+                </div>
+
                 <x-table-basico :headers="[ 'Nombre', 'Email', 'DNI', 'Acciones']" tableClass="table table-striped w-full">
                     @foreach ($clientes as $cliente)
                         <tr class="hover">
@@ -22,12 +27,12 @@
                             <td>{{ $cliente->dni }}</td>
                             <td>
                                 <div class="flex gap-2">
-                                    <a href="{{ route('clientes.show', $cliente->id) }}" class="btn btn-info btn-sm">Ver</a>
-                                    <a href="{{ route('clientes.edit', $cliente->id) }}" class="btn btn-primary btn-sm">Editar</a>
+                                    <a href="{{ route('clientes.show', $cliente->id) }}" id="verEmpresa" class="btn btn-info btn-sm">Ver</a>
+                                    <a href="{{ route('clientes.edit', $cliente->id) }}" id="editarEmpresa" class="btn btn-primary btn-sm">Editar</a>
                                     <form action="{{ route('clientes.destroy', $cliente->id) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                                        <button type="submit" id="eliminarEmpresa" class="btn btn-danger btn-sm">Eliminar</button>
                                     </form>
                                 </div>
                             </td>

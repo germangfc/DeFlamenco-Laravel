@@ -23,6 +23,7 @@
                                     xmlns="http://www.w3.org/2000/svg"
                                     class="h-5 w-5"
                                     fill="none"
+                                    id="menu-hamburguer"
                                     viewBox="0 0 24 24"
                                     stroke="currentColor">
                                     <path
@@ -51,7 +52,7 @@
                     <div class="navbar-center hidden lg:flex">
                         <ul class="menu menu-horizontal px-1">
                             <li><a class="{{ Request::is('/') || Request::is('/eventos') ? 'bg-primary' : '' }}" href=" {{ route("eventos") }}">Eventos</a></li>
-                            <li><a class="{{ Request::is('/empresa') ? 'bg-primary' : '' }}" href=" {{ route("empresas.index") }}" >Empresas</a></li>
+                            <li><a class="{{ Request::is('/empresa') ? 'bg-primary' : '' }}" id="empresa" href=" {{ route("empresas.index") }}" >Empresas</a></li>
 
                         </ul>
                     </div>
@@ -66,6 +67,7 @@
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             class="h-5 w-5"
+                            id="carrito"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor">
