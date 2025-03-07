@@ -59,7 +59,13 @@
                 <p class="text-lg font-bold bg-primary rounded-lg"><strong>Precio:</strong> {{ $evento->precio }}€</p>
             </div>
 
-        </div>
+
+                </div>
+                @if(!Auth::check() || (!Auth::user()->hasRole('admin') && !Auth::user()->hasRole('empresa')))                    <div class="flex-1 p-10 ml-auto w-full md:w-1/2">
+                        <div class="relative">
+                            <h3 class="text-lg font-semibold mt-6 text-center border-2 border-blue-600 bg-blue-600 text-white py-2 px-4 rounded-lg">
+                                {{ $evento->fecha }}
+                            </h3>
 
         <div class="p-10 w-full md:w-auto flex flex-col items-center text-white rounded-xl shadow-lg md:ml-6">
             <h3 class="text-sm font-bold text-center border-2 bg-primary border-primary  text-white py-1 px-4 rounded-lg w-full shadow-md">

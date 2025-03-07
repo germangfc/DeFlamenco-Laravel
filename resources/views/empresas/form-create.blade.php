@@ -1,17 +1,9 @@
-<form id="form" action="{{ route('empresas.store') }}" method="POST" enctype="multipart/form-data" class="form-horizontal">
+<form id="form" action="{{ route('empresas.store') }}" method="POST" enctype="multipart/form-data" class="form-horizontal ">
     @csrf
     <div class="container">
         <div class="row">
             <!-- Columna Izquierda -->
-            <div class="col-md-4 col-sm-6 col-xs-12">
-                <div class="text-center">
-                    <h6>Sube una foto de perfil</h6>
-                    <div class="form-group">
-                        <x-file-input-basico name="imagen" id="imagen" class="form-control text-center center-block well well-sm" accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml"/>
-                        <x-input-error class="mt-2" :messages="$errors->get('imagen')" />
-                    </div>
-                </div>
-            </div>
+
 
             <!-- Columna Derecha -->
             <div class="col-md-8 col-sm-6 col-xs-12 personal-info">
@@ -64,11 +56,20 @@
                     <x-input-error class="mt-2" :messages="$errors->get('password')" />
                 </div>
 
-                <!-- Botones -->
                 <div class="form-group mb-3">
-                    <a href="{{ route('empresas.index') }}" class="btn btn-secondary">Volver</a>
-                    <x-primary-button class="ml-4" id="registerEmpresa">
-                        {{ __('Registrar Empresa') }}
+                    <x-input-label for="password" :value="__('Foto de perfil')" />
+                    <x-file-input-basico name="imagen" id="imagen" class="form-control text-center center-block well well-sm" accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml"/>
+                    <x-input-error class="mt-2" :messages="$errors->get('imagen')" />
+                </div>
+
+                <!-- Botones -->
+
+                <div class="flex items-center justify-end mt-4">
+                    <a class="underline text-sm hover:text-gray-900 dark:hover:text-gray-100 rounded-md " href="{{ route('login') }}">
+                        {{ __('¿Ya tienes Cuenta?') }}
+                    </a>
+                    <x-primary-button class="ml-4">
+                        {{ __('Crear Empresa') }}
                     </x-primary-button>
                 </div>
             </div>
