@@ -26,5 +26,8 @@ describe("template spec", () => {
     cy.get('#cuentaBancaria').type('ES8000755174538626917678');
     cy.get('#password').type('contraseñasegura1234');
     cy.get('#registrarEmpresa').click();
+    cy.get('#buscadorEmpresas').type('companydevelopers@gmail.com');    
+    cy.get('.btn.btn-primary').click();
+
   });
 });

@@ -18,7 +18,7 @@
                 <!-- Nombre -->
                 <div class="form-group mb-3">
                     <x-input-label for="name" :value="__('Nombre')" />
-                    <x-text-input type="text" name="name" id="name" class="form-control field-validate" value="{{ old('name') }}" required placeholder="Nombre de la Empresa" />
+                    <x-text-input type="text" name="name" id="nameEmpresa" class="form-control field-validate" value="{{ old('name') }}" required placeholder="Nombre de la Empresa" />
                     <x-input-error class="mt-2" :messages="$errors->get('name')" />
                 </div>
 
@@ -46,7 +46,7 @@
                 <!-- Email -->
                 <div class="form-group mb-3">
                     <x-input-label for="email" :value="__('Email')" />
-                    <x-text-input type="email" name="email" id="email" class="form-control field-validate" value="{{ old('email') }}" required placeholder="Correo Electrónico" />
+                    <x-text-input type="email" name="email" id="emailEmpresa" class="form-control field-validate" value="{{ old('email') }}" required placeholder="Correo Electrónico" />
                     <x-input-error class="mt-2" :messages="$errors->get('email')" />
                 </div>
 
@@ -60,7 +60,7 @@
                 <!-- Contraseña -->
                 <div class="form-group mb-3">
                     <x-input-label for="password" :value="__('Contraseña')" />
-                    <x-text-input type="password" name="password" id="password" class="form-control field-validate" required placeholder="Contraseña" />
+                    <x-text-input type="password" name="password" id="passwordEmpresa" class="form-control field-validate" required placeholder="Contraseña" />
                     <x-input-error class="mt-2" :messages="$errors->get('password')" />
                 </div>
 
