@@ -15,8 +15,6 @@ class Cliente extends Model
     protected $keyType ='string';
     protected $fillable = [
         'user_id',
-        'dni',
-        'foto_dni',
         'avatar',
         'lista_entradas',
         'is_deleted',

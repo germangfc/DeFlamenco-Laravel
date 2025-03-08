@@ -16,14 +16,9 @@
         <x-input-error class="mt-2" :messages="$errors->get('password')" />
     </div>
     <div class="form-group mb-3">
-        <x-input-label for="dni">DNI</x-input-label>
-        <x-text-input type="text" name="dni" id="dni" class="form-control" value="{{ old('dni') }}" required/>
-        <x-input-error class="mt-2" :messages="$errors->get('dni')" />
-    </div>
-    <div class="form-group mb-3">
-        <x-input-label for="foto_dni">Foto Perfil</x-input-label>
-        <x-file-input-basico name="foto_dni" id="foto_dni" class="form-control" accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml"/>
-        <x-input-error class="mt-2" :messages="$errors->get('foto_dni')" />
+        <x-input-label for="avatar">Foto Perfil</x-input-label>
+        <x-file-input-basico name="avatar" id="avatar" class="form-control" accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml"/>
+        <x-input-error class="mt-2" :messages="$errors->get('avatar')" />
     </div>
     <div class="flex items-center justify-end mt-4">
         <a class="underline text-sm hover:text-gray-900 dark:hover:text-gray-100 rounded-md " href="{{ route('login') }}">

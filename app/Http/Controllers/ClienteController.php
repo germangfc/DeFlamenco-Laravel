@@ -61,8 +61,7 @@ class ClienteController extends Controller
                 'name' => 'required|string|max:255|min:3',
                 'email' => 'required|string|email|unique:users,email',
                 'password' => 'required',
-                'dni' => 'required|string|unique:clientes,dni',
-                'foto_dni' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+                'avatar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
             ]);
 
 
@@ -73,19 +72,19 @@ class ClienteController extends Controller
             ]);
 
 
-            $fotoDniPath = "";
-            if ($request->hasFile('foto_dni')) {
-                $image = $request->file('foto_dni');
-                $customName = 'dni_' . $validatedData['dni'] . '.' . $image->getClientOriginalExtension();
+            $fotoAvatarPath = "";
+            $timestamp = (int) (microtime(true) * 1000);
+            if ($request->hasFile('avatar')) {
+                $image = $request->file('avatar');
+                $customName = 'perfil_' . $timestamp . '.' . $image->getClientOriginalExtension();
                 $image->storeAs('images', $customName, 'public');
-                $fotoDniPath = $customName;
+                $fotoAvatarPath = $customName;
             }
 
 
             $cliente = Cliente::create([
                 'user_id' => $user->id,
-                'dni' => $validatedData['dni'],
-                'foto_dni' => $fotoDniPath
+                'avatar' => $fotoAvatarPath
             ]);
 
 
@@ -138,26 +137,22 @@ class ClienteController extends Controller
         }
 
         $validatedData = $request->validate([
-            'dni' => 'nullable|string|regex:/^[0-9]{8}[A-Z]$/|unique:clientes,dni,' . $cliente->id,
-            'foto_dni' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'name' => 'nullable|string|max:255',
             'email' => 'nullable|string|email|unique:users,email,' . $cliente->user_id,
             'password' => 'nullable|string|min:8',
         ]);
 
-        $cliente->update([
-            'dni' => $validatedData['dni'] ?? $cliente->dni,
-        ]);
 
-        if ($request->hasFile('foto_dni')) {
-            $image = $request->file('foto_dni');
-            $customName = 'perfil_' . $cliente->dni . '.' . $image->getClientOriginalExtension();
-            if ($cliente->foto_dni) {
-                Storage::disk('public')->delete('images/' .$cliente->foto_dni);
+        if ($request->hasFile('avatar')) {
+            $image = $request->file('avatar');
+            $customName = 'perfil_' . $cliente->name . '.' . $image->getClientOriginalExtension();
+            if ($cliente->avatar) {
+                Storage::disk('public')->delete('images/' .$cliente->avatar);
             }
             $image->storeAs('images', $customName, 'public');
 
-            $cliente->foto_dni = $customName;
+            $cliente->avatar = $customName;
             $cliente->save();
 
         }

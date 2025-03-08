@@ -1,3 +1,6 @@
+@php
+    use Illuminate\Support\Str;
+@endphp
 @extends('main')
 
 @section('content')
@@ -17,7 +20,7 @@
                                 <div class="flex items-center gap-3">
                                     <div class="avatar">
                                         <div class="mask mask-squircle h-12 w-12">
-                                            <img src="{{ asset('storage/images/' . $cliente->foto_dni)}}" alt="Avatar de {{ $cliente->user->name }}">
+                                            <img  src="{{ Str::startsWith($cliente->avatar, 'http') ? $cliente->avatar : asset('storage/images/' . $cliente->avatar) }}" alt="Avatar de {{ $cliente->user->name }}">
                                         </div>
                                     </div>
                                     <div class="font-bold">{{ $cliente->user->name }}</div>
