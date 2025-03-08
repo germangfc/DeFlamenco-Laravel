@@ -22,7 +22,6 @@ return new class extends Migration
             $table->string('cuentaBancaria');
             $table->unsignedInteger('usuario_id')->unique();
             $table->foreign('usuario_id')->references('id')->on('users');
-            $table->json('lista_eventos')->default(json_encode([]));
             $table->boolean('isDeleted')->default(false);
             $table->timestamps();
         });

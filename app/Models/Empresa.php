@@ -15,7 +15,7 @@ class Empresa extends Model
     protected $keyType ='string';
 
     protected $fillable = [
-      'cif', 'name', 'direccion','imagen' ,'telefono', 'email','cuentaBancaria', 'usuario_id', 'lista_eventos','isDeleted'
+      'cif', 'name', 'direccion','imagen' ,'telefono', 'email','cuentaBancaria', 'usuario_id','isDeleted'
     ];
 
     public function scopeSearch($query, $term)
@@ -33,11 +33,6 @@ class Empresa extends Model
         });
     }
 
-
-    protected $casts = [
-        'lista_eventos'=>'array'
-    ];
-
     public function usuario()
     {
         return $this->belongsTo(User::class, 'usuario_id');
@@ -53,6 +48,9 @@ class Empresa extends Model
     }
 
 
-
+    public function eventos()
+    {
+        return $this->hasMany(Evento::class, 'empresa_id', 'id');
+    }
 
 }
