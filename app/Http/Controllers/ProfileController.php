@@ -44,13 +44,13 @@ class ProfileController extends Controller
             $cliente->save();
             if ($request->hasFile('profile_photo')) {
                 $image = $request->file('profile_photo');
-                $customName = 'perfil_' . $cliente->dni . '.' . $image->getClientOriginalExtension();
-                if ($cliente->foto_dni) {
-                    Storage::disk('public')->delete('images/' .$cliente->foto_dni);
+                $customName = 'perfil_' . $cliente->avatar . '.' . $image->getClientOriginalExtension();
+                if ($cliente->avatar) {
+                    Storage::disk('public')->delete('images/' .$cliente->avatar);
                 }
                 $image->storeAs('images', $customName, 'public');
 
-                $cliente->foto_dni = $customName;
+                $cliente->avatar = $customName;
             }
             $user->save();
             $cliente->save();

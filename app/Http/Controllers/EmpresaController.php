@@ -23,33 +23,24 @@ class EmpresaController extends Controller
         // Aplicamos el scope 'search' y paginamos
         $empresas = Empresa::search($searchTerm)
             ->orderBy('name', 'ASC')
-            ->paginate(8);
+            ->paginate(9);
 
-        // Retornamos la vista con la lista de empresas
-        return view('empresas.admin', compact('empresas'));
+        if (auth()->check() && auth()->user()->getRoleNames()->contains('admin')) {
+            return view('empresas.admin', compact('empresas'));
+        }
+
+        return view('empresas.user', compact('empresas'));
     }
-
 
 
     public function show($id)
     {
-        $cacheKey = "empresa_{$id}";
-
-        if (Cache::has($cacheKey)) {
-            return view('empresas.show', ['empresa' => Empresa::find($id)]);
-        }
-
-        $empresa = Empresa::find($id);
-
-        if (!$empresa) {
-            return redirect()->route('empresas.index')->with('error', 'Empresa no encontrada');
-        }
-
-        $view = view('empresas.show', compact('empresa'));
-
-        Cache::put($cacheKey, $view->render(), 60);
-
-        return $view; // Devuelve la vista real, no solo el HTML
+        $empresa = Empresa::with('eventos')->findOrFail($id);
+        $eventos = $empresa->eventos()->paginate(10);
+        return view('empresas.show', [
+            'empresa' => $empresa,
+            'eventos' => $eventos
+        ]);
     }
 
     public function showByNombre($nombre)

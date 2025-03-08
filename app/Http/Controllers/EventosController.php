@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Empresa;
 use App\Models\Evento;
 use Exception;
 use Illuminate\Http\Request;
@@ -65,6 +66,8 @@ class EventosController extends Controller
                 $fotoPath = $customName;
             }
 
+            $empresa = Empresa::where('usuario_id', auth()->user()->id)->first();
+
             $evento = Evento::create([
                 'nombre' => $request->nombre,
                 'stock' => $request->stock,
@@ -75,6 +78,7 @@ class EventosController extends Controller
                 'precio' => $request->precio,
                 'descripcion'=>$request->descripcion,
                 'foto' => $fotoPath,
+                'empresa_id' => $empresa->id
             ]);
 
             $cacheKey = "evento_{$evento->id}";
