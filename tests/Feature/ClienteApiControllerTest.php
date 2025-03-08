@@ -130,6 +130,7 @@ class ClienteApiControllerTest extends TestCase
     }
 
     public function test_getById_no_autorizado(){
+        $cliente = Cliente::factory()->create();
         $user = User::factory()->create([
             'email' => 'harold08@example.net',
             'password' => bcrypt('password'),
@@ -139,7 +140,7 @@ class ClienteApiControllerTest extends TestCase
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token
-        ])->getJson('/api/clientes/1');
+        ])->getJson("/api/clientes/{$cliente->id}");
 
         $response->assertStatus(403);
     }
@@ -177,7 +178,7 @@ class ClienteApiControllerTest extends TestCase
         $email = 'test@example.com';
         $admin = User::where('email', 'admin@example.com')->first();
         $token = JWTAuth::fromUser($admin);
-        // Simulamos que el usuario no está en la caché y no se encuentra en la base de datos
+
         Cache::shouldReceive('get')
             ->once()
             ->with("user_email_{$email}")
@@ -200,7 +201,6 @@ class ClienteApiControllerTest extends TestCase
         $email = 'test@example.com';
         $user = User::factory()->create(['email' => $email]);
 
-        // Simulamos que el usuario está en la caché, pero el cliente no
         Cache::shouldReceive('get')
             ->once()
             ->with("user_email_{$email}")
