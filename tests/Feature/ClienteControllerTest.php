@@ -119,15 +119,13 @@ class ClienteControllerTest extends TestCase
         Storage::fake('public');
         Mail::fake();
 
-        $dni = '12345678X';
         $image = UploadedFile::fake()->image('dni.jpg');
 
         $data = [
             'name' => 'Juan Pérez',
             'email' => 'juan@example.com',
             'password' => 'password123',
-            'dni' => $dni,
-            'foto_dni' => $image,
+            'avatar' => $image,
         ];
 
         $response = $this->post(route('clientes.store'), $data);
@@ -142,11 +140,10 @@ class ClienteControllerTest extends TestCase
         $user = User::where('email', 'juan@example.com')->first();
         $this->assertDatabaseHas('clientes', [
             'user_id' => $user->id,
-            'dni' => $dni,
         ]);
 
         // Verificamos que la imagen se haya guardado
-        Storage::disk('public')->assertExists("images/dni_{$dni}.jpg");
+        Storage::disk('public')->assertExists("images/dni_test.jpg");
 
         // Verificamos que se haya enviado el correo
         Mail::assertSent(ClienteBienvenido::class, function ($mail) use ($user) {
@@ -167,11 +164,10 @@ class ClienteControllerTest extends TestCase
             'name' => '',
             'email' => '',
             'password' => '',
-            'dni' => '',
-            'foto_dni' => null // Asegura que la validación del archivo se ejecute
+            'avatar' => null // Asegura que la validación del archivo se ejecute
         ]);
 
-        $response->assertSessionHasErrors(['name', 'email', 'password', 'dni', 'foto_dni']);
+        $response->assertSessionHasErrors(['name', 'email', 'password', 'avatar']);
     }
 
 
@@ -184,8 +180,7 @@ class ClienteControllerTest extends TestCase
             'name' => 'Juan Pérez',
             'email' => 'juan@example.com', // Ya existe
             'password' => 'password123',
-            'dni' => '12345678X',
-            'foto_dni' => UploadedFile::fake()->image('dni.jpg'),
+            'avatar' => UploadedFile::fake()->image('dni.jpg'),
         ];
 
         $response = $this->post(route('clientes.store'), $data);
@@ -193,20 +188,6 @@ class ClienteControllerTest extends TestCase
         $response->assertSessionHasErrors(['email']);
     }
 
-    public function teststoreDniExistente()
-    {
-        Cliente::factory()->create(['dni' => '12345678X']);
-
-        $response = $this->post(route('clientes.store'), [
-            'name' => 'Juan Pérez',
-            'email' => 'juan@example.com',
-            'password' => 'password123',
-            'dni' => '12345678X',
-            'foto_dni' => UploadedFile::fake()->image('dni.jpg')
-        ]);
-
-        $response->assertSessionHasErrors(['dni']);
-    }
 
     public function testEditBuscaEnDBYGuerdaEnCache(){
         $cliente = Cliente::factory()->create();
@@ -270,8 +251,7 @@ class ClienteControllerTest extends TestCase
             'name' => 'Nuevo Nombre',
             'email' => 'nuevo@example.com',
             'password' => 'nuevacontraseña123',
-            'dni' => '87654321X',
-            'foto_dni' => 'nueva/ruta/imagen.jpg'
+            'avatar' => 'nueva/ruta/imagen.jpg'
         ];
 
         $response = $this->put(route('clientes.update', $cliente->id), $nuevosDatos);
@@ -282,8 +262,7 @@ class ClienteControllerTest extends TestCase
         // Verifica la base de datos
         $this->assertDatabaseHas('clientes', [
             'id' => $cliente->id,
-            'dni' => '87654321X',
-            'foto_dni' => 'nueva/ruta/imagen.jpg'
+            'avatar' => 'nueva/ruta/imagen.jpg'
         ]);
 
         $this->assertDatabaseHas('users', [
@@ -297,8 +276,7 @@ class ClienteControllerTest extends TestCase
         $cachedCliente = Cache::get($clienteCacheKey);
 
         $this->assertNotNull($cachedCliente);
-        $this->assertEquals('87654321X', $cachedCliente->dni);
-        $this->assertEquals('nueva/ruta/imagen.jpg', $cachedCliente->foto_dni);
+        $this->assertEquals('nueva/ruta/imagen.jpg', $cachedCliente->avatar);
     }
 
     public function testUpdateDatosErroneos()
@@ -306,21 +284,19 @@ class ClienteControllerTest extends TestCase
         $cliente = Cliente::factory()->create();
 
         $datosInvalidos = [
-            'dni' => '1234', // Formato DNI incorrecto
             'email' => 'no-es-un-email', // Email inválido
             'password' => 'corto', // Menos de 8 caracteres
             'name' => str_repeat('a', 256), // Excede máximo de 255 caracteres
-            'foto_dni' => UploadedFile::fake()->create('documento.pdf') // No es una imagen
+            'avatar' => UploadedFile::fake()->create('documento.pdf') // No es una imagen
         ];
 
         $response = $this->put(route('clientes.update', $cliente->id), $datosInvalidos);
 
         $response->assertSessionHasErrors([
-            'dni',
             'email',
             'password',
             'name',
-            'foto_dni'
+            'avatar'
         ]);
     }
 

@@ -15,15 +15,14 @@ use Illuminate\Support\Facades\Route;
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
-Route::apiResource('clientes', ClienteApiController::class);
-Route::apiResource('users', UserApiController::class);
 
-Route::get('empresas',[EmpresaControllerApi::class, 'getAll']);
 Route::post('/login', [LoginControllerApi::class, '__invoke']);
 Route::get('tickets', [TicketApiController::class, 'index']);
 Route::group([
     'middleware' => ['auth:api', 'admin']
 ], function () {
+
+    Route::apiResource('users', UserApiController::class);
 
     Route::get('tickets/{id}', [TicketApiController::class, 'show']);
     Route::post('tickets', [TicketApiController::class,'store']);
@@ -33,19 +32,22 @@ Route::group([
     Route::post('clientes', [ClienteApiController::class, 'store']);
     Route::get('clientes/{id}', [ClienteApiController::class,'show']);
     Route::put('clientes/{id}', [ClienteApiController::class,'update']);
-    Route::get('clientes/dni/{dni}', [ClienteApiController::class, 'searchByDni']);
     Route::get('clientes/email/{email}', [ClienteApiController::class, 'searchByEmail']);
-    Route::post('clientes/upload-dni/{clienteId}', [ClienteApiController::class, 'uploadDni']);
     Route::delete('clientes/{clienteId}', [ClienteApiController::class, 'destroy']);
     Route::apiResource('usuarios',UserApiController::class);
     Route::apiResource('ventas', VentasApiController::class);
 
     Route::get('eventos/nombre/{nombre}', [EventosApiController::class, 'getByNombre']);
 
-    Route::apiResource('/eventos', EventosApiController::class);
+    Route::get('eventos', [EventosApiController::class, 'index']);
+    Route::get('eventos/{id}', [EventosApiController::class,'show']);
     Route::get('eventos/nombre/{nombre}', [EventosApiController::class, 'getByNombre']);
+    Route::post('eventos', [EventosApiController::class,'store']);
+    Route::put('eventos/{id}', [EventosApiController::class, 'update']);
+    Route::delete('eventos/{id}', [EventosApiController::class, 'destroy']);
 
 
+    Route::get('empresas',[EmpresaControllerApi::class, 'getAll']);
     Route::get('empresas/{id}', [EmpresaControllerApi::class, 'getById']);
     Route::get('empresas/nombre/{nombre}', [EmpresaControllerApi::class, 'getByNombre']);
     Route::get('empresas/cif/{cif}', [EmpresaControllerApi::class,'getByCif']);
