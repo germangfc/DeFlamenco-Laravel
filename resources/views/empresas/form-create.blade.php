@@ -1,24 +1,16 @@
-<form id="form" action="{{ route('empresas.store') }}" method="POST" enctype="multipart/form-data" class="form-horizontal">
+<form id="form" action="{{ route('empresas.store') }}" method="POST" enctype="multipart/form-data" class="form-horizontal ">
     @csrf
     <div class="container">
         <div class="row">
             <!-- Columna Izquierda -->
-            <div class="col-md-4 col-sm-6 col-xs-12">
-                <div class="text-center">
-                    <h6>Sube una foto de perfil</h6>
-                    <div class="form-group">
-                        <x-file-input-basico name="imagen" id="imagen" class="form-control text-center center-block well well-sm" accept="image/jpeg"/>
-                        <x-input-error class="mt-2" :messages="$errors->get('imagen')" />
-                    </div>
-                </div>
-            </div>
+
 
             <!-- Columna Derecha -->
             <div class="col-md-8 col-sm-6 col-xs-12 personal-info">
                 <!-- Nombre -->
                 <div class="form-group mb-3">
                     <x-input-label for="name" :value="__('Nombre')" />
-                    <x-text-input type="text" name="name" id="name" class="form-control field-validate" value="{{ old('name') }}" required placeholder="Nombre de la Empresa" />
+                    <x-text-input type="text" name="name" id="nameEmpresa" class="form-control field-validate" value="{{ old('name') }}" required placeholder="Nombre de la Empresa" />
                     <x-input-error class="mt-2" :messages="$errors->get('name')" />
                 </div>
 
@@ -46,7 +38,7 @@
                 <!-- Email -->
                 <div class="form-group mb-3">
                     <x-input-label for="email" :value="__('Email')" />
-                    <x-text-input type="email" name="email" id="email" class="form-control field-validate" value="{{ old('email') }}" required placeholder="Correo Electrónico" />
+                    <x-text-input type="email" name="email" id="emailEmpresa" class="form-control field-validate" value="{{ old('email') }}" required placeholder="Correo Electrónico" />
                     <x-input-error class="mt-2" :messages="$errors->get('email')" />
                 </div>
 
@@ -60,15 +52,24 @@
                 <!-- Contraseña -->
                 <div class="form-group mb-3">
                     <x-input-label for="password" :value="__('Contraseña')" />
-                    <x-text-input type="password" name="password" id="password" class="form-control field-validate" required placeholder="Contraseña" />
+                    <x-text-input type="password" name="password" id="passwordEmpresa" class="form-control field-validate" required placeholder="Contraseña" />
                     <x-input-error class="mt-2" :messages="$errors->get('password')" />
                 </div>
 
-                <!-- Botones -->
                 <div class="form-group mb-3">
-                    <a href="{{ route('empresas.index') }}" class="btn btn-secondary">Volver</a>
+                    <x-input-label for="password" :value="__('Foto de perfil')" />
+                    <x-file-input-basico name="imagen" id="imagen" class="form-control text-center center-block well well-sm" accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml"/>
+                    <x-input-error class="mt-2" :messages="$errors->get('imagen')" />
+                </div>
+
+                <!-- Botones -->
+
+                <div class="flex items-center justify-end mt-4">
+                    <a class="underline text-sm hover:text-gray-900 dark:hover:text-gray-100 rounded-md " href="{{ route('login') }}">
+                        {{ __('¿Ya tienes Cuenta?') }}
+                    </a>
                     <x-primary-button class="ml-4">
-                        {{ __('Registrar Empresa') }}
+                        {{ __('Crear Empresa') }}
                     </x-primary-button>
                 </div>
             </div>

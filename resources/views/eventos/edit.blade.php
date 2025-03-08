@@ -8,15 +8,20 @@
                 <form action="{{ route('eventos.update', $evento->id) }}" method="POST" enctype="multipart/form-data" class="">
                     @csrf
                     @method('PUT')
+
                     <div class="flex items-center justify-center w-full">
-                        <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed flamenco-dark:border-base-100 rounded-lg cursor-pointer bg-white hover:bg-gray-300">
-                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                <img id="preview" class="object-cover h-60 w-full rounded-2xl {{ $evento->foto ? '' : 'hidden' }}" src="{{ $evento->foto ? asset('storage/' . $evento->foto) : 'https://via.placeholder.com/800x400' }}" alt="Preview" />
-                                <svg id="upload-icon" class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400 {{ $evento->foto ? 'hidden' : '' }}" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
-                                </svg>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                        <label for="dropzone-file" class="flex flex-col items-center justify-center w-full min-h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-white hover:bg-gray-300 overflow-hidden">
+                            <div class="relative w-full h-64 flex items-center justify-center">
+                                <img id="preview" class="object-cover h-60 w-full rounded-2xl {{ $evento->foto ? '' : 'hidden' }}" src="{{ $evento->foto ? asset('storage/images/' . $evento->foto) : 'https://via.placeholder.com/800x400' }}" alt="Preview" />
+                                <div id="upload-placeholder" class="flex flex-col items-center justify-center">
+                                    <svg id="upload-icon" class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400 {{ $evento->foto ? 'hidden' : '' }}" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                                    </svg>
+                                    <p id="upload-text" class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                                    <p class="text-xs text-gray-500">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                                </div>
                             </div>
+                            <input id="dropzone-file" type="file" name="foto" accept="image/*" class="hidden" onchange="previewImage(event)" required />
                         </label>
                     </div>
 
@@ -42,7 +47,7 @@
 
                         <div>
                             <x-input-label for="direccion" :value="__('Direccion')" />
-                            <input type="text" id="autocomplete" name="direccion" class="w-full px-4 py-3 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-400" value="{{ old('direccion', $evento->direccion) }}" required>
+                            <input type="text" id="autocomplete" name="direccion" class="block mt-1 w-full input input-bordered border-base-100 focus:border-base-100 focus:ring-0 rounded-md shadow-sm" value="{{ old('direccion', $evento->direccion) }}" required>
                             <x-input-error :messages="$errors->get('direccion')" class="mt-2" />
                         </div>
 
@@ -50,6 +55,12 @@
                             <x-input-label for="ciudad" :value="__('Ciudad')" />
                             <x-text-input id="ciudad" placeholder="Introduce la ciudad del evento." class="block mt-1 w-full" type="text" name="ciudad" :value="old('ciudad', $evento->ciudad)" required autofocus autocomplete="ciudad" />
                             <x-input-error :messages="$errors->get('ciudad')" class="mt-2" />
+                        </div>
+
+                        <div>
+                            <x-input-label for="descripcion" :value="('Descripcion')" />
+                            <x-text-area-input id="descripcion" placeholder="Introduce la descripcion del evento." class="block mt-1 w-full" type="text" name="descripcion" :value="old('descripcion', $evento->descripcion)" required autofocus autocomplete="descripcion" />
+                            <x-input-error :messages="$errors->get('descripcion')" class="mt-2" />
                         </div>
 
                         <div class="grid grid-cols-2 gap-4">

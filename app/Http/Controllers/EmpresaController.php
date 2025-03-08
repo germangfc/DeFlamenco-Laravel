@@ -17,16 +17,18 @@ class EmpresaController extends Controller
 {
     public function index(Request $request)
     {
-        $empresas = Empresa::search($request->nombre)->orderBy('id', 'ASC')->paginate(8);
+        // Capturamos el valor del input "query"
+        $searchTerm = $request->input('query');
 
-        // Si el usuario está autenticado y es admin, mostrar la vista de admin
-        if (auth()->check() && auth()->user()->getRoleNames()->first() === 'admin') {
-            return view('empresas.admin')->with('empresas', $empresas);
-        }
+        // Aplicamos el scope 'search' y paginamos
+        $empresas = Empresa::search($searchTerm)
+            ->orderBy('name', 'ASC')
+            ->paginate(8);
 
-        // Si el usuario no está autenticado o es cliente, mostrar la vista de guest
-        return view('empresas.user')->with('empresas', $empresas);
+        // Retornamos la vista con la lista de empresas
+        return view('empresas.admin', compact('empresas'));
     }
+
 
 
     public function show($id)

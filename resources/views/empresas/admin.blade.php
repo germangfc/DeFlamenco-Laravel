@@ -4,7 +4,22 @@
     <div class="container">
         <h1>Listado de Empresas</h1>
 
-        <a href="{{ route('empresas.create-admin') }}" class="btn btn-success mb-3">Crear Nueva Empresa</a>
+        <a href="{{ route('empresas.create-admin') }}" id="empresacrear" class="btn btn-success mb-3">Crear Nueva Empresa</a>
+
+        <div class="flex justify-end w-full mb-3">
+            <form method="GET" action="{{ route('empresas.index') }}" class="w-full">
+                <div class="flex gap-2">
+                    <input
+                        type="text"
+                        name="query"
+                        id="buscadorEmpresas"
+                        value="{{ request('query') }}"
+                        placeholder="Buscar empresa por nombre, CIF o email."
+                        class="input input-bordered w-full" />
+                    <button type="submit" class="btn btn-primary">Buscar</button>
+                </div>
+            </form>
+        </div>
 
         <table class="table table-striped">
             <thead>
@@ -12,12 +27,11 @@
                 <th>CIF</th>
                 <th>Nombre</th>
                 <th>Email</th>
-                <th>Teléfono</th>
+                <th>Teléfono</th>
                 <th>Acciones</th>
             </tr>
             </thead>
             <tbody>
-
             @foreach ($empresas as $empresa)
                 <tr>
                     <td>{{ $empresa->cif }}</td>
@@ -26,13 +40,12 @@
                     <td>{{ $empresa->telefono }}</td>
                     <td>
                         <a href="{{ route('empresas.show', $empresa->id) }}" class="btn btn-info btn-sm">Ver</a>
-
                         <a href="{{ route('empresas.edit', $empresa->id) }}" class="btn btn-warning btn-sm">Modificar</a>
-
                         <form action="{{ route('empresas.destroy', $empresa->id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro que deseas eliminar esta empresa?')">
+                            <button type="submit" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('¿Seguro que deseas eliminar esta empresa?')">
                                 Eliminar
                             </button>
                         </form>

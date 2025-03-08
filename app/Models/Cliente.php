@@ -51,4 +51,22 @@ class Cliente extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function scopeSearch($query, $term)
+    {
+        if (!$term) {
+            return $query;
+        }
+
+        $term = strtolower($term);
+
+        return $query->where(function ($q) use ($term) {
+            $q->whereRaw('LOWER(dni) LIKE ?', ["%{$term}%"])
+                ->orWhereHas('user', function ($q2) use ($term) {
+                    $q2->whereRaw('LOWER(name) LIKE ?', ["%{$term}%"])
+                        ->orWhereRaw('LOWER(email) LIKE ?', ["%{$term}%"]);
+                });
+        });
+    }
+
+
 }

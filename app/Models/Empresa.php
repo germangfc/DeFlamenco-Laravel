@@ -18,10 +18,21 @@ class Empresa extends Model
       'cif', 'name', 'direccion','imagen' ,'telefono', 'email','cuentaBancaria', 'usuario_id', 'lista_eventos','isDeleted'
     ];
 
-    public function scopeSearch($query, $name)
+    public function scopeSearch($query, $term)
     {
-        return $query->where('name', 'LIKE', "%$name%");
+        if (!$term) {
+            return $query;
+        }
+
+        $term = strtolower($term);
+
+        return $query->where(function ($q) use ($term) {
+            $q->whereRaw('LOWER(name) LIKE ?', ["%{$term}%"])
+                ->orWhereRaw('LOWER(cif) LIKE ?', ["%{$term}%"])
+                ->orWhereRaw('LOWER(email) LIKE ?', ["%{$term}%"]);
+        });
     }
+
 
     protected $casts = [
         'lista_eventos'=>'array'
@@ -40,6 +51,8 @@ class Empresa extends Model
             }
         });
     }
+
+
 
 
 }

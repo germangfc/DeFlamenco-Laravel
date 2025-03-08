@@ -28,10 +28,10 @@
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="foto_dni" class="form-label">Foto DNI</label>
+                        <label for="foto_dni" class="form-label">Foto Perfil</label>
                         <input type="file" name="foto_dni" class="form-control" id="foto_dni">
                         @if ($cliente->foto_dni)
-                            <img src="{{ asset('storage/' . $cliente->foto_dni) }}" alt="Foto DNI" class="img-fluid mt-2">
+                            <img src="{{ asset('storage/images' . $cliente->foto_dni) }}" alt="Foto Perfil" class="img-fluid mt-2">
                         @endif
                         @error('foto_dni')
                         <div class="alert alert-danger mt-2">{{ $message }}</div>

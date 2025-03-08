@@ -4,17 +4,33 @@ namespace App\Http\Controllers;
 
 use App\Models\Evento;
 use App\Models\Ticket;
+use Illuminate\Support\Facades\Auth;
 
 class TicketController extends Controller
 {
     public function index()
     {
-        $idClient = auth()->user()->id;
-        $tickets = Ticket::where('idClient', $idClient)->paginate(10);
-        $eventos = Evento::all();
+        $idClient = auth()->user()->cliente()->first()->id;
 
-        return view('tickets.index', compact('tickets','eventos'));
+        $tickets = Ticket::where('idClient', $idClient)->get();
+
+        $eventIds = $tickets->pluck('idEvent')->toArray();
+
+        $eventos = Evento::whereIn('id', $eventIds)
+            ->orderBy('fecha', 'desc') // Ordena por fecha descendente
+            ->get()
+            ->keyBy('id');
+
+        $tickets = $tickets->map(function ($ticket) use ($eventos) {
+            $ticket->evento = $eventos[$ticket->idEvent] ?? null;
+            return $ticket;
+        });
+
+        $tickets = $tickets->sortByDesc(fn($ticket) => $ticket->evento->fecha ?? '1970-01-01');
+
+        return view('tickets.index', compact('tickets'));
     }
+
 
     public function validar($id)
     {

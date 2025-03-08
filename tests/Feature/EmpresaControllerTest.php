@@ -36,7 +36,7 @@ class EmpresaControllerTest extends TestCase
     public function testIndex()
     {
 
-        $response = $this->get(route('empresas.index'));
+        $response = $this->get(route('empresas.index-admin'));
 
         $response->assertStatus(200)
             ->assertViewIs('empresas.user')
