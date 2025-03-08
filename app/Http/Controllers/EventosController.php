@@ -36,6 +36,15 @@ class EventosController extends Controller
     }
 
 
+    public function showMeEvents()
+    {
+        $empresa = Empresa::where('usuario_id', auth()->id())->firstOrFail();
+
+        $eventos = $empresa->eventos()->orderBy('fecha', 'desc')->get();
+
+        return view('eventos.index-me', compact('eventos', 'empresa'));
+    }
+
 
     public function create()
     {
