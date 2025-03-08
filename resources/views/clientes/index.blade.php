@@ -13,7 +13,7 @@
                     <x-cliente-search class="w-auto" />
                 </div>
 
-                <x-table-basico :headers="[ 'Nombre', 'Email', 'DNI', 'Acciones']" tableClass="table table-striped w-full">
+                <x-table-basico :headers="[ 'Nombre', 'Email', 'Acciones']" tableClass="table table-striped w-full">
                     @foreach ($clientes as $cliente)
                         <tr class="hover">
                             <td>
@@ -27,7 +27,6 @@
                                 </div>
                             </td>
                             <td>{{ $cliente->user->email }}</td>
-                            <td>{{ $cliente->dni }}</td>
                             <td>
                                 <div class="flex gap-2">
                                     <a href="{{ route('clientes.show', $cliente->id) }}" id="verEmpresa" class="btn btn-info btn-sm">Ver</a>
