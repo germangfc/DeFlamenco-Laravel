@@ -100,6 +100,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/miseventos', [EventosController::class , 'showMeEvents'])->name('eventos.index-me');
 });
 
+Route::get('/ticket/download/{ticketId}', [TicketController::class, 'download'])->name('ticket.download');
+
+
 require __DIR__.'/auth.php';
 
 

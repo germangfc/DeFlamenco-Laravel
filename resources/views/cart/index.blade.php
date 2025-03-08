@@ -13,7 +13,7 @@
                     <th class="py-3 px-4">Precio</th>
                     <th class="py-3 px-4 text-center">Cantidad</th>
                     <th class="py-3 px-4">Subtotal</th>
-                    <th class="py-3 px-4 text-center">Acciones</th>
+                    <th class="py-3 px-4 text-center">Borrar</th>
                 </tr>
                 </thead>
                 <tbody>

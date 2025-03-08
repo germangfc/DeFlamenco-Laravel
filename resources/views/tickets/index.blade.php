@@ -24,13 +24,13 @@
                     <div class="group relative overflow-hidden rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500
             {{ $isExpired ? 'bg-gray-200 text-gray-500' : 'bg-base-100' }} h-[400px]">
 
-                        <a href="{{ route('eventos.show', $ticket->evento->id) }}" class="block h-full">
+                        <a href="{{ route('ticket.download', ['ticketId' => $ticket->id]) }}" class="block h-full">
                             <!-- Contenedor de imagen con efecto zoom -->
                             <div class="h-60 overflow-hidden relative">
                                 <img src="{{ $imageSrc }}"
                                      alt="{{ $ticket->evento->nombre ?? 'Evento' }}"
                                      class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105
-                         {{ $isExpired ? 'grayscale brightness-75' : '' }}">
+                 {{ $isExpired ? 'grayscale brightness-75' : '' }}">
 
                                 <!-- Badge de precio flotante -->
                                 <div class="absolute top-4 right-4 badge badge-lg bg-primary glass shadow-lg">
@@ -72,6 +72,7 @@
                                 @endif
                             </div>
                         </a>
+
                     </div>
                 @endforeach
             </div>

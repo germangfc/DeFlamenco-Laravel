@@ -100,7 +100,7 @@
                             </div>
 
                             <x-primary-button class="ml-4 w-full bg-primary text-primary-content py-2 rounded-lg font-bold text-lg shadow-lg hover:bg-primary-focus transition transform hover:scale-105 text-center">
-                                {{ __('Añadir al carrito') }} <span id="totalPrice">  {{ $evento->precio }}€</span>
+                                {{ __('Añadir al carrito') }} <span id="totalPrice">  {{ $evento->precio }} €</span>
                             </x-primary-button>
                         </form>
                     </div>
