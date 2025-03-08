@@ -26,6 +26,7 @@ class Evento extends Model
         'ciudad',
         'precio',
         'foto',
+        'empresa_id'
     ];
 
     protected static function boot()
@@ -36,6 +37,11 @@ class Evento extends Model
                 $evento->id = GuuidGenerator::generateHash();
             }
         });
+    }
+
+    public function empresa()
+    {
+        return $this->belongsTo(Empresa::class, 'empresa_id', 'id');
     }
 
     protected $primaryKey = 'id';

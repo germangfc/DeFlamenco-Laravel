@@ -34,25 +34,26 @@ class EmpresaController extends Controller
 
 
 
+    // Controlador corregido
     public function show($id)
     {
-        $cacheKey = "empresa_{$id}";
+        $cacheKey = "empresa_{$id}_eventos";
 
         if (Cache::has($cacheKey)) {
-            return view('empresas.show', ['empresa' => Empresa::find($id)]);
+            return Cache::get($cacheKey);
         }
 
-        $empresa = Empresa::find($id);
+        $empresa = Empresa::with('eventos')->findOrFail($id); // Carga relacional
+        $eventos = $empresa->eventos()->paginate(10); // Paginación
 
-        if (!$empresa) {
-            return redirect()->route('empresas.index')->with('error', 'Empresa no encontrada');
-        }
+        $view = view('empresas.show', [
+            'empresa' => $empresa,
+            'eventos' => $eventos // Cambiamos a plural para coincidir con foreach
+        ])->render();
 
-        $view = view('empresas.show', compact('empresa'));
+        Cache::put($cacheKey, $view, 3600); // 1 hora de cache
 
-        Cache::put($cacheKey, $view->render(), 60);
-
-        return $view; // Devuelve la vista real, no solo el HTML
+        return $view;
     }
 
     public function showByNombre($nombre)

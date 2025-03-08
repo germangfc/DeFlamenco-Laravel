@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Empresa;
+use App\Models\Evento;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Random\RandomException;
@@ -28,9 +29,16 @@ class EmpresaFactory extends Factory
             'email' => $this->faker->unique()->safeEmail,
             'cuentaBancaria' => $this->faker->iban('ES'),
             'usuario_id' => User::factory()->create(['tipo' => 'empresa'])->id,
-            'lista_eventos' => json_encode($this->faker->words(3)),
             'isDeleted' => false,
         ];
+    }
+
+    public function withEventos($count = 3)
+    {
+        return $this->afterCreating(function (Empresa $empresa) use ($count) {
+            $eventos = Evento::factory()->count($count)->make();
+            $empresa->eventos()->saveMany($eventos);
+        });
     }
 
 

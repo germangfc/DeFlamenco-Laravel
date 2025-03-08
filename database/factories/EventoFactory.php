@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Empresa;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -30,6 +31,7 @@ class EventoFactory extends Factory
                         Un line up inmejorable con los mejores artistas y djs de la escena repartidos en 4 áreas musicales 🎵
                         El ambientazo que solo encuentras con {$nombre}  con una fiesta non stop de más de 6 horas 🕺🏼
                         Todas las fiestas de {$nombre} en exclusiva en De Flamenco 🎁",
+            'empresa_id' => Empresa::factory()->create(),
         ];
     }
 }

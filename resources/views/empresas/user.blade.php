@@ -8,7 +8,7 @@
     <div class="p-8">
         <h1 class="text-center text-2xl font-bold">Empresas Registradas</h1>
         <x-empresa-search></x-empresa-search>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4 md:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach($empresas as $empresa)
                 <div class="group relative overflow-hidden rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 bg-base-100 h-[400px]">
                     <a href="{{ route('empresas.show', $empresa->id) }}" class="block h-full">
