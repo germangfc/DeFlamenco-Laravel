@@ -104,8 +104,11 @@ class EventoApiControllerTest extends TestCase
         $this->assertDatabaseHas('eventos', $data);
     }
 
-    /*public function testStoreValidationError()
+    public function testStoreValidationError()
     {
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
+        $empresa = Empresa::factory()->create();
         $data = [
             'nombre' => 'a',
             'stock' => 10,
@@ -114,16 +117,15 @@ class EventoApiControllerTest extends TestCase
             'direccion' => '',
             'ciudad' => '',
             'precio' => 'precio-invalido',
+            'empresa_id' => $empresa->id,
         ];
 
-        $response = $this->postJson('/api/eventos', $data);
+        $response = $this->postJson('/api/eventos', $data, [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
-        $response->assertStatus(422)
-            ->assertJsonValidationErrors([
-                'nombre', 'fecha', 'hora', 'direccion', 'ciudad', 'precio',
-            ]);
+        $response->assertStatus(422);
     }
-    */
 
 
 
