@@ -37,120 +37,158 @@
             @endif
         </div>
     </div>
+
+    <div class="mt-6 text-center">
+        <div class=" p-4 rounded-lg inline-block shadow-lg">
+            <div id="countdown" class="text-2xl font-semibold">
+                <ul class="list-none flex justify-center gap-8">
+                    <li><span id="days"></span> DIAS</li>
+                    <li><span id="hours"></span> HORAS</li>
+                    <li><span id="minutes"></span> MINUTOS</li>
+                    <li><span id="seconds"></span> SEGUNDOS</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
     <div class="p-6 mb-8 rounded-lg flex flex-col md:flex-row justify-between">
+        <!-- Fila de detalles -->
         <div class="flex-1 p-6 text-left">
-            <h3 class="text-2xl font-semibold mb-6">Información del Evento</h3>
-            <p class="mb-4 text-lg leading-relaxed">
-                <span class="hidden-text">El mayor evento de música flamenca de 2025 en España 🔥</span><br>
-                <span class="hidden-text">Un line up inmejorable con los mejores artistas y DJs de la escena repartidos en 4 áreas musicales 🎵</span><br>
-                <span class="hidden-text">El ambientazo que solo encuentras en {{ $evento->nombre }} con una fiesta non-stop de más de 6 horas 🕺🏼</span><br>
-                <span class="hidden-text">Todas las fiestas de {{ $evento->nombre }} en exclusiva en De Flamenco 🎁</span>
+            <h3 class="text-2xl font-semibold mb-6 text-center text-blue-600">Información del Evento</h3>
+
+            <p class="mb-6 text-lg leading-relaxed text-gray-700">
+                {{$evento->descripcion}}
             </p>
 
+            <h3 class="text-2xl font-semibold mb-6 text-center text-blue-600">Detalles del Evento</h3>
 
-            <h3 class="text-2xl font-semibold mb-4 rounded-lg">Detalles del Evento</h3>
-            <div class="mb-4 bg-red-700">
-                <p class="text-lg font-bold bg-primary rounded-lg"><strong>📅 Fecha:</strong> {{ $evento->fecha }} a las {{ $evento->hora }}</p>
-            </div>
-            <div class="mb-4 bg-primary">
-                <p class="text-lg font-bold bg-primary rounded-lg"><strong>📍 Lugar:</strong> {{ $evento->direccion }}, {{ $evento->ciudad }}</p>
-            </div>
-            <div>
-                <p class="text-lg font-bold bg-primary rounded-lg"><strong>Precio:</strong> {{ $evento->precio }}€</p>
-            </div>
-
-
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                    <p class="text-lg font-medium text-gray-800"><strong>📅 Fecha:</strong> {{ \Carbon\Carbon::parse($evento->fecha)->format('d M, Y') }} a las {{ $evento->hora }}</p>
                 </div>
-                @if(!Auth::check() || (!Auth::user()->hasRole('admin') && !Auth::user()->hasRole('empresa')))                    <div class="flex-1 p-10 ml-auto w-full md:w-1/2">
-                        <div class="relative">
-                            <h3 class="text-lg font-semibold mt-6 text-center border-2 border-blue-600 bg-blue-600 text-white py-2 px-4 rounded-lg">
-                                {{ $evento->fecha }}
-                            </h3>
 
-                    <div class="p-10 w-full md:w-auto flex flex-col items-center text-white rounded-xl shadow-lg md:ml-6">
-                        <h3 class="text-sm font-bold text-center border-2 bg-primary border-primary  text-white py-1 px-4 rounded-lg w-full shadow-md">
-                            Compra aqui tus entradas
+                <div class="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                    <p class="text-lg font-medium text-gray-800"><strong>📍 Lugar:</strong> {{ $evento->direccion }}, {{ $evento->ciudad }}</p>
+                </div>
+
+                <div class="bg-white p-4 rounded-lg shadow-md border border-gray-200 col-span-2">
+                    <p class="text-lg font-medium text-gray-800"><strong>💰 Precio:</strong> {{ $evento->precio }}€</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Opción de añadir al carrito solo si es cliente -->
+        @if(!Auth::check() || (!Auth::user()->hasRole('admin') && !Auth::user()->hasRole('empresa')))
+            <div class="flex-1 p-4 ml-auto  md:w-1/12"> <!-- Reducción del tamaño de la columna -->
+                <div class="relative">
+                    <div class="p-4 w-full md:w-auto flex flex-col items-center text-white rounded-xl shadow-lg md:ml-6">
+                        <h3 class="text-xs font-bold text-center border-2 bg-primary border-primary text-white py-1 px-4 rounded-lg w-full shadow-md">
+                            Añadir a la cesta
                         </h3>
 
-                        <p class="mt-3 text-lg font-medium text-center">Entrada general para <strong>{{ $evento->nombre }}</strong></p>
-
-                        <form action="{{ route('cart.add') }}" method="POST" class="w-full mt-6">
+                        <form action="{{ route('cart.add') }}" method="POST" class="w-full mt-4">
                             @csrf
 
                             <input type="hidden" name="idEvent" value="{{ $evento->id }}">
                             <input type="hidden" name="price" value="{{ $evento->precio }}">
                             <input type="hidden" name="name" value="{{ $evento->nombre }}">
 
-
-                            <div class="flex items-center justify-center space-x-4 mb-6">
-                                <button type="button" id="decrease" class="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition shadow-md">-</button>
-                                <input type="number" name="quantity"  id="quantity" value="1" min="1" max="5" class="w-16 text-center border rounded-lg text-lg font-semibold bg-gray-800 text-white shadow-md">
-                                <button type="button" id="increase" class="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition shadow-md">+</button>
+                            <div class="flex items-center justify-center space-x-4 mb-4">
+                                <button type="button" id="decrease" class="px-3 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition shadow-md">-</button>
+                                <input type="number" name="quantity" id="quantity" value="1" min="1" max="5" class="w-12 text-center border rounded-lg text-lg font-semibold bg-gray-800 text-white shadow-md">
+                                <button type="button" id="increase" class="px-3 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition shadow-md">+</button>
                             </div>
 
-                            <x-primary-button class="ml-4 w-full bg-primary text-primary-content py-3 rounded-lg font-bold text-lg shadow-lg hover:bg-primary-focus transition transform hover:scale-105 text-center">
-                                {{ __('Comprar') }} <span id="totalPrice">{{ $evento->precio }}€</span>
+                            <x-primary-button class="ml-4 w-full bg-primary text-primary-content py-2 rounded-lg font-bold text-lg shadow-lg hover:bg-primary-focus transition transform hover:scale-105 text-center">
+                                {{ __('Añadir al carrito') }} <span id="totalPrice">  {{ $evento->precio }}€</span>
                             </x-primary-button>
                         </form>
                     </div>
                 </div>
-            @endif
+            </div>
+        @endif
 
-    <div class="mt-8">
+    </div>
+
+
+    <div class="w-full mt-8 mb-8">
         <h3 class="text-xl font-semibold mb-3 text-center">Ubicación en el mapa</h3>
         <div id="map" class="w-full h-64 rounded-lg shadow-md"></div>
     </div>
 
+
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css " />
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var address = '{{ $evento->ciudad . ' ' . $evento->direccion }}';
+@endsection
 
-            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.length > 0) {
-                        var lat = data[0].lat;
-                        var lon = data[0].lon;
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-                        var map = L.map('map').setView([lat, lon], 13);
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var address = '{{ $evento->ciudad . ' ' . $evento->direccion }}';
 
-                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                            attribution: '&copy; OpenStreetMap contributors'
-                        }).addTo(map);
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    var lat = data[0].lat;
+                    var lon = data[0].lon;
 
-                        var marker = L.marker([lat, lon]).addTo(map);
-                        marker.bindPopup('<b>{{ $evento->nombre }}</b><br>{{ $evento->direccion }}');
-                    } else {
-                        document.getElementById("map").innerHTML = "<p class='text-red-500 text-center'>No se pudo encontrar la ubicación.</p>";
-                    }
-                });
-        });
+                    var map = L.map('map').setView([lat, lon], 13);
 
-        document.addEventListener("DOMContentLoaded", function () {
-            const quantityInput = document.getElementById("quantity");
-            const totalPrice = document.getElementById("totalPrice");
-            const price = {{ $evento->precio }};
-            const increaseBtn = document.getElementById("increase");
-            const decreaseBtn = document.getElementById("decrease");
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; OpenStreetMap contributors'
+                    }).addTo(map);
 
-            increaseBtn.addEventListener("click", function () {
-                quantityInput.value = parseInt(quantityInput.value) + 1;
-                updateTotal();
-            });
-
-            decreaseBtn.addEventListener("click", function () {
-                if (parseInt(quantityInput.value) > 1) {
-                    quantityInput.value = parseInt(quantityInput.value) - 1;
-                    updateTotal();
+                    var marker = L.marker([lat, lon]).addTo(map);
+                    marker.bindPopup('<b>{{ $evento->nombre }}</b><br>{{ $evento->direccion }}');
+                } else {
+                    document.getElementById("map").innerHTML = "<p class='text-red-500 text-center'>No se pudo encontrar la ubicación.</p>";
                 }
             });
+    });
 
-            function updateTotal() {
-                totalPrice.textContent = (quantityInput.value * price).toFixed(2);
-            }
+    document.addEventListener("DOMContentLoaded", function () {
+        const quantityInput = document.getElementById("quantity");
+        const totalPrice = document.getElementById("totalPrice");
+        const price = {{ $evento->precio }};
+        const increaseBtn = document.getElementById("increase");
+        const decreaseBtn = document.getElementById("decrease");
+        increaseBtn.addEventListener("click", function () {quantityInput.value = parseInt(quantityInput.value) + 1;
+            updateTotal();
         });
-    </script>
-@endsection
+        decreaseBtn.addEventListener("click", function () {if (parseInt(quantityInput.value) > 1) {
+            quantityInput.value = parseInt(quantityInput.value) - 1;
+            updateTotal();
+        }
+        });
+
+        function updateTotal() {
+            totalPrice.textContent = (quantityInput.value * price).toFixed(2);
+        }
+        const eventDate = "{{ \Carbon\Carbon::parse($evento->fecha)->format('M d, Y H:i') }}"; // Usamos la fecha del evento
+        const eventTimestamp = new Date(eventDate).getTime();
+
+        const second = 1000,
+            minute = second * 60,
+            hour = minute * 60,
+            day = hour * 24;
+
+        const countdown = setInterval(function() {
+            const now = new Date().getTime(),
+                distance = eventTimestamp - now;
+
+            document.getElementById("days").innerText = Math.floor(distance / (day));
+            document.getElementById("hours").innerText = Math.floor((distance % (day)) / (hour));
+            document.getElementById("minutes").innerText = Math.floor((distance % (hour)) / (minute));
+            document.getElementById("seconds").innerText = Math.floor((distance % (minute)) / second);
+
+            // Al llegar a la fecha, cambiar el mensaje
+            if (distance < 0) {
+                document.getElementById("headline").innerText = "¡Es el día del evento!";
+                document.getElementById("countdown").style.display = "none";
+                clearInterval(countdown);
+            }
+        }, 0);
+    });
+</script>
