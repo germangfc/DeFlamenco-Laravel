@@ -144,129 +144,6 @@ class ClienteApiControllerTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function test_get_By_dni_on_cache()
-    {
-        $admin = User::where('email', 'admin@example.com')->first();
-        $token = JWTAuth::fromUser($admin);
-
-        $user = User::factory()->create();
-        $cliente = Cliente::factory()->create();
-
-        Cache::shouldReceive('get')
-            ->once()
-            ->with("cliente_dni_{$cliente->dni}")
-            ->andReturn($cliente);
-
-        Cache::shouldReceive('get')
-            ->once()
-            ->with("user_{$cliente->user_id}")
-            ->andReturn($user);
-
-        $response = $this->getJson("/api/clientes/dni/{$cliente->dni}", [
-            'Authorization' => 'Bearer ' . $token
-        ]);
-
-        $response->assertStatus(200)
-            ->assertJson([
-                'id' => $cliente->id,
-            ]);
-    }
-
-
-    public function test_get_by_dni_no_in_cache(){
-        $admin = User::where('email', 'admin@example.com')->first();
-        $token = JWTAuth::fromUser($admin);
-
-        $user = User::factory()->create();
-        $cliente = Cliente::factory()->create(['user_id' => $user->id]);
-
-        Cache::shouldReceive('get')
-            ->once()
-            ->with("cliente_dni_{$cliente->dni}")
-            ->andReturnNull();
-
-        Cache::shouldReceive('put')
-            ->once()
-            ->with("cliente_dni_{$cliente->dni}", Mockery::on(function ($cachedCliente) use ($cliente) {
-                return $cachedCliente->id === $cliente->id;
-            }), Mockery::any());
-
-        Cache::shouldReceive('get')
-            ->once()
-            ->with("user_{$cliente->user_id}")
-            ->andReturnNull();
-
-        Cache::shouldReceive('put')
-            ->once()
-            ->with("user_{$cliente->user_id}", Mockery::on(function ($cachedUser) use ($user) {
-                return $cachedUser->id === $user->id;
-            }), Mockery::any());
-
-        $response = $this->getJson("/api/clientes/dni/{$cliente->dni}", [
-            'Authorization' => 'Bearer ' . $token
-        ]);
-
-        $response->assertStatus(200)
-            ->assertJson([
-                'id' => $cliente->id,
-            ]);
-    }
-
-    public function test_get_by_dni_not_found(){
-        $admin = User::where('email', 'admin@example.com')->first();
-        $token = JWTAuth::fromUser($admin);
-        $dni = '1234567890';
-
-        Cache::shouldReceive('get')
-            ->once()
-            ->with("cliente_dni_{$dni}")
-            ->andReturnNull();
-
-
-        $response = $this->getJson("/api/clientes/dni/{$dni}", [
-            'Authorization' => 'Bearer ' . $token
-        ]);
-
-        $response->assertStatus(404)
-            ->assertJson([
-                'message' => 'Cliente no encontrado',
-            ]);
-    }
-
-    public function test_get_by_dni_user_not_found_in_cache(){
-        $admin = User::where('email', 'admin@example.com')->first();
-        $token = JWTAuth::fromUser($admin);
-
-        $user = User::factory()->create();
-        $cliente = Cliente::factory()->create(['user_id' => $user->id]);
-
-
-        Cache::shouldReceive('get')
-            ->once()
-            ->with("cliente_dni_{$cliente->dni}")
-            ->andReturn($cliente);
-
-        Cache::shouldReceive('get')
-            ->once()
-            ->with("user_{$cliente->user_id}")
-            ->andReturnNull();
-
-        Cache::shouldReceive('put')
-            ->once()
-            ->with("user_{$cliente->user_id}", Mockery::on(function ($cachedUser) use ($user) {
-                return $cachedUser->id === $user->id;
-            }), Mockery::any());
-
-        $response = $this->getJson("/api/clientes/dni/{$cliente->dni}", [
-            'Authorization' => 'Bearer ' . $token
-        ]);
-
-        $response->assertStatus(200)
-            ->assertJson([
-                'id' => $cliente->id,
-            ]);
-    }
-
     public function test_searchByEmail_success_on_cache()
     {
         $admin = User::where('email', 'admin@example.com')->first();
@@ -394,7 +271,6 @@ class ClienteApiControllerTest extends TestCase
             'name' => 'John Doe',
             'email' => 'johndoe@example.com',
             'password' => 'password123',
-            'dni' => '12345678A',
         ];
 
         $response = $this->withHeaders([
@@ -406,7 +282,6 @@ class ClienteApiControllerTest extends TestCase
                 0 => [
                     'id',
                     'user_id',
-                    'dni',
                     'avatar',
                 ]
             ]);
@@ -415,9 +290,7 @@ class ClienteApiControllerTest extends TestCase
             'email' => 'johndoe@example.com',
         ]);
 
-        $this->assertDatabaseHas('clientes', [
-            'dni' => '12345678A',
-        ]);
+
 
         Mail::assertSent(ClienteBienvenido::class, 1);
     }
@@ -431,7 +304,6 @@ class ClienteApiControllerTest extends TestCase
             'name' => '',
             'email' => 'not-an-email',
             'password' => 'short',
-            'dni' => '',
         ];
 
         $response = $this->withHeaders([
@@ -444,7 +316,6 @@ class ClienteApiControllerTest extends TestCase
                     'name',
                     'email',
                     'password',
-                    'dni',
                 ],
             ]);
     }
@@ -460,9 +331,8 @@ class ClienteApiControllerTest extends TestCase
 
         $payload = [
             'name' => 'John Doe',
-            'email' => 'duplicate@example.com', // Email repetido
+            'email' => 'duplicate@example.com',
             'password' => 'password123',
-            'dni' => '12345678B',
         ];
 
         $response = $this->withHeaders([
@@ -473,34 +343,6 @@ class ClienteApiControllerTest extends TestCase
             ->assertJsonStructure([
                 'errors' => [
                     'email',
-                ],
-            ]);
-    }
-
-    public function test_store_cliente_fails_duplicate_dni()
-    {
-        $admin = User::where('email', 'admin@example.com')->first();
-        $token = JWTAuth::fromUser($admin);
-
-        $existingCliente = Cliente::factory()->create([
-            'dni' => '99999999Z',
-        ]);
-
-        $payload = [
-            'name' => 'Jane Doe',
-            'email' => 'janedoe@example.com',
-            'password' => 'password123',
-            'dni' => '99999999Z', // DNI repetido
-        ];
-
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $token,
-        ])->postJson('/api/clientes', $payload);
-
-        $response->assertStatus(422)
-            ->assertJsonStructure([
-                'errors' => [
-                    'dni',
                 ],
             ]);
     }
@@ -518,7 +360,6 @@ class ClienteApiControllerTest extends TestCase
             'name' => 'Unauthorized User',
             'email' => 'unauthorized@example.com',
             'password' => 'password123',
-            'dni' => '11111111X',
         ];
 
         $response = $this->withHeaders([
@@ -537,11 +378,10 @@ class ClienteApiControllerTest extends TestCase
         $user = User::find($cliente->user_id);
 
         $payload = [
-            'dni' => '98765432X',
             'name' => 'Updated Name',
             'email' => 'updatedemail@example.com',
             'password' => 'newpassword123',
-            'foto_dni' => 'foto_actualizada.jpg',
+            'avatar' => 'foto_actualizada.jpg',
         ];
 
         $response = $this->withHeaders([
@@ -551,14 +391,12 @@ class ClienteApiControllerTest extends TestCase
         $response->assertStatus(200)
             ->assertJson([
                 'id' => $cliente->id,
-                'dni' => '98765432X',
-                'foto_dni' => 'foto_actualizada.jpg',
+                'avatar' => 'foto_actualizada.jpg',
             ]);
 
         $this->assertDatabaseHas('clientes', [
             'id' => $cliente->id,
-            'dni' => '98765432X',
-            'foto_dni' => 'foto_actualizada.jpg',
+            'avatar' => 'foto_actualizada.jpg',
         ]);
 
         $this->assertDatabaseHas('users', [
@@ -578,7 +416,6 @@ class ClienteApiControllerTest extends TestCase
         $cliente = Cliente::factory()->create();
 
         $payload = [
-            'dni' => 'invalid-dni-format!!!',
             'email' => 'invalid-email',
             'password' => 'short',
         ];
@@ -590,7 +427,6 @@ class ClienteApiControllerTest extends TestCase
         $response->assertStatus(422)
             ->assertJsonStructure([
                 'errors' => [
-                    'dni',
                     'email',
                     'password',
                 ],
@@ -624,32 +460,6 @@ class ClienteApiControllerTest extends TestCase
             ]);
     }
 
-    public function test_update_cliente_fails_duplicate_dni()
-    {
-        $admin = User::where('email', 'admin@example.com')->first();
-        $token = JWTAuth::fromUser($admin);
-
-        $existingCliente = Cliente::factory()->create([
-            'dni' => '99999999Z',
-        ]);
-
-        $cliente = Cliente::factory()->create();
-
-        $payload = [
-            'dni' => '99999999Z',
-        ];
-
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $token,
-        ])->putJson("/api/clientes/{$cliente->id}", $payload);
-
-        $response->assertStatus(422)
-            ->assertJsonStructure([
-                'errors' => [
-                    'dni',
-                ],
-            ]);
-    }
 
     public function test_update_cliente_not_found()
     {
@@ -657,7 +467,6 @@ class ClienteApiControllerTest extends TestCase
         $token = JWTAuth::fromUser($admin);
 
         $payload = [
-            'dni' => '12345678X',
             'name' => 'New Name',
         ];
 

@@ -33,9 +33,7 @@ Route::group([
     Route::post('clientes', [ClienteApiController::class, 'store']);
     Route::get('clientes/{id}', [ClienteApiController::class,'show']);
     Route::put('clientes/{id}', [ClienteApiController::class,'update']);
-    Route::get('clientes/dni/{dni}', [ClienteApiController::class, 'searchByDni']);
     Route::get('clientes/email/{email}', [ClienteApiController::class, 'searchByEmail']);
-    Route::post('clientes/upload-dni/{clienteId}', [ClienteApiController::class, 'uploadDni']);
     Route::delete('clientes/{clienteId}', [ClienteApiController::class, 'destroy']);
     Route::apiResource('usuarios',UserApiController::class);
     Route::apiResource('ventas', VentasApiController::class);

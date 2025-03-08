@@ -23,7 +23,7 @@ class ClienteApiController extends Controller
 
     public function index(Request $request)
     {
-        $clientes = Cliente::search($request->dni)->orderBy('id', 'ASC')->paginate(5);
+        $clientes = Cliente::search($request->user_id)->orderBy('id', 'ASC')->paginate(5);
         return response()->json($clientes, 200);
     }
 
@@ -46,37 +46,6 @@ class ClienteApiController extends Controller
 
         return response()->json($cliente, 200);
     }
-
-    public function searchByDni($dni)
-    {
-        $clienteCacheKey = "cliente_dni_{$dni}";
-        $cliente = Cache::get($clienteCacheKey);
-
-        if (!$cliente) {
-            $cliente = Cliente::findByDni($dni)->first();
-
-            if (!$cliente) {
-                return response()->json(['message' => 'Cliente no encontrado'], 404);
-            }
-
-            Cache::put($clienteCacheKey, $cliente, 60);
-        }
-
-        $userCacheKey = "user_{$cliente->user_id}";
-        $user = Cache::get($userCacheKey);
-
-        if (!$user) {
-            $user = User::find($cliente->user_id);
-            if ($user) {
-                Cache::put($userCacheKey, $user, 60);
-            }else{
-                return response()->json(['message' => 'Usuario no encontrado para este cliente'], 404);
-            }
-        }
-
-        return response()->json( $cliente, 200);
-    }
-
 
     public function searchByEmail(Request $request)
     {
@@ -119,7 +88,6 @@ class ClienteApiController extends Controller
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|unique:users,email',
                 'password' => 'required|string|min:8',
-                'dni' => 'required|string|max:20|unique:clientes,dni'
             ]);
 
 
@@ -131,7 +99,6 @@ class ClienteApiController extends Controller
 
             $cliente = Cliente::create([
                 'user_id' => $user->id,
-                'dni' => $validatedData['dni'],
                 'avatar'=>"avatardefault.jpg"
             ]);
 
@@ -179,19 +146,15 @@ class ClienteApiController extends Controller
         }
 
         $validatedData = $request->validate([
-            'dni' => 'nullable|string|max:20|unique:clientes,dni,' . $cliente->id,
-            'foto_dni' => 'nullable|string',
+            'avatar' => 'nullable|string',
             'name' => 'nullable|string|max:255',
             'email' => 'nullable|string|email|unique:users,email,' . $cliente->user_id,
             'password' => 'nullable|string|min:8',
         ]);
 
 
-        if ($request->has('dni')) {
-            $cliente->dni = $validatedData['dni'];
-        }
-        if ($request->has('foto_dni')) {
-            $cliente->foto_dni = $validatedData['foto_dni'];
+        if ($request->has('avatar')) {
+            $cliente->avatar = $validatedData['avatar'];
         }
         if ($request->has('name')) {
             $user->name = $validatedData['name'];

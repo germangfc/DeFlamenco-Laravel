@@ -34,16 +34,6 @@ class Cliente extends Model
         });
     }
 
-    public function scopeSearch($query, $dni)
-    {
-        return $query->where('dni', 'LIKE', "%$dni%");
-    }
-
-    public function scopeFindByDni($query, $dni)
-    {
-        return $query->where('dni', $dni);
-    }
-
     public function scopeFindByUserId($query, $userid)
     {
         return $query->where('user_id', $userid);
