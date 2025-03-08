@@ -29,7 +29,7 @@
         <a class="underline text-sm hover:text-gray-900 dark:hover:text-gray-100 rounded-md " href="{{ route('login') }}">
             {{ __('¿Ya tienes Cuenta?') }}
         </a>
-        <x-primary-button class="ml-4">
+        <x-primary-button class="ml-4" id="crearCliente">
             {{ __('Crear Cliente') }}
         </x-primary-button>
     </div>

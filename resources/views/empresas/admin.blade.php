@@ -44,7 +44,7 @@
                         <form action="{{ route('empresas.destroy', $empresa->id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm"
+                            <button type="submit" class="btn btn-danger btn-sm" id="eliminarBoton"
                                     onclick="return confirm('¿Seguro que deseas eliminar esta empresa?')">
                                 Eliminar
                             </button>

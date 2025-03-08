@@ -88,7 +88,7 @@
                                 <button type="button" id="increase" class="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition shadow-md">+</button>
                             </div>
 
-                            <x-primary-button class="ml-4 w-full bg-primary text-primary-content py-3 rounded-lg font-bold text-lg shadow-lg hover:bg-primary-focus transition transform hover:scale-105 text-center">
+                            <x-primary-button id="comprarBoton" class="ml-4 w-full bg-primary text-primary-content py-3 rounded-lg font-bold text-lg shadow-lg hover:bg-primary-focus transition transform hover:scale-105 text-center">
                                 {{ __('Comprar') }} <span id="totalPrice">{{ $evento->precio }}€</span>
                             </x-primary-button>
                         </form>
