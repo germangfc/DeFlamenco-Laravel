@@ -39,8 +39,13 @@ Route::group([
 
     Route::get('eventos/nombre/{nombre}', [EventosApiController::class, 'getByNombre']);
 
-    Route::apiResource('/eventos', EventosApiController::class);
+    Route::get('eventos', [EventosApiController::class, 'index']);
+    Route::get('eventos/{id}', [EventosApiController::class,'show']);
     Route::get('eventos/nombre/{nombre}', [EventosApiController::class, 'getByNombre']);
+    Route::post('eventos', [EventosApiController::class,'store']);
+    Route::put('eventos/{id}', [EventosApiController::class, 'update']);
+    Route::delete('eventos/{id}', [EventosApiController::class, 'destroy']);
+
 
     Route::get('empresas',[EmpresaControllerApi::class, 'getAll']);
     Route::get('empresas/{id}', [EmpresaControllerApi::class, 'getById']);

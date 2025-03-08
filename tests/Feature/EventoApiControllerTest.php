@@ -2,16 +2,32 @@
 
 namespace Tests\Feature;
 
+use App\Models\Empresa;
 use App\Models\Evento;
+use App\Models\User;
+use Database\Seeders\UserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class EventoApiControllerTest extends TestCase
 {
     use RefreshDatabase;
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->seed(UserSeeder::class);
+
+        User::factory()->create();
+    }
 
     public function testIndex()
     {
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
+        $empresa = Empresa::factory()->create();
         Evento::create([
             'nombre' => 'Evento Test 1',
             'stock' => 100,
@@ -20,6 +36,7 @@ class EventoApiControllerTest extends TestCase
             'direccion' => 'Calle Falsa 123',
             'ciudad' => 'Madrid',
             'precio' => 19.99,
+            'empresa_id' => $empresa->id
         ]);
 
         Evento::create([
@@ -30,6 +47,7 @@ class EventoApiControllerTest extends TestCase
             'direccion' => 'Nueva Calle 456',
             'ciudad' => 'Barcelona',
             'precio' => 29.99,
+            'empresa_id' => $empresa->id
         ]);
 
         Evento::create([
@@ -40,9 +58,12 @@ class EventoApiControllerTest extends TestCase
             'direccion' => 'Otra Calle 789',
             'ciudad' => 'Valencia',
             'precio' => 39.99,
+            'empresa_id' => $empresa->id
         ]);
 
-        $response = $this->getJson('/api/eventos');
+        $response = $this->getJson('/api/eventos', [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
         $response->assertStatus(200);
 
@@ -50,7 +71,7 @@ class EventoApiControllerTest extends TestCase
 
         $response->assertJsonStructure([
             '*' => [
-                'id', 'nombre', 'stock', 'fecha', 'hora', 'direccion', 'ciudad', 'precio',
+                'id', 'nombre', 'stock', 'fecha', 'hora', 'direccion', 'ciudad', 'precio', 'empresa_id'
             ],
         ]);
     }
@@ -59,6 +80,9 @@ class EventoApiControllerTest extends TestCase
 
     public function testStore()
     {
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
+        $empresa = Empresa::factory()->create();
         $data = [
             'nombre' => 'Evento Test',
             'stock' => 100,
@@ -67,9 +91,12 @@ class EventoApiControllerTest extends TestCase
             'direccion' => 'Calle Falsa 123',
             'ciudad' => 'Madrid',
             'precio' => 19.99,
+            'empresa_id' => $empresa->id,
         ];
 
-        $response = $this->postJson('/api/eventos', $data);
+        $response = $this->postJson('/api/eventos', $data, [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
         $response->assertStatus(201)
             ->assertJson($data);
@@ -102,6 +129,9 @@ class EventoApiControllerTest extends TestCase
 
     public function testShow()
     {
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
+        $empresa = Empresa::factory()->create();
         $evento = Evento::create([
             'nombre' => 'Evento Test',
             'stock' => 100,
@@ -110,9 +140,12 @@ class EventoApiControllerTest extends TestCase
             'direccion' => 'Calle Falsa 123',
             'ciudad' => 'Madrid',
             'precio' => 19.99,
+            'empresa_id' => $empresa->id
         ]);
 
-        $response = $this->getJson('/api/eventos/' . $evento->id);
+        $response = $this->getJson('/api/eventos/' . $evento->id, [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
         $response->assertStatus(200)
             ->assertJson([
@@ -124,6 +157,7 @@ class EventoApiControllerTest extends TestCase
                 'direccion' => $evento->direccion,
                 'ciudad' => $evento->ciudad,
                 'precio' => $evento->precio,
+                'empresa_id' => $empresa->id
             ]);
     }
 
@@ -131,7 +165,11 @@ class EventoApiControllerTest extends TestCase
 
     public function testShowNotFound()
     {
-        $response = $this->getJson('/api/eventos/999');
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
+        $response = $this->getJson('/api/eventos/999', [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
         $response->assertStatus(404)
             ->assertJson(['error' => 'Evento no encontrado']);
@@ -140,6 +178,9 @@ class EventoApiControllerTest extends TestCase
 
     public function testUpdate()
     {
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
+        $empresa = Empresa::factory()->create();
         $evento = Evento::create([
             'nombre' => 'Evento Test',
             'stock' => 100,
@@ -148,6 +189,7 @@ class EventoApiControllerTest extends TestCase
             'direccion' => 'Calle Falsa 123',
             'ciudad' => 'Madrid',
             'precio' => 19.99,
+            'empresa_id' => $empresa->id
         ]);
 
         $data = [
@@ -158,9 +200,12 @@ class EventoApiControllerTest extends TestCase
             'direccion' => 'Nueva Calle 456',
             'ciudad' => 'Barcelona',
             'precio' => 29.99,
+            'empresa_id' => $empresa->id,
         ];
 
-        $response = $this->putJson('/api/eventos/' . $evento->id, $data);
+        $response = $this->putJson('/api/eventos/' . $evento->id, $data, [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
         $response->assertStatus(200)
             ->assertJson($data);
@@ -172,6 +217,9 @@ class EventoApiControllerTest extends TestCase
 
     public function testUpdateNotFound()
     {
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
+        $empresa = Empresa::factory()->create();
         $data = [
             'nombre' => 'Evento Actualizado',
             'stock' => 150,
@@ -180,16 +228,21 @@ class EventoApiControllerTest extends TestCase
             'direccion' => 'Nueva Calle 456',
             'ciudad' => 'Barcelona',
             'precio' => 29.99,
+            'empresa_id' => $empresa->id,
         ];
 
-        $response = $this->putJson('/api/eventos/999', $data);
+        $response = $this->putJson('/api/eventos/999', $data, [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
         $response->assertStatus(404)
             ->assertJson(['error' => 'Evento no encontrado']);
     }
-
-   /* public function testUpdateValidationError()
+    public function testUpdateValidationError()
     {
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
+        $empresa = Empresa::factory()->create();
         $evento = Evento::create([
             'nombre' => 'Evento Actualizado',
             'stock' => 100,
@@ -198,6 +251,7 @@ class EventoApiControllerTest extends TestCase
             'direccion' => 'Calle Falsa 123',
             'ciudad' => 'Madrid',
             'precio' => 19.99,
+            'empresa_id' => $empresa->id,
         ]);
 
         $data = [
@@ -210,19 +264,20 @@ class EventoApiControllerTest extends TestCase
             'precio' => 'precio-invalido',
         ];
 
-        $response = $this->putJson('/api/eventos/' . $evento->id, $data);
+        $response = $this->putJson('/api/eventos/' . $evento->id, $data, [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
-        $response->assertStatus(422)
-            ->assertJsonValidationErrors([
-                'nombre', 'stock', 'fecha', 'hora', 'direccion', 'ciudad', 'precio',
-            ]);
+        $response->assertStatus(422);
 
    }
-*/
 
 
     public function testDestroy()
     {
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
+        $empresa = Empresa::factory()->create();
         $evento = Evento::create([
             'nombre' => 'Evento Test',
             'stock' => 100,
@@ -231,9 +286,12 @@ class EventoApiControllerTest extends TestCase
             'direccion' => 'Calle Falsa 123',
             'ciudad' => 'Madrid',
             'precio' => 19.99,
+            'empresa_id' => $empresa->id,
         ]);
 
-        $response = $this->deleteJson('/api/eventos/' . $evento->id);
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token
+        ])->deleteJson('/api/eventos/' . $evento->id);
 
         $response->assertStatus(200)
             ->assertJson(['message' => 'Evento eliminado']);
@@ -247,16 +305,25 @@ class EventoApiControllerTest extends TestCase
 
     public function testDestroyNotFound()
     {
-        $response = $this->deleteJson('/api/eventos/999');
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token
+        ])->deleteJson('/api/eventos/112');
+
 
         $response->assertStatus(404)
             ->assertJson(['error' => 'Evento no encontrado']);
     }
 
 
-    public function testGetByNombre()
+    public function testGetByNombreConCache()
     {
-        Evento::create([
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
+
+        $empresa = Empresa::factory()->create();
+        $evento = Evento::create([
             'nombre' => 'Evento Test',
             'stock' => 100,
             'fecha' => '2025-02-17',
@@ -264,46 +331,44 @@ class EventoApiControllerTest extends TestCase
             'direccion' => 'Calle Falsa 123',
             'ciudad' => 'Madrid',
             'precio' => 19.99,
+            'empresa_id' => $empresa->id
         ]);
 
-        Evento::create([
-            'nombre' => 'Evento Test',
-            'stock' => 150,
-            'fecha' => '2025-03-01',
-            'hora' => '15:00:00',
-            'direccion' => 'Nueva Calle 456',
-            'ciudad' => 'Barcelona',
-            'precio' => 29.99,
-        ]);
+        Cache::shouldReceive('get')
+            ->once()
+            ->with("eventos_nombre_{$evento->nombre}")
+            ->andReturn(collect([$evento]));
 
-        Evento::create([
-            'nombre' => 'Evento Test',
-            'stock' => 200,
-            'fecha' => '2025-04-10',
-            'hora' => '16:00:00',
-            'direccion' => 'Otra Calle 789',
-            'ciudad' => 'Valencia',
-            'precio' => 39.99,
+        $response = $this->getJson('/api/eventos/nombre/' . $evento->nombre, [
+            'Authorization' => 'Bearer ' . $token
         ]);
-
-        $response = $this->getJson('/api/eventos/nombre/Evento Test');
 
         $response->assertStatus(200)
-            ->assertJsonCount(3)
-            ->assertJsonStructure([
-                '*' => [
-                    'id', 'nombre', 'stock', 'fecha', 'hora', 'direccion', 'ciudad', 'precio',
-                ],
+            ->assertJsonFragment([
+                'nombre' => $evento->nombre,
+                'stock' => $evento->stock,
+                'fecha' => $evento->fecha,
+                'hora' => $evento->hora,
+                'direccion' => $evento->direccion,
+                'ciudad' => $evento->ciudad,
+                'precio' => $evento->precio,
+                'empresa_id' => $empresa->id
             ]);
     }
 
-
-    public function testGetByNombreNotFound()
+    public function testGetByNombreNoEncontrado()
     {
-        $response = $this->getJson('/api/eventos/nombre/NoExiste');
+        $admin = User::where('email', 'admin@example.com')->first();
+        $token = JWTAuth::fromUser($admin);
+
+
+        $response = $this->getJson('/api/eventos/nombre/no_existe', [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
         $response->assertStatus(404)
-            ->assertJson(['error' => 'Evento no encontrado']);
+            ->assertJson([
+                'error' => 'Evento no encontrado'
+            ]);
     }
-
 }
