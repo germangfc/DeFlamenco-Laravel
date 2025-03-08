@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\utils\GuuidGenerator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -25,6 +26,7 @@ class Evento extends Model
         'ciudad',
         'precio',
         'foto',
+        'empresa_id'
     ];
 
     protected static function boot()
@@ -35,6 +37,11 @@ class Evento extends Model
                 $evento->id = GuuidGenerator::generateHash();
             }
         });
+    }
+
+    public function empresa()
+    {
+        return $this->belongsTo(Empresa::class, 'empresa_id', 'id');
     }
 
     protected $primaryKey = 'id';
@@ -64,5 +71,10 @@ class Evento extends Model
     public function scopeFindById($query, $id)
     {
         return $query->where('id', $id);
+    }
+
+    public function scopeRecientes(Builder $query, int $limit = 10): Builder
+    {
+        return $query->orderBy('created_at', 'desc')->limit($limit);
     }
 }

@@ -1,3 +1,6 @@
+@php
+    use Illuminate\Support\Str;
+@endphp
 @extends('main')
 
 @section('content')
@@ -10,21 +13,20 @@
                     <x-cliente-search class="w-auto" />
                 </div>
 
-                <x-table-basico :headers="[ 'Nombre', 'Email', 'DNI', 'Acciones']" tableClass="table table-striped w-full">
+                <x-table-basico :headers="[ 'Nombre', 'Email', 'Acciones']" tableClass="table table-striped w-full">
                     @foreach ($clientes as $cliente)
                         <tr class="hover">
                             <td>
                                 <div class="flex items-center gap-3">
                                     <div class="avatar">
                                         <div class="mask mask-squircle h-12 w-12">
-                                            <img src="{{ asset('storage/images/' . $cliente->foto_dni)}}" alt="Avatar de {{ $cliente->user->name }}">
+                                            <img  src="{{ Str::startsWith($cliente->avatar, 'http') ? $cliente->avatar : asset('storage/images/' . $cliente->avatar) }}" alt="Avatar de {{ $cliente->user->name }}">
                                         </div>
                                     </div>
                                     <div class="font-bold">{{ $cliente->user->name }}</div>
                                 </div>
                             </td>
                             <td>{{ $cliente->user->email }}</td>
-                            <td>{{ $cliente->dni }}</td>
                             <td>
                                 <div class="flex gap-2">
                                     <a href="{{ route('clientes.show', $cliente->id) }}" id="verEmpresa" class="btn btn-info btn-sm">Ver</a>

@@ -1,8 +1,16 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-tY6wA_l3.css",
+    "file": "assets/app-Cla55-qy.css",
     "src": "resources/css/app.css",
     "isEntry": true
+  },
+  "resources/images/foto_login_flamenco.svg": {
+    "file": "assets/foto_login_flamenco-CnFmCJs_.svg",
+    "src": "resources/images/foto_login_flamenco.svg"
+  },
+  "resources/images/foto_login_flamenco_con_fondo.svg": {
+    "file": "assets/foto_login_flamenco_con_fondo-C52WJ1D8.svg",
+    "src": "resources/images/foto_login_flamenco_con_fondo.svg"
   },
   "resources/js/app.js": {
     "file": "assets/app-CqflisoM.js",
