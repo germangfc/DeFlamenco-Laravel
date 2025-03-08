@@ -220,10 +220,7 @@ class EmpresaController extends Controller
         if ($empresa) {
             Cache::forget($cacheKey);
 
-            // 🔹 Verificar si la imagen existe y eliminarla
-            if ($empresa->imagen && Storage::disk('public')->exists($empresa->imagen)) {
-                Storage::disk('public')->delete($empresa->imagen);
-            }
+            $empresa->eventos()->delete();
 
             $empresa->delete();
 
