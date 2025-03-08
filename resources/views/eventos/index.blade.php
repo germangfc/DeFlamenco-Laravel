@@ -8,7 +8,7 @@
     <div class="p-8">
         @include('components.slider')
         <x-search-bar />
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4 md:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 ">
             @foreach($eventos as $evento)
                 <div class="group relative overflow-hidden rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 bg-base-100 h-[400px]">
                     <a href="{{ route('eventos.show', $evento->id) }}" class="block h-full">

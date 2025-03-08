@@ -23,10 +23,13 @@ class EmpresaController extends Controller
         // Aplicamos el scope 'search' y paginamos
         $empresas = Empresa::search($searchTerm)
             ->orderBy('name', 'ASC')
-            ->paginate(8);
+            ->paginate(9);
 
-        // Retornamos la vista con la lista de empresas
-        return view('empresas.admin', compact('empresas'));
+        if (auth()->check() && auth()->user()->getRoleNames()->contains('admin')) {
+            return view('empresas.admin', compact('empresas'));
+        }
+
+        return view('empresas.user', compact('empresas'));
     }
 
 
