@@ -22,11 +22,23 @@ class VentaFake
             return new self([
                 'id'          => 1,
                 'created_at'  => now(),
-                'lineasVenta' => [['1', '100', 'Evento 1', '01-10-2025', '18:00:00', 'Madrid']],
+                'lineasVenta' => [array_values(['1', '100', 'Evento 1', '01-10-2025', '18:00:00', 'Madrid'])],
+                //'lineasVenta' => [['1', '100', 'Evento 1', '01-10-2025', '18:00:00', 'Madrid']],
                 'guid'        => 'guid-123',
             ]);
         }
 
         return null; // Si no se encuentra, devuelve null
+    }
+
+    public static function orderBy($column, $direction = 'asc')
+    {
+        return new class {
+            public function paginate($perPage = 15, $columns = ['*'], $pageName = 'page', $page = null)
+            {
+                // Devuelve la instancia del paginador fake registrada en el contenedor
+                return app('fake.paginatedVentas');
+            }
+        };
     }
 }
