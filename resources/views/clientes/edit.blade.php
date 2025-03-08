@@ -21,19 +21,12 @@
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="dni" class="form-label">DNI</label>
-                        <input type="text" name="dni" class="form-control" id="dni" value="{{ $cliente->dni }}" required>
-                        @error('dni')
-                        <div class="alert alert-danger mt-2">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="mb-3">
-                        <label for="foto_dni" class="form-label">Foto Perfil</label>
-                        <input type="file" name="foto_dni" class="form-control" id="foto_dni">
-                        @if ($cliente->foto_dni)
-                            <img src="{{ asset('storage/images' . $cliente->foto_dni) }}" alt="Foto Perfil" class="img-fluid mt-2">
+                        <label for="avatar" class="form-label">Foto Perfil</label>
+                        <input type="file" name="avatar" class="form-control" id="avatar">
+                        @if ($cliente->avatar)
+                            <img src="{{ asset('storage/images' . $cliente->avatar) }}" alt="Foto Perfil" class="img-fluid mt-2">
                         @endif
-                        @error('foto_dni')
+                        @error('avatar')
                         <div class="alert alert-danger mt-2">{{ $message }}</div>
                         @enderror
                     </div>

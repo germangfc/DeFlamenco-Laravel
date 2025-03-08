@@ -18,8 +18,7 @@ class ClienteFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'dni' => fake()->unique()->randomNumber(8, true),
-            'foto_dni' => 'https://example.com/images/test.jpg',
+            'avatar' => 'https://i.pravatar.cc/300',
             'is_deleted' => false
         ];
     }
