@@ -1,3 +1,6 @@
+@php
+    use Illuminate\Support\Str;
+@endphp
 @extends('main')
 
 @section('content')
@@ -58,7 +61,7 @@
                         <x-input-error class="mt-2" :messages="$errors->get('imagen')" />
 
                         @if ($empresa->imagen)
-                            <img src="{{ asset('storage/' . $empresa->imagen) }}" alt="Imagen Empresa" class="img-fluid mt-2">
+                            <img src="{{ Str::startsWith($empresa->imagen, 'http') ? $empresa->imagen : asset('storage/empresas/' . $empresa->imagen) }}" alt="Imagen Empresa" class="img-fluid mt-2">
                         @endif
                     </div>
 

@@ -36,8 +36,8 @@ class EmpresaFactory extends Factory
     public function withEventos($count = 3)
     {
         return $this->afterCreating(function (Empresa $empresa) use ($count) {
-            $eventos = Evento::factory()->count($count)->make();
-            $empresa->eventos()->saveMany($eventos);
+            $empresa->eventos()->createMany(
+                Evento::factory()->count($count)->make()->toArray() );
         });
     }
 
