@@ -52,12 +52,9 @@ class Cliente extends Model
 
         $term = strtolower($term);
 
-        return $query->where(function ($q) use ($term) {
-            $q->whereRaw('LOWER(dni) LIKE ?', ["%{$term}%"])
-                ->orWhereHas('user', function ($q2) use ($term) {
-                    $q2->whereRaw('LOWER(name) LIKE ?', ["%{$term}%"])
-                        ->orWhereRaw('LOWER(email) LIKE ?', ["%{$term}%"]);
-                });
+        return $query->whereHas('user', function ($q) use ($term) {
+            $q->whereRaw('LOWER(name) LIKE ?', ["%{$term}%"])
+                ->orWhereRaw('LOWER(email) LIKE ?', ["%{$term}%"]);
         });
     }
 
