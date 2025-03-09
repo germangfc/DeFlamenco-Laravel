@@ -75,7 +75,7 @@
         <p><strong>Fecha:</strong> {{ $ticket->fecha }}</p>
         <p><strong>Hora:</strong> {{ $ticket->hora }}</p>
         <p><strong>Ciudad:</strong> {{ $ticket->ciudad }}</p>
-        <p><strong>Precio:</strong> €{{ number_format($ticket->price, 2) }}</p>
+        <p><strong>Precio:</strong> €{{ number_format($ticket->precio, 2) }}</p>
     </div>
 
     <!-- Detalles adicionales -->

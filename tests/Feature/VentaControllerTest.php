@@ -21,11 +21,9 @@ class VentaControllerTest extends TestCase
     protected VentaFake $ventaDummy;
     protected $dummyColVentas;
 
-// Método que se ejecuta una sola vez antes de TODOS los tests en esta clase.
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-
         // Utilizamos class_alias para que cualquier llamado a \App\Models\Venta use VentaFake
         // pero solo creamos el alias una vez
         if (!defined('VENTA_ALIAS_SET')) {

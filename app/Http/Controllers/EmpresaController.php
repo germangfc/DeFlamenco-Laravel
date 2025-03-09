@@ -35,13 +35,19 @@ class EmpresaController extends Controller
 
     public function show($id)
     {
-        $empresa = Empresa::with('eventos')->findOrFail($id);
-        $eventos = $empresa->eventos()->paginate(10);
-        return view('empresas.show', [
-            'empresa' => $empresa,
-            'eventos' => $eventos
-        ]);
+        try {
+            $empresa = Empresa::with('eventos')->findOrFail($id);
+            $eventos = $empresa->eventos()->paginate(10);
+
+            return view('empresas.show', [
+                'empresa' => $empresa,
+                'eventos' => $eventos
+            ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return redirect()->route('empresas.index')->with('error', 'Empresa no encontrada');
+        }
     }
+
 
     public function showByNombre($nombre)
     {
@@ -220,10 +226,7 @@ class EmpresaController extends Controller
         if ($empresa) {
             Cache::forget($cacheKey);
 
-            // 🔹 Verificar si la imagen existe y eliminarla
-            if ($empresa->imagen && Storage::disk('public')->exists($empresa->imagen)) {
-                Storage::disk('public')->delete($empresa->imagen);
-            }
+            $empresa->eventos()->delete();
 
             $empresa->delete();
 
