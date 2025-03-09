@@ -9,10 +9,8 @@ export default {
     ],
     theme: {
         fontFamily: {
-            cormorant: ['Cormorant', 'serif'],
-            cinzel: ['Cinzel', 'serif'],
-            marcellus: ['Marcellus', 'serif'],
-            quicksand: ['Quicksand', 'serif'],
+            sans: ['Inter', 'sans-serif'],       // Fuente principal
+            heading: ['Roboto Condensed', 'sans-serif'] // Títulos
         },
         extend: {
             colors: {

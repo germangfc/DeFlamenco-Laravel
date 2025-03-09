@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Empresa;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
@@ -15,12 +16,28 @@ use PHPUnit\Exception;
 class EmpresaControllerApi extends Controller
 {
 
+
+    /**
+     * Muestra el listado de empresas.
+     *
+     * @param Request $request para la peticion de busqueda.
+     *
+     * @return JsonResponse con el listado de empresas.
+     */
     public function getAll(Request $request){
         $empresas = Empresa::search($request->name)->orderBy('id', 'ASC')->paginate(5);
 
         return response()->json($empresas, status: 200);
     }
 
+
+    /**
+     * Muestra el detalle de una empresa.
+     *
+     * @param int $id del cliente.
+     *
+     * @return JsonResponse con los detalles del cliente.
+     */
     public function getById($id){
         $cacheKey = "empresa_{$id}";
 
@@ -41,6 +58,14 @@ class EmpresaControllerApi extends Controller
         }
     }
 
+
+    /**
+     * Muestra el detalle de una empresa por su nombre.
+     *
+     * @param string $nombre del cliente.
+     *
+     * @return JsonResponse con los detalles del cliente.
+     */
     public function getByNombre($nombre){
         $cacheKey = "empresa_nombre_{$nombre}";
 
@@ -61,6 +86,14 @@ class EmpresaControllerApi extends Controller
         }
     }
 
+
+    /**
+     * Muestra el detalle de una empresa por su cif.
+     *
+     * @param string $cif del cliente.
+     *
+     * @return JsonResponse con los detalles del cliente.
+     */
     public function getByCif($cif){
         $cacheKey = "empresa_cif_{$cif}";
 
@@ -81,6 +114,14 @@ class EmpresaControllerApi extends Controller
         }
     }
 
+
+    /**
+     * Crea una nueva empresa.
+     *
+     * @param Request $request con los datos de la empresa a crear.
+     *
+     * @return JsonResponse con los detalles de la empresa creada.
+     */
     public function create(Request $request)
     {
         try {
@@ -120,6 +161,15 @@ class EmpresaControllerApi extends Controller
         }
     }
 
+
+    /**
+     * Actualiza una empresa.
+     *
+     * @param int $id de la empresa a actualizar.
+     * @param Request $request con los datos de la empresa a actualizar.
+     *
+     * @return JsonResponse con la empresa actualizada.
+     */
     public function update($id, Request $request)
     {
         $empresa = Empresa::find($id);
@@ -184,6 +234,14 @@ class EmpresaControllerApi extends Controller
 
 
 
+
+    /**
+     * Elimina una empresa.
+     *
+     * @param int $id de la empresa a eliminar.
+     *
+     * @return JsonResponse con el resultado de la eliminación.
+     */
     public function destroy($id)
     {
         $empresaCacheKey = "empresa_{$id}";

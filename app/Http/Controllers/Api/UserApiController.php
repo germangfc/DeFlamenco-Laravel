@@ -4,17 +4,32 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 class UserApiController extends Controller
 {
+
+    /**
+     * Muestra el listado de usuarios.
+     *
+     * @return JsonResponse con el listado de usuarios.
+     */
     public function index()
     {
         return response()->json(User::all());
     }
 
+
+    /**
+     * Crea un usuario.
+     *
+     * @param Request $request para la peticion de creacion.
+     *
+     * @return JsonResponse con el usuario creado.
+     */
     public function store(Request $request)
     {
         try {
@@ -43,6 +58,14 @@ class UserApiController extends Controller
     }
 
 
+
+    /**
+     * Muestra el detalle de un usuario.
+     *
+     * @param string $id del usuario.
+     *
+     * @return JsonResponse con los detalles del usuario.
+     */
     public function show(string $id)
     {
         $cacheKey = "user_{$id}";
@@ -63,6 +86,15 @@ class UserApiController extends Controller
     }
 
 
+
+    /**
+     * Actualiza un usuario.
+     *
+     * @param Request $request para la peticion de actualizacion.
+     * @param string $id del usuario.
+     *
+     * @return JsonResponse con el usuario actualizado.
+     */
     public function update(Request $request, string $id)
     {
         $user = User::find($id);
@@ -90,6 +122,14 @@ class UserApiController extends Controller
     }
 
 
+
+    /**
+     * Elimina un usuario.
+     *
+     * @param string $id del usuario a eliminar.
+     *
+     * @return JsonResponse con el resultado de la eliminación.
+     */
     public function destroy(string $id)
     {
         $user = User::find($id);

@@ -5,10 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\Evento;
 use App\Models\Ticket;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Application;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 class TicketController extends Controller
 {
+
+    /**
+     * Muestra los tickets del usuario logueado.
+     *
+     * @return View Vista con los tickets del usuario.
+     */
     public function index()
     {
         $idClient = auth()->user()->cliente()->first()->id;
@@ -33,6 +44,13 @@ class TicketController extends Controller
     }
 
 
+    /**
+     * Valida un ticket.
+     *
+     * @param int $id ID del ticket.
+     *
+     * @return Factory|Application|object|View Vista de ticket válido.
+     */
     public function validar($id)
     {
         $ticket = Ticket::find($id);
@@ -45,6 +63,14 @@ class TicketController extends Controller
         }
     }
 
+
+    /**
+     * Descarga un ticket en formato PDF.
+     *
+     * @param int $ticketId ID del ticket.
+     *
+     * @return RedirectResponse|Response Redirecciona a la vista de tickets.
+     */
     public function download($ticketId)
     {
         $ticket = Ticket::findOrFail($ticketId);
