@@ -105,9 +105,9 @@ class EventosController extends Controller
         }
     }
 
-
     public function show($id)
     {
+        // Se obtiene el evento solicitado directamente de la base de datos
         $cacheKey = "evento_{$id}";
 
         $evento = Cache::remember($cacheKey, 60, function () use ($id) {
@@ -118,11 +118,20 @@ class EventosController extends Controller
             return response()->json(['message' => 'Evento no encontrado'], 404);
         }
 
-        $eventoAnterior = Evento::where('id', '<', $evento->id)->orderBy('id', 'desc')->first();
-        $eventoSiguiente = Evento::where('id', '>', $evento->id)->orderBy('id', 'asc')->first();
+        // Se obtienen el evento anterior y siguiente según el id
+        $eventoAnterior = Evento::where('id', '<', $evento->id)
+            ->orderBy('id', 'desc')
+            ->first();
+        $eventoSiguiente = Evento::where('id', '>', $evento->id)
+            ->orderBy('id', 'asc')
+            ->first();
 
-        return view('eventos.show', compact('evento', 'eventoAnterior', 'eventoSiguiente'));
+        // Se obtiene el listado completo de eventos para el slider
+        $eventos = Evento::paginate(12);
+
+        return view('eventos.show', compact('evento', 'eventoAnterior', 'eventoSiguiente', 'eventos'));
     }
+
 
 
     public function edit($id)
