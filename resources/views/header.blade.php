@@ -148,8 +148,9 @@
                     class="menu menu-sm dropdown-content bg-base-300 rounded-box mt-3 w-52 p-2 shadow z-50">
                     <li class="z-50"><a href="{{ route('clientes.index') }}">Clientes</a> </li>
                     <li class="z-50"><a href="{{ route('eventos.index-admin') }}">Eventos</a></li>
-                    <li class="z-50"><a href="{{ route('profile.edit') }}">Perfil</a></li>
+                    <li class="z-50"><a href="{{ route('empresas.index') }}">Empresas</a></li>
                     <li class="z-50"><a href="{{ route('ventas.index') }}">Ventas</a></li>
+                    <li class="z-50"><a href="{{ route('profile.edit') }}">Perfil</a></li>
                     <li class="z-50"><form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button id="cerrarSesioncliente" type="submit" >Cerrar Sesión</button>
