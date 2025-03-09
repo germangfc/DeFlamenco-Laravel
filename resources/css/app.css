@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cormorant:wght@400;600&family=Playfair+Display:wght@500;700&family=Lora&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Roboto+Condensed:wght@500;700&family=Playfair+Display:wght@600;700&family=Lora:wght@400;500&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -35,11 +34,13 @@
 
 @layer base {
     html {
-        font-family: cormorant;
+        font-family: sans; /* Para Opción 1: Inter */
+        /* font-family: serif; Para Opción 2: Lora */
         @apply text-[18px] md:text-[20px];
     }
 
     h1, h2, h3, h4, h5, h6 {
-        font-family: cinzel;
+        font-family: heading;
+        font-weight: 700;
     }
 }

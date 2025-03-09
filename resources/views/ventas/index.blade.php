@@ -49,10 +49,10 @@
                                     @endforeach
 
                                     <!-- Fila de total y botón "Detalle" -->
-                                    <tr class="bg-customBeige  font-bold">
+                                    <tr class="bg-primary ">
                                         <td colspan=5" class="text-right pr-4">Total: {{ number_format($total, 2, ',', '.') }} €</td>
                                         <td>
-                                            <a href="{{ route('ventas.show', $venta->id) }}" class="btn btn-info btn-sm">
+                                            <a href="{{ route('ventas.show', $venta->id) }}" class="btn btn-danger btn-sm">
                                                 Detalle
                                             </a>
                                         </td>
