@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Ticket;
+use Illuminate\Http\JsonResponse;
 use MongoDB\BSON\ObjectId;
 use App\Http\Controllers\Controller;
 use App\Models\Venta;
@@ -14,11 +15,24 @@ use Illuminate\Support\Facades\Cache;
 
 class VentasApiController extends Controller
 {
+    /**
+     * Muestra el listado de ventas.
+     *
+     * @return JsonResponse con el listado de ventas.
+     */
     public function index()
     {
         return response()->json(Venta::all(), 200);
     }
 
+
+    /**
+     * Muestra el detalle de una venta.
+     *
+     * @param string $id de la venta.
+     *
+     * @return JsonResponse con los detalles de la venta.
+     */
     public function show($id){
 
         Log::info('Showing Venta');
@@ -46,6 +60,14 @@ class VentasApiController extends Controller
         return response()->json($venta, 200);
 
     }
+
+    /**
+     * Crea una venta.
+     *
+     * @param Request $request para la petición de creación.
+     *
+     * @return JsonResponse con la venta creada.
+     */
     public function store(Request $request){
         Log::info("Storing Venta. Validating...");
         try {
@@ -136,6 +158,13 @@ class VentasApiController extends Controller
         }
     }
 
+    /**
+     * Actualiza una venta.
+     *
+     * @param string $id de la venta.
+     *
+     * @return JsonResponse con la venta actualizada.
+     */
     public function destroy($id){
 
         Log::info('Deleting Venta');
