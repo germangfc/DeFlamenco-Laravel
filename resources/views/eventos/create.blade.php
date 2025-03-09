@@ -42,6 +42,7 @@
                         <x-text-input type="text" name="nombre"
                                       value="{{ old('nombre') }}"
                                       required
+                                      id="nombreEvento"
                                       placeholder="Nombre del evento" />
                         <x-input-error :messages="$errors->get('nombre')" />
                     </div>
@@ -50,6 +51,7 @@
                     <div class="form-group">
                         <x-input-label for="fecha" class="text-primary" :value="__('Fecha')" />
                         <x-text-input type="date" name="fecha"
+                                      id="fechaEvento"
                                       value="{{ old('fecha') }}"
                                       required />
                         <x-input-error :messages="$errors->get('fecha')" />
@@ -59,6 +61,7 @@
                         <x-input-label for="hora" class="text-primary" :value="__('Hora')" />
                         <x-text-input type="time" name="hora"
                                       value="{{ old('hora') }}"
+                                      id="horaEvento"
                                       required />
                         <x-input-error :messages="$errors->get('hora')" />
                     </div>
@@ -75,6 +78,7 @@
                     <div class="form-group">
                         <x-input-label for="ciudad" class="text-primary" :value="__('Ciudad')" />
                         <x-text-input type="text" name="ciudad"
+                                      id="ciudadEvento"
                                       value="{{ old('ciudad') }}"
                                       required
                                       placeholder="Ciudad" />
@@ -85,6 +89,7 @@
                     <div class="form-group col-span-full">
                         <x-input-label for="descripcion" class="text-primary" :value="__('Descripción')" />
                         <textarea name="descripcion"
+                                  id="descripcionEvento"
                                   class="glass-input bg-base-100/20 border border-base-content/20 text-base-content placeholder-base-content/60 rounded-lg shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/30 transition duration-200 w-full p-3 resize-y min-h-[150px]"
                                   required>{{ old('descripcion') }}</textarea>
                         <x-input-error :messages="$errors->get('descripcion')" />
@@ -96,6 +101,7 @@
                         <x-text-input type="number" name="precio"
                                       value="{{ old('precio') }}"
                                       required
+                                      id="precioEvento"
                                       placeholder="Precio en €" />
                         <x-input-error :messages="$errors->get('precio')" />
                     </div>
@@ -105,6 +111,7 @@
                         <x-text-input type="number" name="stock"
                                       value="{{ old('stock') }}"
                                       required
+                                      id="stockEvento"
                                       placeholder="Número de plazas" />
                         <x-input-error :messages="$errors->get('stock')" />
                     </div>
@@ -117,6 +124,7 @@
                         Volver
                     </a>
                     <button type="submit"
+                            id="crearEvento"
                             class="bg-primary hover:bg-accent text-white px-8 py-3 rounded-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-pink-700/20 flex-1">
                         Crear Evento
                     </button>
