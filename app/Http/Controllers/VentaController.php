@@ -3,11 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\Venta;
+use Illuminate\Console\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\View\Factory;
+use Illuminate\View\View;
 
 class VentaController extends Controller
 {
+
+    /**
+     * Muestra el listado de ventas.
+     *
+     * @param Request $request para la peticion de busqueda.
+     *
+     * @return View con el listado de ventas.
+     */
     public function index(Request $request)
     {
         // Consulta de ventas
@@ -20,6 +31,13 @@ class VentaController extends Controller
     }
 
 
+    /**
+     * Muestra el detalle de una venta.
+     *
+     * @param int $id
+     *
+     * @return Factory|Application|object|View a la vista de detalle de venta.
+     */
     public function show($id){
         $cacheKey = "venta_{$id}";
         $venta = Cache::get($cacheKey);
