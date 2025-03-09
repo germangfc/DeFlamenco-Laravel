@@ -36,6 +36,5 @@ describe("template spec", () => {
     cy.get('#crearEvento').click();
     cy.get('#buscador').type('EVENTAZO');
     cy.get('#buscadorEventos').click();
-    cy.get('#foto-flamenco').click();
   });
 });

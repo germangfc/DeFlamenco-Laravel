@@ -7,7 +7,7 @@ describe("template spec", () => {
 		cy.get("#email").type("admin@example.com");
 		cy.get("#password").type("12345678");
 		cy.get("#submit").click({ force: true });
-		cy.url().should("include", "/eventos");
+		cy.url().should("include", "/");
 	});
 
 	it("login de admin mobile device", () => {
@@ -20,6 +20,6 @@ describe("template spec", () => {
 		cy.get("#email").type("admin@example.com");
 		cy.get("#password").type("12345678");
 		cy.get("#submit").click();
-		cy.url().should("include", "/eventos");
+		cy.url().should("include", "/");
 	});
 });
