@@ -57,12 +57,12 @@ class VentaFactory extends Factory
 
             // Agregar la línea de venta con datos del ticket y evento
             $lineasVenta[] = [
-                'idTicket' => $ticket->_id,
-                'precioUnitario' => $ticket->price,
-                'nombre' => $event->nombre,
-                'fecha' => $event->fecha,
-                'hora' => $event->hora,
-                'ciudad' => $event->ciudad,
+                 $ticket->_id,
+                 $ticket->price,
+                 $event->nombre,
+                 $event->fecha,
+                 $event->hora,
+                 $event->ciudad,
             ];
         }
 
