@@ -21,10 +21,9 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserSeeder::class,
+            UsuariosClientesSeeder::class,
+            EmpresasEventosSeeder::class,
         ]);
-        Cliente::factory()->count(25)->create();
-        Empresa::factory()->count(25)->withEventos(3)->create();
-       // Evento::factory()->count(50)->create();
 
         Ticket::truncate();  // Vacía la colección de Ticket
         Venta::truncate();   // Vacía la colección de Venta
