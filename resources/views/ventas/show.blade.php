@@ -55,7 +55,7 @@
                     </table>
                 </div>
                 <div class="text-center mt-4">
-                    <a href="{{ route('ventas.index') }}" class="btn btn-primary">Volver</a>
+                    <a href="{{ route('ventas.index') }}" class="btn btn-info btn-sm">Volver</a>
                 </div>
             </div>
         </div>
