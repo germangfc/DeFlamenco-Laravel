@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,8 +7,8 @@
     <title>Tickets de Compra</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
             margin: 0;
             padding: 0;
             display: flex;
@@ -16,55 +17,54 @@
             height: 100vh;
         }
         .container {
-            width: 90%;
+            width: 100%;
             max-width: 800px;
-            background-color: #ffffff;
-            border-radius: 10px;
+            margin: auto;
+            background-color: white;
+            border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
             padding: 20px;
-            margin-top: 20px;
         }
-        h1 {
+
+        .header {
+            background: #3b82f6;
+            color: white;
+            padding: 20px;
             text-align: center;
-            color: #333;
-            font-size: 28px;
-            margin-bottom: 30px;
+            font-size: 24px;
         }
-        .logo {
-            display: block;
-            margin: 0 auto;
-            max-width: 200px;
-            margin-bottom: 20px;
+
+        .header h1 {
+            margin: 0;
         }
+
         .ticket {
-            page-break-after: always;
-            background-color: #f9f9f9;
+            background-color: #f9fafb;
             border-radius: 8px;
             padding: 20px;
             margin-bottom: 20px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            text-align: center;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
+
         .ticket:hover {
             transform: scale(1.02);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
-        .ticket img {
-            max-width: 200px;
-            margin: 20px 0;
-            border-radius: 10px;
-        }
+
         .ticket h2 {
             font-size: 22px;
             color: #333;
             margin-bottom: 10px;
         }
+
         .ticket p {
             font-size: 16px;
             color: #555;
             margin: 5px 0;
         }
+
         .ticket .qr {
             margin-top: 20px;
             background-color: #e8e8e8;
@@ -72,15 +72,40 @@
             border-radius: 10px;
             display: inline-block;
         }
+
         .ticket .qr p {
             font-size: 14px;
             color: #333;
             margin-bottom: 10px;
         }
+
         .ticket .qr img {
             margin-top: 10px;
         }
-        .ticket .disclaimer {
+
+        .footer {
+            padding: 20px;
+            background-color: #3b82f6;
+            color: white;
+            text-align: center;
+            font-size: 14px;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .footer p {
+            margin: 5px 0;
+        }
+
+        .price {
+            background-color: #10b981;
+            color: white;
+            padding: 8px;
+            border-radius: 50px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .disclaimer {
             margin-top: 30px;
             background-color: #f4f4f4;
             padding: 15px;
@@ -90,19 +115,14 @@
             text-align: left;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        footer {
-            text-align: center;
-            color: #777;
-            font-size: 14px;
-            margin-top: 30px;
-        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <img src="{{ asset('images/LogoTablao.jpg') }}" alt="Logo Tablao" class="logo">
-    <h1>Tickets de Compra</h1>
+    <div class="header">
+        <h1>Tickets de Compra</h1>
+    </div>
 
     @foreach($lineasVenta as $linea)
         <div class="ticket">
@@ -125,9 +145,9 @@
         </div>
     @endforeach
 
-    <footer>
+    <div class="footer">
         <p>&copy; {{ date('Y') }} Tablao Flamenco | Todos los derechos reservados.</p>
-    </footer>
+    </div>
 </div>
 
 </body>

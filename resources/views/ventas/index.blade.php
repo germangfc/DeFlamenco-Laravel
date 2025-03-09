@@ -35,18 +35,19 @@
                                     @endphp
                                     @foreach($venta->lineasVenta as $lineaVenta)
                                         @php
-                                            // Se asume que el índice 1 es el precio
-                                            $total += $lineaVenta[1];
+                                            // Asegúrate de que el índice 1 (precio) exista antes de agregarlo al total
+                                            $total += $lineaVenta[1] ?? 0;
                                         @endphp
                                         <tr>
-                                            <td>{{ $lineaVenta[0] }}</td>
-                                            <td>{{ number_format($lineaVenta[1],2, ',', '.') }} €</td>
-                                            <td>{{ $lineaVenta[2] }}</td>
-                                            <td>{{ Carbon::parse($lineaVenta[3])->format('d-m-Y') }}</td>
-                                            <td>{{ Carbon::parse($lineaVenta[4])->format('H:i:s') }}</td>
-                                            <td>{{ $lineaVenta[5] }}</td>
+                                            <td>{{ isset($lineaVenta[0]) ? $lineaVenta[0] : 'N/A' }}</td>
+                                            <td>{{ isset($lineaVenta[1]) ? number_format($lineaVenta[1], 2, ',', '.') . ' €' : 'N/A' }}</td>
+                                            <td>{{ isset($lineaVenta[2]) ? $lineaVenta[2] : 'N/A' }}</td>
+                                            <td>{{ isset($lineaVenta[3]) ? Carbon::parse($lineaVenta[3])->format('d-m-Y') : 'N/A' }}</td>
+                                            <td>{{ isset($lineaVenta[4]) ? Carbon::parse($lineaVenta[4])->format('H:i:s') : 'N/A' }}</td>
+                                            <td>{{ isset($lineaVenta[5]) ? $lineaVenta[5] : 'N/A' }}</td>
                                         </tr>
                                     @endforeach
+
                                     <!-- Fila de total y botón "Detalle" -->
                                     <tr class="bg-customBeige  font-bold">
                                         <td colspan=5" class="text-right pr-4">Total: {{ number_format($total, 2, ',', '.') }} €</td>
