@@ -11,7 +11,7 @@ describe('Registro y redirección', () => {
     cy.get('#foto_dni').attachFile('foto.jpg');
     cy.contains('Crear Cliente').click();
     cy.get('#foto-flamenco').click();
-    cy.get('#comprar').click();
+    cy.get('#comprarBoton').click();
     cy.get('#carrito').click();
     cy.contains('Ver Carrito').click();
     cy.get('#pagar').click();
