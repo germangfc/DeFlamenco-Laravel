@@ -5,9 +5,16 @@ namespace App\Http\Controllers;
 use App\Mail\PagoConfirmado;
 use App\Services\VentaService;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Application;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Stripe\Exception\ApiErrorException;
 use Stripe\Stripe;
 use Stripe\Checkout\Session as StripeSession;
 
@@ -18,8 +25,10 @@ class StripeController extends Controller
     public function __construct(VentaService $ventaService){
         $this->ventaService = $ventaService;
     }
+
     /**
-     * Muestra la vista del checkout con el resumen del carrito.
+     * Muestra el carrito de la compra.
+     * @return Factory|View|Application|object Vista del carrito de la compra.
      */
     public function index()
     {
@@ -28,7 +37,8 @@ class StripeController extends Controller
     }
 
     /**
-     * Genera una sesión de Stripe Checkout a partir del carrito.
+     * Agregar un item al carrito.
+     * @return RedirectResponse Redirecciona al carrito de la compra.
      */
     public function checkout()
     {
@@ -64,6 +74,13 @@ class StripeController extends Controller
 
         return redirect()->away($session->url);
     }
+
+    /**
+     * Procesa la venta después de un pago exitoso.
+     *
+     *
+     * @return RedirectResponse Redirecciona a la página de eventos.
+     */
 
     public function success()
     {

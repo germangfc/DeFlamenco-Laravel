@@ -5,17 +5,32 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Empresa;
 use App\Models\Evento;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\ValidationException;
 
 class EventosApiController extends Controller
 {
+
+    /**
+     * Muestra el listado de eventos.
+     *
+     * @return JsonResponse con el listado de eventos.
+     */
     public function index(){
         $eventos = Evento::all();
         return response()->json($eventos);
     }
 
+
+    /**
+     * Crea un nuevo evento.
+     *
+     * @param Request $request para la peticion de creacion.
+     *
+     * @return JsonResponse con el evento creado.
+     */
     public function store(Request $request){
         try{
             $validatedData = $request->validate([
@@ -41,6 +56,14 @@ class EventosApiController extends Controller
         }
     }
 
+
+    /**
+     * Muestra el detalle de un evento.
+     *
+     * @param int $id del evento.
+     *
+     * @return JsonResponse con los detalles del evento.
+     */
     public function show($id)
     {
         $cacheKey = "evento_{$id}";
@@ -60,6 +83,14 @@ class EventosApiController extends Controller
         return response()->json($eventos, 200);
     }
 
+
+    /**
+     * Muestra el detalle de un evento por su nombre.
+     *
+     * @param string $nombre del evento.
+     *
+     * @return JsonResponse con los detalles del evento.
+     */
     public function getByNombre($nombre)
     {
         $cacheKey = "eventos_nombre_$nombre";
@@ -78,6 +109,16 @@ class EventosApiController extends Controller
         return response()->json($eventos, 200);
     }
 
+
+    /**
+     * Actualiza un evento.
+     *
+     * @param Request $request para la petición de actualización.
+     *
+     * @param int $id del evento a actualizar.
+     *
+     * @return JsonResponse con el evento actualizado.
+     */
     public function update(Request $request, $id)
     {
         try {
@@ -109,6 +150,14 @@ class EventosApiController extends Controller
         }
     }
 
+
+    /**
+     * Elimina un evento.
+     *
+     * @param int $id del evento a eliminar.
+     *
+     * @return JsonResponse con el resultado de la eliminación.
+     */
     public function destroy($id)
     {
         $eventos = Evento::find($id);

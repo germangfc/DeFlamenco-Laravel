@@ -38,11 +38,11 @@
                             <ul
                                 tabindex="0"
                                 class="menu menu-sm dropdown-content mt-3 z-[1] w-52 rounded-box bg-base-300 p-2 shadow">
-                                <li><a class="{{ Request::is('/') || Request::is('/eventos') ? 'bg-primary' : '' }}" href=" {{ route("eventos") }}">Eventos</a></li>
-                                <li><a class="{{ Request::is('/empresa') ? 'bg-primary' : '' }}" href=" {{ route("empresas.index") }}" >Empresas</a></li>
+                                <li><a class="{{ Request::is('/') || Request::is('/eventos') ? 'bg-primary' : '' }} z-50" href=" {{ route("eventos") }}">Eventos</a></li>
+                                <li><a class="{{ Request::is('/empresa') ? 'bg-primary' : '' }} z-50" href=" {{ route("empresas.index") }}" >Empresas</a></li>
                                 @guest
-                                    <li><a id="loginhamburger" href="{{ route('login') }}">Iniciar Sesión</a></li>
-                                    <li><a id="registerhamburger" href="{{ route('register') }}">Registrarse</a></li>
+                                    <li><a id="loginhamburger" href="{{ route('login') }} z-50">Iniciar Sesión</a></li>
+                                    <li><a id="registerhamburger" href="{{ route('register') }} z-50">Registrarse</a></li>
                                 @endguest
                             </ul>
                         </div>
@@ -51,8 +51,8 @@
                     <!-- Menú escritorio (se muestra en pantallas grandes) -->
                     <div class="navbar-center hidden lg:flex">
                         <ul class="menu menu-horizontal px-1">
-                            <li><a class="{{ Request::is('/') || Request::is('/eventos') ? 'bg-primary' : '' }}" href=" {{ route("eventos") }}">Eventos</a></li>
-                            <li><a class="{{ Request::is('/empresa') ? 'bg-primary' : '' }}" id="empresa" href=" {{ route("empresas.index") }}" >Empresas</a></li>
+                            <li><a class=" z-50 {{ Request::is('/') || Request::is('/eventos') ? 'bg-primary' : '' }}" href=" {{ route("eventos") }}">Eventos</a></li>
+                            <li><a class="z-50 {{ Request::is('/empresa') ? 'bg-primary' : '' }}" id="empresa" href=" {{ route("empresas.index") }}" >Empresas</a></li>
 
                         </ul>
                     </div>
@@ -82,12 +82,12 @@
                 </div>
                 <div
                     tabindex="0"
-                    class="card card-compact dropdown-content bg-base-300 z-[1] mt-3 w-52 shadow">
+                    class="card card-compact dropdown-content bg-base-300 z-50 mt-3 w-52 shadow">
                     <div class="card-body">
                         <span class="text-lg font-bold">{{ count(session('cart', [])) > 0 ? count(session('cart', [])) : 0 }} Entradas</span>
                         <span class="text-info">Subtotal: {{ number_format($subtotal, 2) }}€</span>
                         <div class="card-actions">
-                            <a href="{{ route('cart.index') }}" class="btn btn-primary btn-block">Ver Carrito</a>
+                            <a href="{{ route('cart.index') }}" class="btn btn-primary btn-block z-50">Ver Carrito</a>
                         </div>
                     </div>
                 </div>
@@ -96,7 +96,7 @@
             {{--Perfil--}}
             @guest
                 <div class="navbar-center hidden lg:flex">
-                    <ul class="menu menu-horizontal px-1">
+                    <ul class="menu menu-horizontal px-1 z-50">
                         <li><a id="login" href="{{ route('login') }}">Iniciar Sesión</a></li>
                         <li><a id="register" href="{{ route('register') }}">Registrarse</a></li>
                     </ul>
@@ -121,12 +121,12 @@
                         </div>
                         <div
                             tabindex="0"
-                            class="card card-compact dropdown-content bg-base-300 z-[1] mt-3 w-52 shadow">
+                            class="card card-compact dropdown-content bg-base-300 z-50 mt-3 w-52 shadow">
                             <div class="card-body">
                                 <span class="text-lg font-bold">{{ count(session('cart', [])) > 0 ? count(session('cart', [])) : 0 }} Entradas</span>
                                 <span class="text-info">Subtotal: {{ number_format($subtotal, 2) }}€</span>
                                 <div class="card-actions">
-                                    <a href="{{ route('cart.index') }}" class="btn btn-primary btn-block">Ver Carrito</a>
+                                    <a href="{{ route('cart.index') }}" class="btn btn-primary btn-block z-50">Ver Carrito</a>
                                 </div>
                             </div>
                         </div>
@@ -145,12 +145,13 @@
                 @can("admin")
                 <ul
                     tabindex="0"
-                    class="menu menu-sm dropdown-content bg-base-300 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                    <li><a href="{{ route('clientes.index') }}">Clientes</a> </li>
-                    <li><a href="{{ route('eventos.index-admin') }}">Eventos</a></li>
-                    <li><a href="{{ route('profile.edit') }}">Perfil</a></li>
-                    <li><a href="{{ route('ventas.index') }}">Ventas</a></li>
-                    <li><form method="POST" action="{{ route('logout') }}">
+                    class="menu menu-sm dropdown-content bg-base-300 rounded-box mt-3 w-52 p-2 shadow z-50">
+                    <li class="z-50"><a href="{{ route('clientes.index') }}">Clientes</a> </li>
+                    <li class="z-50"><a href="{{ route('eventos.index-admin') }}">Eventos</a></li>
+                    <li class="z-50"><a href="{{ route('empresas.index') }}">Empresas</a></li>
+                    <li class="z-50"><a href="{{ route('ventas.index') }}">Ventas</a></li>
+                    <li class="z-50"><a href="{{ route('profile.edit') }}">Perfil</a></li>
+                    <li class="z-50"><form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button id="cerrarSesioncliente" type="submit" >Cerrar Sesión</button>
                         </form>
@@ -161,10 +162,10 @@
                 @can("cliente")
                     <ul
                         tabindex="0"
-                        class="menu menu-sm dropdown-content bg-base-300 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                        <li><a href="{{ route('profile.edit') }}">Perfil</a></li>
-                        <li><a href="{{ route('tickets.index') }}">Ver mis entradas</a></li>
-                        <li><form method="POST" action="{{ route('logout') }}">
+                        class="menu menu-sm dropdown-content bg-base-300 rounded-box z-50 mt-3 w-52 p-2 shadow">
+                        <li class="z-50"><a href="{{ route('profile.edit') }}">Perfil</a></li>
+                        <li class="z-50"><a href="{{ route('tickets.index') }}">Ver mis entradas</a></li>
+                        <li class="z-50"><form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button id="cerrarSesioncliente" type="submit" >Cerrar Sesión</button>
                             </form>
@@ -174,11 +175,11 @@
                 @can("empresa")
                     <ul
                         tabindex="0"
-                        class="menu menu-sm dropdown-content bg-base-300 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                        <li><a href="{{ route('profile.edit') }}">Perfil</a></li>
-                        <li><a href="{{ route('eventos.index-me') }}">Ver mis eventos</a></li>
-                        <li><a href="{{ route('eventos.create') }}">Crear Eventos</a></li>
-                        <li><form method="POST" action="{{ route('logout') }}">
+                        class="menu menu-sm dropdown-content bg-base-300 rounded-box z-50 mt-3 w-52 p-2 shadow">
+                        <li class="z-50"><a href="{{ route('profile.edit') }}">Perfil</a></li>
+                        <li class="z-50"><a href="{{ route('eventos.index-me') }}">Ver mis eventos</a></li>
+                        <li class="z-50"><a href="{{ route('eventos.create') }}">Crear Eventos</a></li>
+                        <li class="z-50"><form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button id="cerrarSesioncliente" type="submit" >Cerrar Sesión</button>
                             </form>

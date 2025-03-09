@@ -2,18 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class CartController extends Controller
 {
-    // Mostrar el contenido del carrito
+
+    /**
+     * Muestra el contenido del carrito.
+     *
+     * @return View
+     */
     public function index()
     {
         $cart = session()->get('cart', []);
         return view('cart.index', compact('cart'));
     }
 
-    // Agregar un item al carrito
+    /**
+     * Agregar un item al carrito.
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
     public function add(Request $request)
     {
         // Validar datos
@@ -48,7 +60,13 @@ class CartController extends Controller
         return redirect()->back()->with('success', 'Item agregado al carrito.');
     }
 
-    // Remover un item del carrito
+    /**
+     * Eliminar un item del carrito.
+     *
+     * @param Request $request
+     * @param int $idEvent
+     * @return RedirectResponse
+     */
     public function remove(Request $request, $idEvent)
     {
         $cart = session()->get('cart', []);
@@ -62,7 +80,13 @@ class CartController extends Controller
         return redirect()->back()->with('success', 'Item removido del carrito.');
     }
 
-    // Actualizar la cantidad de un item
+    /**
+     * Actualizar la cantidad de un item en el carrito.
+     *
+     * @param Request $request
+     * @param int $idEvent
+     * @return RedirectResponse
+     */
     public function update(Request $request, $idEvent)
     {
         $data = $request->validate([
