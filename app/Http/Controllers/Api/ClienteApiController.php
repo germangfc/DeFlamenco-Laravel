@@ -8,6 +8,7 @@ use App\Mail\ClienteBienvenido;
 use App\Mail\EliminacionCuenta;
 use App\Models\Cliente;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -21,12 +22,27 @@ use function PHPUnit\Framework\logicalAnd;
 class ClienteApiController extends Controller
 {
 
+    /**
+     * Muestra el listado de clientes.
+     *
+     * @param Request $request para la peticion de busqueda.
+     *
+     * @return JsonResponse con el listado de clientes.
+     */
+
     public function index(Request $request)
     {
         $clientes = Cliente::search($request->user_id)->orderBy('id', 'ASC')->paginate(5);
         return response()->json($clientes, 200);
     }
 
+    /**
+     * Muestra el detalle de un cliente.
+     *
+     * @param int $id del cliente.
+     *
+     * @return JsonResponse con los detalles del cliente.
+     */
 
     public function show($id)
     {
@@ -46,6 +62,14 @@ class ClienteApiController extends Controller
 
         return response()->json($cliente, 200);
     }
+
+    /**
+     * Busca un cliente por su email.
+     *
+     * @param Request $request con el email del cliente.
+     *
+     * @return JsonResponse con los detalles del cliente.
+     */
 
     public function searchByEmail(Request $request)
     {
@@ -81,6 +105,13 @@ class ClienteApiController extends Controller
 
 
 
+    /**
+     * Almacena un nuevo cliente en la base de datos.
+     *
+     * @param Request $request con los datos del cliente.
+     *
+     * @return JsonResponse con el cliente creado.
+     */
     public function store(Request $request)
     {
         try {
@@ -117,6 +148,16 @@ class ClienteApiController extends Controller
     }
 
 
+
+    /**
+     * Actualiza un cliente.
+     *
+     * @param Request $request con los datos del cliente a actualizar.
+     *
+     * @param int $id del cliente a actualizar.
+     *
+     * @return JsonResponse con el resultado de la actualización.
+     */
     public function update(Request $request, $id)
     {
         $clienteCacheKey = "cliente_{$id}";
@@ -177,6 +218,14 @@ class ClienteApiController extends Controller
     }
 
 
+
+    /**
+     * Elimina un cliente.
+     *
+     * @param int $id ID del cliente a eliminar.
+     *
+     * @return JsonResponse con el resultado de la eliminación.
+     */
     public function destroy($id)
     {
         try {

@@ -6,6 +6,10 @@ use App\Mail\ClienteBienvenido;
 use App\Mail\EliminacionCuenta;
 use App\Models\Cliente;
 use App\Models\User;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Application;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -17,6 +21,12 @@ use Illuminate\Validation\ValidationException;
 class ClienteController extends Controller
 {
 
+    /**
+     * Muestra el listado de clientes.
+     *
+     * @param Request $request
+     * @return View
+     */
     public function index(Request $request)
     {
         $searchTerm = $request->input('query');
@@ -28,6 +38,12 @@ class ClienteController extends Controller
         return view('clientes.index', compact('clientes'));
     }
 
+    /**
+     * Muestra el detalle de un cliente.
+     *
+     * @param int $id
+     * @return Factory|Application|object|View a la vista de detalle de cliente.
+     */
     public function show($id)
     {
         $cacheKey = "cliente_{$id}";
@@ -47,6 +63,11 @@ class ClienteController extends Controller
         return view('clientes.show', compact('cliente'));
     }
 
+    /**
+     * Muestra el formulario para crear un nuevo cliente.
+     *
+     * @return View con el formulario de creación de cliente.
+     */
 
     public function create()
     {
@@ -101,6 +122,14 @@ class ClienteController extends Controller
     }
 
 
+    /**
+     * Muestra el formulario para editar un cliente.
+     *
+     * @param $id int ID del cliente a editar.
+     *
+     * @return Factory|View|Application|RedirectResponse|object a la vista de edición de cliente.
+     */
+
     public function edit($id)
     {
         $cacheKey = "cliente_{$id}";
@@ -121,6 +150,15 @@ class ClienteController extends Controller
     }
 
 
+    /**
+     * Actualiza un cliente.
+     *
+     * @param Request $request
+     *
+     * @param int $id ID del cliente a actualizar.
+     *
+     * @return RedirectResponse
+     */
     public function update(Request $request, $id)
     {
         $clienteCacheKey = "cliente_{$id}";
@@ -172,8 +210,6 @@ class ClienteController extends Controller
 
         return redirect()->route('clientes.index')->with('success', 'Cliente actualizado con éxito');
     }
-
-
 
     public function destroy($id)
     {
