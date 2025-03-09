@@ -177,11 +177,12 @@ class EmpresaController extends Controller
     {
         $request->validate([
             'cif' => ['required', 'regex:/^[A-HJNP-SUVW][0-9]{7}[0-9A-J]$/'],
-            'name' => 'required|max:255',
-            'direccion' => 'required|max:255',
+            'name' => 'required|min:5|max:255',
+            'direccion' => 'required|min:7|max:255',
             'cuentaBancaria' => ['required', 'regex:/^ES\d{2}\d{20}$/'],
             'telefono' => ['required', 'regex:/^(\+34|0034)?[679]\d{8}$/'],
-            'email' => 'required|email|max:255'
+            'email' => 'required|email|min:3|max:255',
+            'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
 
         try {
@@ -194,10 +195,15 @@ class EmpresaController extends Controller
             $empresa->fill($request->all());
 
             if ($request->hasFile('imagen')) {
-                if (Storage::exists($empresa->imagen)) {
-                    Storage::delete($empresa->imagen);
+                $image = $request->file('imagen');
+                $customName = 'empresaPerfil_' . $empresa->name . '.' . $image->getClientOriginalExtension();
+                if ($empresa->imagen) {
+                    Storage::disk('public')->delete('empresas/' .$empresa->imagen);
                 }
-                $empresa->imagen = $request->file('imagen')->store('storage');
+                $image->storeAs('empresas', $customName, 'public');
+
+                $empresa->imagen = $customName;
+
             }
 
             $empresa->save();
