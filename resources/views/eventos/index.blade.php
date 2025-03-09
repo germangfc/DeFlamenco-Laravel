@@ -76,14 +76,5 @@
 
 
 
-    <script>
-        let index = 0;
-        const slides = document.querySelectorAll('#slider .carousel-inner img');
-        const totalSlides = slides.length;
-        function changeSlide() {
-            index = (index + 1) % totalSlides;
-            document.querySelector('.carousel-inner').style.transform = `translateX(-${index * 100}%)`;
-        }
-        setInterval(changeSlide, 10000);
-    </script>
+
 @endsection

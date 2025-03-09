@@ -9,6 +9,12 @@ use Illuminate\Http\Request;
 
 class LoginControllerApi extends Controller
 {
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse con el token de autenticacion.
+     */
     public function __invoke(Request $request): JsonResponse
     {
         $request->validate([
