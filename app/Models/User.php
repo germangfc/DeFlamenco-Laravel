@@ -7,6 +7,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -92,12 +93,12 @@ class User extends Authenticatable implements JWTSubject
     {
         if ($this->hasRole('cliente')) {
             $cliente = Cliente::where('user_id', $this->id)->first();
-            return $cliente ? asset('storage/images/' . $cliente->avatar) : 'https://img.freepik.com/free-vector/contact-icon-3d-vector-illustration-blue-button-with-user-profile-symbol-networking-sites-apps-cartoon-style-isolated-white-background-online-communication-digital-marketing-concept_778687-1715.jpg?t=st=1739915366~exp=1739918966~hmac=5d19f77be0966f655a43f5fee452798d19849968b456dce69f42cc7400194b9d&w=740';
+            return Str::startsWith($cliente->avatar,'http') ? $cliente->avatar : asset('storage/images/' . $cliente->avatar);
         }
 
         if ($this->hasRole('empresa')) {
             $empresa = Empresa::where('usuario_id', $this->id)->first();
-            return $empresa ? asset('storage/empresas/' . $empresa->imagen) : 'https://img.freepik.com/free-vector/contact-icon-3d-vector-illustration-blue-button-with-user-profile-symbol-networking-sites-apps-cartoon-style-isolated-white-background-online-communication-digital-marketing-concept_778687-1715.jpg?t=st=1739915366~exp=1739918966~hmac=5d19f77be0966f655a43f5fee452798d19849968b456dce69f42cc7400194b9d&w=740';
+            return Str::startsWith($empresa->imagen,'http') ? $empresa->imagen : asset('storage/empresas/' . $empresa->imagen);
         }
 
         return 'https://img.freepik.com/free-vector/contact-icon-3d-vector-illustration-blue-button-with-user-profile-symbol-networking-sites-apps-cartoon-style-isolated-white-background-online-communication-digital-marketing-concept_778687-1715.jpg?t=st=1739915366~exp=1739918966~hmac=5d19f77be0966f655a43f5fee452798d19849968b456dce69f42cc7400194b9d&w=740';
