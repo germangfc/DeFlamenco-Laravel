@@ -82,7 +82,7 @@
                 </div>
                 <div
                     tabindex="0"
-                    class="card card-compact dropdown-content bg-base-300 z-[1] mt-3 w-52 shadow">
+                    class="card card-compact dropdown-content bg-base-300 z-50 mt-3 w-52 shadow">
                     <div class="card-body">
                         <span class="text-lg font-bold">{{ count(session('cart', [])) > 0 ? count(session('cart', [])) : 0 }} Entradas</span>
                         <span class="text-info">Subtotal: {{ number_format($subtotal, 2) }}€</span>
@@ -121,7 +121,7 @@
                         </div>
                         <div
                             tabindex="0"
-                            class="card card-compact dropdown-content bg-base-300 z-[1] mt-3 w-52 shadow">
+                            class="card card-compact dropdown-content bg-base-300 z-50 mt-3 w-52 shadow">
                             <div class="card-body">
                                 <span class="text-lg font-bold">{{ count(session('cart', [])) > 0 ? count(session('cart', [])) : 0 }} Entradas</span>
                                 <span class="text-info">Subtotal: {{ number_format($subtotal, 2) }}€</span>

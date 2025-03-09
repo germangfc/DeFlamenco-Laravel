@@ -21,7 +21,6 @@
                         <div class="form-group">
                             <x-input-label for="name" class="text-primary" :value="__('Nombre')" />
                             <x-text-input type="text" name="name" id="nameEmpresa"
-                                          class="glass-input w-full p-3 bg-white/10 border border-white/20 rounded-lg"
                                           value="{{ old('name', $empresa->name) }}"
                                           required
                                           placeholder="Nombre de la Empresa" />
@@ -32,7 +31,6 @@
                         <div class="form-group">
                             <x-input-label for="cif" class="text-primary" :value="__('CIF')" />
                             <x-text-input type="text" name="cif" id="cif"
-                                          class="glass-input w-full p-3 bg-white/10 border border-white/20 rounded-lg"
                                           value="{{ old('cif', $empresa->cif) }}"
                                           required
                                           placeholder="CIF de la Empresa" />
@@ -43,7 +41,6 @@
                         <div class="form-group">
                             <x-input-label for="direccion" class="text-primary" :value="__('Dirección')" />
                             <x-text-input type="text" name="direccion" id="direccion"
-                                          class="glass-input w-full p-3 bg-white/10 border border-white/20 rounded-lg"
                                           value="{{ old('direccion', $empresa->direccion) }}"
                                           required
                                           placeholder="Dirección de la Empresa" />
@@ -54,7 +51,6 @@
                         <div class="form-group">
                             <x-input-label for="telefono" class="text-primary" :value="__('Teléfono')" />
                             <x-text-input type="text" name="telefono" id="telefono"
-                                          class="glass-input w-full p-3 bg-white/10 border border-white/20 rounded-lg"
                                           value="{{ old('telefono', $empresa->telefono) }}"
                                           required
                                           placeholder="Número de Teléfono" />
@@ -65,7 +61,6 @@
                         <div class="form-group">
                             <x-input-label for="email" class="text-primary" :value="__('Email')" />
                             <x-text-input type="email" name="email" id="emailEmpresa"
-                                          class="glass-input w-full p-3 bg-white/10 border border-white/20 rounded-lg"
                                           value="{{ old('email', $empresa->email) }}"
                                           required
                                           placeholder="Correo Electrónico" />
@@ -76,7 +71,6 @@
                         <div class="form-group">
                             <x-input-label for="cuentaBancaria" class="text-primary" :value="__('Cuenta Bancaria')" />
                             <x-text-input type="text" name="cuentaBancaria" id="cuentaBancaria"
-                                          class="glass-input w-full p-3 bg-white/10 border border-white/20 rounded-lg"
                                           value="{{ old('cuentaBancaria', $empresa->cuentaBancaria) }}"
                                           required
                                           placeholder="Cuenta Bancaria" />
@@ -135,17 +129,7 @@
             -webkit-backdrop-filter: blur(16px);
         }
 
-        .glass-input {
-            @apply bg-white/10 border border-white/20 rounded-lg p-3 text-white;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .glass-input:focus {
-            @apply border-primary ring-2 ring-primary/20;
-        }
-
         .event-title {
-            font-family: 'Oswald', sans-serif;
             text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
     </style>
