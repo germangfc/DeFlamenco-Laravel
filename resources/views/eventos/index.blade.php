@@ -42,7 +42,7 @@
                         </div>
 
                         <!-- Efecto hover: Detalles que aparecen -->
-                        <div class="absolute inset-0 bg-gradient-to-t from-base-100 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-6 flex flex-col justify-end">
+                        <div id="clickarevento" class= "absolute inset-0 bg-gradient-to-t from-base-100 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-6 flex flex-col justify-end">
                             <p class="text-sm text-base-content line-clamp-3 mb-4">
                                 {{ $evento->descripcion }}
                             </p>
@@ -73,17 +73,4 @@
             <p class="text-center mt-8">No se han encontrado eventos.</p>
         @endif
     </div>
-
-
-
-    <script>
-        let index = 0;
-        const slides = document.querySelectorAll('#slider .carousel-inner img');
-        const totalSlides = slides.length;
-        function changeSlide() {
-            index = (index + 1) % totalSlides;
-            document.querySelector('.carousel-inner').style.transform = `translateX(-${index * 100}%)`;
-        }
-        setInterval(changeSlide, 10000);
-    </script>
 @endsection
