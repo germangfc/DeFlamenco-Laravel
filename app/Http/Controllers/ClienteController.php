@@ -176,8 +176,8 @@ class ClienteController extends Controller
 
         $validatedData = $request->validate([
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'name' => 'nullable|string|max:255',
-            'email' => 'nullable|string|email|unique:users,email,' . $cliente->user_id,
+            'name' => 'nullable|string|min:3|max:255',
+            'email' => 'nullable|string|min:5|email|unique:users,email,' . $cliente->user_id,
             'password' => 'nullable|string|min:8',
         ]);
 
