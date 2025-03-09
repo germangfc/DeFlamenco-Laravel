@@ -21,9 +21,6 @@ Route::get('tickets', [TicketApiController::class, 'index']);
 Route::group([
     'middleware' => ['auth:api', 'admin']
 ], function () {
-
-    Route::apiResource('users', UserApiController::class);
-
     Route::get('tickets/{id}', [TicketApiController::class, 'show']);
     Route::post('tickets', [TicketApiController::class,'store']);
     Route::delete('tickets/{id}', [TicketApiController::class, 'destroy']);
@@ -34,7 +31,6 @@ Route::group([
     Route::put('clientes/{id}', [ClienteApiController::class,'update']);
     Route::get('clientes/email/{email}', [ClienteApiController::class, 'searchByEmail']);
     Route::delete('clientes/{clienteId}', [ClienteApiController::class, 'destroy']);
-    Route::apiResource('usuarios',UserApiController::class);
     Route::apiResource('ventas', VentasApiController::class);
 
     Route::get('eventos/nombre/{nombre}', [EventosApiController::class, 'getByNombre']);
