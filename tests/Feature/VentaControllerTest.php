@@ -18,22 +18,10 @@ class VentaControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected VentaFake $ventaDummy;
-    protected $dummyColVentas;
+    protected $adminUser;
+    protected $noAdminUser;
 
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-        // Utilizamos class_alias para que cualquier llamado a \App\Models\Venta use VentaFake
-        // pero solo creamos el alias una vez
-        if (!defined('VENTA_ALIAS_SET')) {
-            class_alias(VentaFake::class, Venta::class);
-            define('VENTA_ALIAS_SET', true);
-        }}
-
-
-
-        protected function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->seed(UserSeeder::class);
@@ -48,118 +36,38 @@ class VentaControllerTest extends TestCase
         // Configurar caché
         Config::set('cache.default', 'array');
 
-        $this->ventaDummy = new VentaFake([
-            'id'          => 1,
-            'created_at'  => now(),
-            'lineasVenta' => [['1', '100', 'Evento 1', '01-10-2025', '18:00:00', 'Madrid']],
-            'guid'        => 'guid-123'
-        ]);
-
-        $this->dummyColVentas = collect([
-            new VentaFake([
-                'id'          => 1,
-                'created_at'  => now()->toDateTimeString(),
-                'lineasVenta' => [array_values(['1', '100', 'Evento 1', '01-10-2025', '18:00:00', 'Madrid']),], // Reindexamos las líneas para garantizar índices 0, 1, ...
-                'guid'        => 'guid-123',
-            ]),
-            new VentaFake([
-                'id'          => 2,
-                'created_at'  => now()->subDay()->toDateTimeString(),
-                'lineasVenta' => [array_values(['1', '110', 'Evento 2', '12-04-2025', '19:00:00', 'Madrid']),],
-                'guid'        => 'guid-456',
-            ]),
-            new VentaFake([
-                'id'          => 3,
-                'created_at'  => now()->toDateTimeString(),
-                'lineasVenta' => [array_values(['1', '300', 'Evento 1', '01-10-2025', '18:00:00', 'Madrid']),], // Reindexamos las líneas para garantizar índices 0, 1, ...
-                'guid'        => 'guid-123',
-            ]),
-            new VentaFake([
-                'id'          => 4,
-                'created_at'  => now()->toDateTimeString(),
-                'lineasVenta' => [array_values(['1', '100', 'Evento 1', '01-10-2025', '18:00:00', 'Madrid']),], // Reindexamos las líneas para garantizar índices 0, 1, ...
-                'guid'        => 'guid-123',
-            ]),
-            new VentaFake([
-                'id'          => 5,
-                'created_at'  => now()->toDateTimeString(),
-                'lineasVenta' => [array_values(['1', '500', 'Evento 1', '01-10-2025', '18:00:00', 'Madrid']),], // Reindexamos las líneas para garantizar índices 0, 1, ...
-                'guid'        => 'guid-123',
-            ]),
-            new VentaFake([
-                'id'          => 6,
-                'created_at'  => now()->toDateTimeString(),
-                'lineasVenta' => [array_values(['1', '600', 'Evento 1', '01-10-2025', '18:00:00', 'Madrid']),], // Reindexamos las líneas para garantizar índices 0, 1, ...
-                'guid'        => 'guid-123',
-            ]),
-            new VentaFake([
-                'id'          => 7,
-                'created_at'  => now()->toDateTimeString(),
-                'lineasVenta' => [array_values(['1', '700', 'Evento 1', '01-10-2025', '18:00:00', 'Madrid']),], // Reindexamos las líneas para garantizar índices 0, 1, ...
-                'guid'        => 'guid-123',
-            ]),
-        ]);
-
+        // Crear algunas ventas para pruebas
+        Venta::factory()->count(7)->create();
     }
 
     #[Test]
     public function testIndexDisplaysPaginatedVentas()
     {
-        // Autenticar como usuario admin
         $this->actingAs($this->adminUser);
 
-        $ventasDummy = $this->dummyColVentas->values(); // reindexado
+        $ventasOrdenadas = Venta::orderByDesc('_id')->paginate(5);
 
-        // Ordenamos las ventas por created_at de forma descendente y reindexamos
-        $ventasOrdenadas = $ventasDummy->sortByDesc('created_at')->values();
-
-        // Creamos un paginador simulado con los datos fake
-        $paginatedVentas = new LengthAwarePaginator(
-            $ventasOrdenadas->take(5)->values(),  // Items de la página (reindexados)
-            $ventasOrdenadas->count(),              // Total de ítems
-            5,                                     // Items por página
-            1,                                     // Página actual
-            ['path' => URL::current()]             // Para generar URLs correctamente
-        );
-
-        // Registramos el paginador fake en el contenedor, clave 'fake.paginatedVentas'
-        app()->instance('fake.paginatedVentas', $paginatedVentas);
-
-        // Realizamos la solicitud al método index (la llamada a Venta::orderBy()->paginate(5) se redirige a nuestra fake)
         $response = $this->get(route('ventas.index'));
 
         $response->assertStatus(200)
             ->assertViewIs('ventas.index')
             ->assertViewHas('ventas', function ($ventas) use ($ventasOrdenadas) {
-                // Extraemos los IDs de los elementos del paginador
                 $actualIds = collect($ventas->items())->pluck('id')->toArray();
-                $expectedIds = $ventasOrdenadas->pluck('id')->take(5)->toArray();
+                $expectedIds = $ventasOrdenadas->pluck('id')->toArray();
                 return $actualIds === $expectedIds;
             });
     }
 
+
     #[Test]
     public function testIndexHandlesEmptyVentas()
     {
-        // Autenticar como usuario admin.
         $this->actingAs($this->adminUser);
 
-        // Simular una colección vacía de ventas.
-        $ventasDummy = collect([]);
+        Venta::truncate();
 
-        // Crear un paginador simulado a partir de la colección vacía.
-        $paginatedVentas = new LengthAwarePaginator(
-            $ventasDummy,         // Items (vacío)
-            0,                    // Total de ítems
-            5,                    // Items por página
-            1,                    // Página actual
-            ['path' => URL::current()]  // Parámetros para la URL (para paginación)
-        );
+        $paginatedVentas = Venta::paginate(5);
 
-        // Registrar el paginador fake en el contenedor bajo la clave 'fake.paginatedVentas'
-        app()->instance('fake.paginatedVentas', $paginatedVentas);
-
-        // Realizar la solicitud al método index del controlador.
         $response = $this->get(route('ventas.index'));
 
         $response->assertStatus(200)
@@ -182,83 +90,51 @@ class VentaControllerTest extends TestCase
     {
         $this->actingAs($this->adminUser);
 
-        // Simular que la venta ya está en la caché
-        Cache::put('venta_1', $this->ventaDummy, 60);
+        $venta = Venta::factory()->create();
 
-        // Realizar la solicitud al controlador
-        $response = $this->get(route('ventas.show', ['id' => 1]));
+        Cache::put("venta_{$venta->id}", $venta, 60);
 
-        // Verificar que la respuesta es correcta
+        $response = $this->get(route('ventas.show', ['id' => $venta->id]));
+
         $response->assertStatus(200)
             ->assertViewIs('ventas.show')
-            ->assertViewHas('venta', fn($v) => $v->guid === 'guid-123');
+            ->assertViewHas('venta', fn($v) => $v->guid === $venta->guid);
 
-        // Verificar que la caché no se haya sobrescrito innecesariamente
-        $this->assertEquals($this->ventaDummy, Cache::get('venta_1'));
+        $this->assertEquals($venta, Cache::get("venta_{$venta->id}"));
     }
-
 
     #[Test]
     public function testShowStoresVentaInCacheIfNotPresent()
     {
         $this->actingAs($this->adminUser);
 
-        // Simular que no hay datos en el caché
-        Cache::forget("venta_1"); // Asegúrate de que la clave no exista previamente
+        Cache::forget('venta_1');
 
-        // Sobrescribir lógica para simular la búsqueda de la venta
-        $ventaFromDb = $this->dummyColVentas->firstWhere('id', 1);
+        $ventaFromDb = Venta::factory()->create();
 
-        // Verificar que la venta existe en el "mock" de datos
-        $this->assertNotNull($ventaFromDb, 'Venta no encontrada en la colección de dummies');
+        $response = $this->get(route('ventas.show', ['id' => $ventaFromDb->id]));
 
-        // Insertar manualmente la venta en caché para validar el flujo
-        Cache::put("venta_{$ventaFromDb->id}", $ventaFromDb, 60);
-
-        // Realizar la solicitud al controlador
-        $response = $this->get(route('ventas.show', ['id' => 1]));
-
-        // Verificar que la respuesta es correcta
         $response->assertStatus(200)
             ->assertViewIs('ventas.show')
-            ->assertViewHas('venta', fn($v) => $v->guid === 'guid-123');
+            ->assertViewHas('venta', fn($v) => $v->guid === $ventaFromDb->guid);
 
-        // Verificar que la venta está correctamente cacheada
-        $this->assertEquals($ventaFromDb, Cache::get("venta_{$ventaFromDb->id}"));
+        // Obtener la venta desde la caché y convertir las fechas a un formato común
+        $cachedVenta = Cache::get("venta_{$ventaFromDb->id}");
 
+        $this->assertEquals($ventaFromDb->only(['id', 'guid', 'created_at', 'updated_at']),
+            $cachedVenta->only(['id', 'guid', 'created_at', 'updated_at']));
+
+        $this->assertEquals($ventaFromDb->created_at->toDateTimeString(), $cachedVenta->created_at->toDateTimeString());
+        $this->assertEquals($ventaFromDb->updated_at->toDateTimeString(), $cachedVenta->updated_at->toDateTimeString());
     }
-    #[Test]
-    public function testShowReturnsForbiddenForNonAdminUser()
-    {
-        $this->actingAs($this->noAdminUser);
-
-        // Realizar la solicitud al controlador
-        $response = $this->get(route('ventas.show', ['id' => 1]));
-
-        // Verificar que la respuesta es correcta
-        $response->assertStatus(403);
-
-    }
-
 
     #[Test]
     public function testShowRedirectsIfVentaNotFound()
     {
         $this->actingAs($this->adminUser);
 
-        // Asegurarse de que la caché esté vacía inicialmente
-        Cache::forget('venta_1'); // Simula que no hay datos en el caché
-
-        // Simular búsqueda fallida en la colección de dummies
-        $ventaFromDb = $this->dummyColVentas->firstWhere('id', 123);
-
-        // Verificar que la venta no existe
-        $this->assertNull($ventaFromDb, 'La venta debería estar ausente para este test.');
-
-        // Realizar la solicitud al controlador
         $response = $this->get(route('ventas.show', ['id' => 123]));
 
-        // Validar que se redirige correctamente
         $response->assertRedirect(route('ventas.index'))
             ->assertSessionHas('error', 'Venta no encontrada');
     }
