@@ -28,11 +28,10 @@
         }
     </style>
 
-    <div class="event-hero" id="heroParallax">
+    <div class="event-hero relative mt-16 min-h-[80vh] flex flex-col justify-center overflow-hidden mb-16 rounded-xl" id="heroParallax">
         <div class="hero-parallax"></div>
 
-        <!-- Flechas de Navegación con estilo mejorado -->
-        <div class="navigation-arrows absolute top-1/2 transform -translate-y-1/2 w-full flex justify-between px-8 z-20">
+        <div class="navigation-arrows absolute top-1/2 transform w-full flex justify-between px-8 z-20">
             @if($eventoAnterior)
                 <a href="{{ route('eventos.show', $eventoAnterior->id) }}"
                    class="transition duration-300 ease-in-out backdrop-blur-sm bg-white/10 hover:bg-white/20 transform hover:scale-110 rounded-full w-12 h-12 flex items-center justify-center cursor-pointer border border-white/20">
@@ -58,7 +57,7 @@
                     <div class="absolute left-0 top-1/2 w-8 h-1 bg-white"></div>
                     {{ $evento->ciudad }}
                 </div>
-                <h1 class="event-title">{{ $evento->nombre }}</h1>
+                <h1 class="event-title text-2xl">{{ $evento->nombre }}</h1>
             </div>
 
             <div class="grid gap-4 mb-12">
@@ -87,7 +86,6 @@
                 </div>
             </div>
 
-            <!-- Sección para el formulario de compra y descripción del evento -->
             <div class="flex flex-col md:flex-row gap-8">
                 @if(!Auth::check() || (!Auth::user()->hasRole('admin') && !Auth::user()->hasRole('empresa')))
                     <div class="ticket-form max-w-md bg-white/10 backdrop-blur-xl rounded-xl p-8 border border-white/20 shadow-2xl">
@@ -99,26 +97,25 @@
 
                             <div class="quantity-selector flex items-center justify-center gap-4">
                                 <button type="button" id="decrease"
-                                        class="w-12 h-12 rounded-full bg-amber-600 hover:bg-amber-700 text-white text-2xl flex items-center justify-center transition-all">
+                                        class="w-12 h-12 rounded-full bg-primary hover:bg-accent text-white text-2xl flex items-center justify-center transition-all">
                                     -
                                 </button>
                                 <input type="number" name="quantity" id="quantity" value="1" min="1" max="5"
                                        class="w-20 text-center bg-white/5 border border-white/20 rounded-xl py-3 text-xl font-bold">
                                 <button type="button" id="increase"
-                                        class="w-12 h-12 rounded-full bg-amber-600 hover:bg-amber-700 text-white text-2xl flex items-center justify-center transition-all">
+                                        class="w-12 h-12 rounded-full bg-primary hover:bg-accent text-white text-2xl flex items-center justify-center transition-all">
                                     +
                                 </button>
                             </div>
 
                             <button type="submit"
-                                    class="w-full py-4 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl transition-all transform hover:scale-[1.02] shadow-lg hover:shadow-amber-500/20">
+                                    class="w-full py-4 bg-primary hover:bg-accent text-white font-bold rounded-xl transition-all transform hover:scale-[1.02] shadow-lg hover:shadow-pink-700/20">
                                 COMPRAR - <span id="totalPrice">{{ $evento->precio }}</span>€
                             </button>
                         </form>
                     </div>
                 @endif
 
-                <!-- Descripción del Evento -->
                 <div class="event-description flex-1 bg-white/10 backdrop-blur-xl rounded-xl p-8 border border-white/20 shadow-2xl">
                     <h3 class="text-xl font-bold mb-4">Descripción del Evento</h3>
                     <p>{{ $evento->descripcion }}</p>
@@ -127,7 +124,7 @@
         </div>
     </div>
 
-    <div class="map-container w-full md:w-11/12 mx-auto my-24 rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+    <div class="map-container w-full mx-auto mb-24 rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
         <div id="map" class="w-full h-96"></div>
     </div>
 
