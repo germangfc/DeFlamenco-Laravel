@@ -8,15 +8,15 @@ La web cuenta con un registro propio tanto para cliente como para empresa para q
 
 ## **Tecnologías y Enfoques Utilizados**
 
-- Arquitectura orientada al apartado web
+- Arquitectura orientada al apartado web.
 - Arquitectura basada en Modelo-Vista-Controlador
 
 ## **Base de Datos**
 
 Este proyecto utiliza dos bases de datos para gestionar la información de usuarios y movimientos:
 
--Una base de datos relacional para la relacion entre los modelos
--Y una base de datos no relacional para ventas y lineas de venta
+-Una base de datos relacional para la relacion entre los modelos.
+-Una base de datos no relacional para ventas y lineas de venta
 
 ## **Importación y Exportación de Datos**
 
@@ -40,6 +40,7 @@ Este proyecto utiliza dos bases de datos para gestionar la información de usuar
 -  **Testcontainers.MongoDb**
 -  **WSL2**
 -  **UBUNTU**
+-  **PHPDOC**
 
 ## **Calidad y Pruebas**
 
