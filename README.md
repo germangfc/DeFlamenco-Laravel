@@ -1,66 +1,121 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Tablao Pass
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## ¿Que es Tablao Pass?
 
-## About Laravel
+Tablao Pass es una web dedicada a la venta de entradas de distintos eventos de flamenco, el back end esta compuesto por un apartado web, que podra ser utilizado tanto para clientes, empresas y administradores, y una parte de API Rest , en la que solo podra ser utilizado por un administrador
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+La web cuenta con un registro propio tanto para cliente como para empresa para que haya una distincion entre usuarios
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## **Tecnologías y Enfoques Utilizados**
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Arquitectura orientada al apartado web
+- Arquitectura basada en Modelo-Vista-Controlador
 
-## Learning Laravel
+## **Base de Datos**
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Este proyecto utiliza dos bases de datos para gestionar la información de usuarios y movimientos:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+-Una base de datos relacional para la relacion entre los modelos
+-Y una base de datos no relacional para ventas y lineas de venta
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## **Importación y Exportación de Datos**
 
-## Laravel Sponsors
+-Cuando en la aplicacion , realizamos una venta siendo un cliente, nuestra factura se emitirá via correo electronico 
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- **PDF**
 
-### Premium Partners
+## **Lenguajes y Tecnologías**
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+- **PHP 8.2**
+- **Laravel 11**
+- **Docker**
+- **PostgreSQL**
+- **MongoDB**
+- **Postman**
+- **Git**
+- **GitFlow**
+- **PHPUnit**
+- **Moq**
+- **Testcontainers.MongoDb**
+-  **Testcontainers.MongoDb**
+-  **WSL2**
+-  **UBUNTU**
 
-## Contributing
+## **Calidad y Pruebas**
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+El proyecto implementa diversas prácticas y herramientas para asegurar la calidad y el correcto funcionamiento del código. A continuación se describen los principales enfoques utilizados:
 
-## Code of Conduct
+- **Test Containers**
+- **Pruebas Unitarias**
+- **Pruebas de Integración**
+- **Moq**
+- **PHPUnit**
+- **Cobertura de Código**
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Enlace al video
 
-## Security Vulnerabilities
+[Explicación del proyecto](https://www.youtube.com/watch?v=fG5jdisKxM8)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Autores del programa
 
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+<table align="center">
+  <tr>
+    <td align="center">
+      <a href="https://github.com/Javierhvicente">
+        <img src="https://github.com/Javierhvicente.png" width="70" height="70" style="border-radius: 50%;" alt="Germán Fernández Carracedo"/>
+        <br/>
+        <sub><b>Javier</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/Samuceese">
+        <img src="https://github.com/Samuceese.png" width="70" height="70" style="border-radius: 50%;" alt="Samuel Cortés Sánchez"/>
+        <br/>
+        <sub><b>Samuel</b></sub>
+      </a>
+    </td>
+        <td align="center">
+      <a href="https://github.com/rraul10">
+        <img src="https://github.com/rraul10.png" width="70" height="70" style="border-radius: 50%;" alt="Raúl Fernández"/>
+        <br/>
+        <sub><b>Raúl</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/alvarito304">
+        <img src="https://avatars.githubusercontent.com/u/114983881?v=4" width="70" height="70" style="border-radius: 50%;" alt="Álvaro Herrero Tamayo"/>
+        <br/>
+        <sub><b>Álvaro</b></sub>
+      </a>
+    </td>
+        </td>
+    <td align="center">
+      <a href="https://github.com/germangfc">
+        <img src="https://avatars.githubusercontent.com/u/147338370" width="70" height="70" style="border-radius: 50%;" alt="German"/>
+        <br/>
+        <sub><b>German</b></sub>
+      </a>
+      </td>
+      <td align="center">
+      <a href="https://github.com/Diokar017">
+        <img src="https://github.com/Diokar017.png" width="70" height="70" style="border-radius: 50%;" alt="Oscar Encabo"/>
+        <br/>
+        <sub><b>Oscar</b></sub>
+      </a>
+      </td>
+    <td align="center">
+      <a href="https://github.com/13elhadri">
+        <img src="https://github.com/13elhadri.png" width="70" height="70" style="border-radius: 50%;" alt="Yahya el Hadri"/>
+        <br/>
+        <sub><b>Yahya</b></sub>
+      </a>
+      </td>
+    <td align="center">
+      <a href="https://github.com/javi97ruiz">
+        <img src="https://github.com/javi97ruiz.png" width="70" height="70" style="border-radius: 50%;" alt="Javier Ruiz"/>
+        <br/>
+        <sub><b>Javier Ruiz</b></sub>
+      </a>
+      </td>
+  </tr>
+</table>
