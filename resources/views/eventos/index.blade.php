@@ -42,7 +42,7 @@
                         </div>
 
                         <!-- Efecto hover: Detalles que aparecen -->
-                        <div class="absolute inset-0 bg-gradient-to-t from-base-100 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-6 flex flex-col justify-end">
+                        <div id="clickarevento" class= "absolute inset-0 bg-gradient-to-t from-base-100 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-6 flex flex-col justify-end">
                             <p class="text-sm text-base-content line-clamp-3 mb-4">
                                 {{ $evento->descripcion }}
                             </p>
