@@ -35,13 +35,19 @@ class EmpresaController extends Controller
 
     public function show($id)
     {
-        $empresa = Empresa::with('eventos')->findOrFail($id);
-        $eventos = $empresa->eventos()->paginate(10);
-        return view('empresas.show', [
-            'empresa' => $empresa,
-            'eventos' => $eventos
-        ]);
+        try {
+            $empresa = Empresa::with('eventos')->findOrFail($id);
+            $eventos = $empresa->eventos()->paginate(10);
+
+            return view('empresas.show', [
+                'empresa' => $empresa,
+                'eventos' => $eventos
+            ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return redirect()->route('empresas.index')->with('error', 'Empresa no encontrada');
+        }
     }
+
 
     public function showByNombre($nombre)
     {
