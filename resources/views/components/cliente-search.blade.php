@@ -8,7 +8,7 @@
                 value="{{ request('query') }}"
                 placeholder="Buscar cliente por nombre, DNI o email."
                 class="input input-bordered w-full" />
-            <button type="submit" id="buscadorBotonClientes" class="btn btn-primary">Buscar</button>
+            <button type="submit" id="botonClientes" class="btn btn-primary">Buscar</button>
         </div>
     </form>
 </div>
