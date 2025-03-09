@@ -181,18 +181,17 @@ class ClienteController extends Controller
             'password' => 'nullable|string|min:8',
         ]);
 
-
         if ($request->hasFile('avatar')) {
             $image = $request->file('avatar');
-            $customName = 'perfil_' . $cliente->name . '.' . $image->getClientOriginalExtension();
-            if ($cliente->avatar) {
-                Storage::disk('public')->delete('images/' .$cliente->avatar);
+            $customName = 'perfil_' . ($validatedData['name'] ?? $cliente->name) . '.' . $image->getClientOriginalExtension();
+
+            if ($cliente->avatar && $cliente->avatar !== $customName) {
+                Storage::disk('public')->delete('images/' . $cliente->avatar);
             }
+
             $image->storeAs('images', $customName, 'public');
 
             $cliente->avatar = $customName;
-            $cliente->save();
-
         }
 
         $user = User::find($cliente->user_id);
@@ -204,21 +203,13 @@ class ClienteController extends Controller
             ]);
         }
 
-        Cache::forget($clienteCacheKey);
+        $cliente->save();
 
-        Cache::put($clienteCacheKey, $cliente, 20);
+        Cache::forget($clienteCacheKey);
+        Cache::put($clienteCacheKey, $cliente->fresh(), 20);
 
         return redirect()->route('clientes.index')->with('success', 'Cliente actualizado con éxito');
     }
-
-
-    /**
-     * Elimina un cliente.
-     *
-     * @param int $id ID del cliente a eliminar.
-     *
-     * @return RedirectResponse
-     */
 
     public function destroy($id)
     {
@@ -240,10 +231,8 @@ class ClienteController extends Controller
             $user = User::find($cliente->user_id);
         }
 
-        // Eliminar el cliente
         $cliente->delete();
 
-        // Si el usuario existe, proceder con su eliminación
         if ($user) {
             $user->delete();
         }

@@ -15,11 +15,6 @@ Route::get('/', function () {
 })->name('main');
 
 
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
 Route::get('/ticket/validar/{id}', [TicketController::class, 'validar'])->name('ticket.validar');
 
 Route::prefix('venta')->group(function () {
