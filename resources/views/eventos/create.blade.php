@@ -3,93 +3,152 @@
 @section("content")
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAToojCJw_9KvxDrlkEbwR9YkQ-Ib4sVxA&libraries=places"></script>
 
-    <x-edit>
-        <div>
-            <div>
-                <form action="{{ route('eventos.store') }}" method="POST" enctype="multipart/form-data" class="">
-                    @csrf
-                    <div class="flex items-center justify-center w-full">
-                        <label for="dropzone-file" class="flex flex-col items-center justify-center w-full min-h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-white hover:bg-gray-300 overflow-hidden">
-                            <div class="relative w-full h-64 flex items-center justify-center" id="imagenEvento">
-                                <img id="preview" class="w-full h-full object-cover rounded-2xl hidden absolute" src="https://via.placeholder.com/800x400" alt="Preview" />
-                                <div id="upload-placeholder" class="flex flex-col items-center justify-center">
-                                    <svg id="upload-icon" class="w-8 h-8 mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
-                                    </svg>
-                                    <p id="upload-text" class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                                    <p class="text-xs text-gray-500">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
-                                </div>
+    <div class="details-container relative z-10 p-4 md:p-8 max-w-4xl mx-auto">
+        <div class="glass-card bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/20 shadow-2xl flamenco-light:bg-base-200">
+            <h1 class="event-title text-3xl md:text-4xl font-bold mb-8 border-l-4 border-primary pl-4">
+                Crear Nuevo Evento
+            </h1>
+
+            <form action="{{ route('eventos.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+                @csrf
+
+                <!-- Imagen del evento -->
+                <div class="form-group">
+                    <x-input-label class="text-primary block mb-4" :value="__('Imagen del Evento')" />
+                    <div class="relative group">
+                        <div class="flex flex-col items-center justify-center border-2 border-dashed border-white/20 rounded-xl p-6 hover:border-primary transition-all cursor-pointer"
+                             onclick="document.getElementById('dropzone-file').click()">
+
+                            <div id="upload-placeholder" class="text-center space-y-4">
+                                <span class="text-4xl">🎉</span>
+                                <p class="text-sm text-gray-400">Haz clic para subir una imagen</p>
                             </div>
-                            <input id="dropzone-file" type="file" name="foto" accept="image/*" class="hidden" onchange="previewImage(event)" required />
-                        </label>
+
+                            <img id="preview" class="w-64 h-64 rounded-full object-cover border-4 border-primary/50 shadow-lg hidden"
+                                 src="#" alt="Preview">
+
+                            <input id="dropzone-file" type="file" name="foto" accept="image/*"
+                                   class="hidden" onchange="previewImage(event)" required>
+                        </div>
+                        <x-input-error :messages="$errors->get('foto')" />
+                    </div>
+                </div>
+
+                <!-- Campos del formulario -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Nombre -->
+                    <div class="form-group">
+                        <x-input-label for="nombre" class="text-primary" :value="__('Nombre del Evento')" />
+                        <x-text-input type="text" name="nombre"
+                                      value="{{ old('nombre') }}"
+                                      required
+                                      placeholder="Nombre del evento" />
+                        <x-input-error :messages="$errors->get('nombre')" />
                     </div>
 
-                    <div class="text-lg space-y-6">
-                        <div>
-                            <x-input-label for="nombre" :value="('Evento')" />
-                            <x-text-input id="nombre" placeholder="Introduce el nombre del evento." class="block mt-1 w-full" type="text" name="nombre" :value="old('nombre')" required autofocus autocomplete="off" />
-                            <x-input-error :messages="$errors->get('nombre')" class="mt-2" />
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <x-input-label for="fecha" :value="('Fecha')" />
-                                <x-text-input id="fecha" placeholder="dd/mm/aaaa." class="block mt-1 w-full" type="date" name="fecha" :value="old('fecha')" required autofocus autocomplete="fecha" />
-                                <x-input-error :messages="$errors->get('fecha')" class="mt-2" />
-                            </div>
-                            <div>
-                                <x-input-label for="hora" :value="('Hora')" />
-                                <x-text-input id="hora" placeholder="" class="block mt-1 w-full" type="time" name="hora" :value="old('hora')" required autofocus autocomplete="hora" />
-                                <x-input-error :messages="$errors->get('hora')" class="mt-2" />
-                            </div>
-                        </div>
-
-                        <div>
-                            <x-input-label for="direccion" :value="('Direccion')" />
-                            <input type="text" id="autocomplete" name="direccion" class=" block mt-1 w-full input input-bordered border-base-100 focus:border-base-100 focus:ring-0 rounded-md shadow-sm" required>
-                            <x-input-error :messages="$errors->get('direccion')" class="mt-2" />
-                        </div>
-
-
-
-                        <div>
-                            <x-input-label for="ciudad" :value="('Ciudad')" />
-                            <x-text-input id="ciudad" placeholder="Introduce la ciudad del evento." class="block mt-1 w-full" type="text" name="ciudad" :value="old('ciudad')" required autofocus autocomplete="ciudad" />
-                            <x-input-error :messages="$errors->get('ciudad')" class="mt-2" />
-                        </div>
-
-                        <div>
-                            <x-input-label for="descripcion" :value="('Descripcion')" />
-                            <x-text-area-input id="descripcion" placeholder="Introduce la descripcion del evento." class="block mt-1 w-full" type="text" name="descripcion" :value="old('descripcion')" required autofocus autocomplete="descripcion" />
-                            <x-input-error :messages="$errors->get('descripcion')" class="mt-2" />
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <x-input-label for="precio" :value="('Precio')" />
-                                <x-text-input id="precio" placeholder="Introduce el precio." class="block mt-1 w-full" type="number" name="precio" :value="old('precio')" required autofocus autocomplete="precio" />
-                                <x-input-error :messages="$errors->get('precio')" class="mt-2" />
-                            </div>
-                            <div>
-                                <x-input-label for="stock" :value="('Aforo')" />
-                                <x-text-input id="stock" placeholder="Introduce el aforo." class="block mt-1 w-full" type="number" name="stock" :value="old('stock')" required autofocus autocomplete="off" />
-                                <x-input-error :messages="$errors->get('stock')" class="mt-2" />
-                            </div>
-                        </div>
+                    <!-- Fecha y Hora -->
+                    <div class="form-group">
+                        <x-input-label for="fecha" class="text-primary" :value="__('Fecha')" />
+                        <x-text-input type="date" name="fecha"
+                                      value="{{ old('fecha') }}"
+                                      required />
+                        <x-input-error :messages="$errors->get('fecha')" />
                     </div>
 
-                    <div class="flex justify-end items-center mt-10">
-                        <a href="{{ route('eventos') }}" class="underline text-sm hover:text-gray-900 dark:hover:text-gray-100 rounded-md">
-                            Volver
-                        </a>
-                        <x-primary-button type="submit" class="ms-3" id="crearEvento">
-                            Crear Evento
-                        </x-primary-button>
+                    <div class="form-group">
+                        <x-input-label for="hora" class="text-primary" :value="__('Hora')" />
+                        <x-text-input type="time" name="hora"
+                                      value="{{ old('hora') }}"
+                                      required />
+                        <x-input-error :messages="$errors->get('hora')" />
                     </div>
-                </form>
-            </div>
+
+                    <!-- Dirección y Ciudad -->
+                    <div class="form-group">
+                        <x-input-label for="autocomplete" class="text-primary" :value="__('Dirección')" />
+                        <input type="text" id="autocomplete" name="direccion"
+                               class="glass-input bg-base-100/20 border border-base-content/20 text-base-content placeholder-base-content/60 rounded-lg shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/30 transition duration-200 w-full p-3"
+                               required>
+                        <x-input-error :messages="$errors->get('direccion')" />
+                    </div>
+
+                    <div class="form-group">
+                        <x-input-label for="ciudad" class="text-primary" :value="__('Ciudad')" />
+                        <x-text-input type="text" name="ciudad"
+                                      value="{{ old('ciudad') }}"
+                                      required
+                                      placeholder="Ciudad" />
+                        <x-input-error :messages="$errors->get('ciudad')" />
+                    </div>
+
+                    <!-- Descripción -->
+                    <div class="form-group col-span-full">
+                        <x-input-label for="descripcion" class="text-primary" :value="__('Descripción')" />
+                        <textarea name="descripcion"
+                                  class="glass-input bg-base-100/20 border border-base-content/20 text-base-content placeholder-base-content/60 rounded-lg shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/30 transition duration-200 w-full p-3 resize-y min-h-[150px]"
+                                  required>{{ old('descripcion') }}</textarea>
+                        <x-input-error :messages="$errors->get('descripcion')" />
+                    </div>
+
+                    <!-- Precio y Aforo -->
+                    <div class="form-group">
+                        <x-input-label for="precio" class="text-primary" :value="__('Precio')" />
+                        <x-text-input type="number" name="precio"
+                                      value="{{ old('precio') }}"
+                                      required
+                                      placeholder="Precio en €" />
+                        <x-input-error :messages="$errors->get('precio')" />
+                    </div>
+
+                    <div class="form-group">
+                        <x-input-label for="stock" class="text-primary" :value="__('Aforo')" />
+                        <x-text-input type="number" name="stock"
+                                      value="{{ old('stock') }}"
+                                      required
+                                      placeholder="Número de plazas" />
+                        <x-input-error :messages="$errors->get('stock')" />
+                    </div>
+                </div>
+
+                <!-- Botones -->
+                <div class="flex flex-col md:flex-row gap-4 mt-8">
+                    <a href="{{ route('eventos') }}"
+                       class="bg-gray-700 hover:bg-gray-600 text-white px-8 py-3 rounded-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-gray-500/20 flex-1 text-center">
+                        Volver
+                    </a>
+                    <button type="submit"
+                            class="bg-primary hover:bg-accent text-white px-8 py-3 rounded-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-pink-700/20 flex-1">
+                        Crear Evento
+                    </button>
+                </div>
+            </form>
         </div>
-    </x-edit>
+    </div>
+
+    <style>
+        .glass-card {
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        .glass-input {
+            @apply bg-white/5 border border-white/20 rounded-lg p-3 text-white;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-input:focus {
+            @apply border-primary ring-2 ring-primary/20;
+        }
+
+        .event-title {
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Ajustes para light theme */
+        .flamenco-light .glass-input {
+            @apply bg-base-200/50 border-base-300 text-base-content;
+        }
+    </style>
 
     <script>
         function initAutocomplete() {
@@ -101,39 +160,33 @@
             autocomplete.addListener("place_changed", () => {
                 const place = autocomplete.getPlace();
                 if (!place.geometry) {
-                    alert("Dirección no válida");
+                    alert("Dirección no válida");
                     return;
                 }
 
-                const direccion = place.formatted_address || "";
-                const ciudad = place.address_components.find(c => c.types.includes("locality"))?.long_name || "";
-
-                document.querySelector('[name="direccion"]').value = direccion;
-                document.querySelector('[name="ciudad"]').value = ciudad;
+                document.querySelector('[name="direccion"]').value = place.formatted_address || "";
+                document.querySelector('[name="ciudad"]').value =
+                    place.address_components.find(c => c.types.includes("locality"))?.long_name || "";
             });
         }
 
-        google.maps.event.addDomListener(window, "load", initAutocomplete);
-    </script>
-
-    <script>
         function previewImage(event) {
             const input = event.target;
             const file = input.files[0];
             const preview = document.getElementById('preview');
-            const uploadIcon = document.getElementById('upload-icon');
-            const uploadText = document.getElementById('upload-text');
+            const container = event.target.closest('.relative');
 
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function (e) {
+                reader.onload = function(e) {
                     preview.src = e.target.result;
                     preview.classList.remove('hidden');
-                    uploadIcon.classList.add('hidden');
-                    uploadText.classList.add('hidden');
+                    container.querySelector('#upload-placeholder').classList.add('hidden');
                 };
                 reader.readAsDataURL(file);
             }
         }
+
+        google.maps.event.addDomListener(window, "load", initAutocomplete);
     </script>
 @endsection

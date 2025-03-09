@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Mail\EmpresaBienvenida;
 use App\Models\Empresa;
 use App\Models\User;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Application;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -15,6 +19,14 @@ use Illuminate\Validation\ValidationException;
 
 class EmpresaController extends Controller
 {
+
+    /**
+     * Muestra el listado de empresas.
+     *
+     * @param Request $request para la peticion de busqueda.
+     *
+     * @return View con el listado de empresas.
+     */
     public function index(Request $request)
     {
         // Capturamos el valor del input "query"
@@ -31,6 +43,14 @@ class EmpresaController extends Controller
 
         return view('empresas.user', compact('empresas'));
     }
+
+    /**
+     * Muestra el detalle de una empresa.
+     *
+     * @param int $id
+     *
+     * @return Factory|Application|object|View a la vista de detalle de empresa.
+     */
 
 
     public function show($id)
@@ -49,6 +69,13 @@ class EmpresaController extends Controller
     }
 
 
+    /**
+     * Muestra el detalle de una empresa por su nombre.
+     *
+     * @param string $nombre
+     *
+     * @return Factory|Application|object|View a la vista de detalle de empresa.
+     */
     public function showByNombre($nombre)
     {
 
@@ -62,6 +89,13 @@ class EmpresaController extends Controller
         return redirect()->route('empresas.show', ['id' => $empresa->id]);
     }
 
+    /**
+     * Muestra el detalle de una empresa por su cif.
+     *
+     * @param string $cif
+     *
+     * @return Factory|Application|object|View a la vista de detalle de empresa.
+     */
     public function showByCif($cif)
     {
 
@@ -74,6 +108,11 @@ class EmpresaController extends Controller
         return redirect()->route('empresas.show',['id' => $empresa->id]);
     }
 
+    /**
+     * Muestra el formulario para crear una nueva empresa.
+     *
+     * @return View con el formulario de creación de empresa.
+     */
     public function create()
     {
         if (Auth::check() && Auth::user()->hasRole('admin')) {
@@ -84,6 +123,13 @@ class EmpresaController extends Controller
     }
 
 
+    /**
+     * Almacena una nueva empresa en la base de datos.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse a la vista de listado de empresas.
+     */
     public function store(Request $request)
     {
         try {
@@ -156,6 +202,13 @@ class EmpresaController extends Controller
     }
 
 
+    /**
+     * Muestra el formulario para editar una empresa.
+     *
+     * @param int $id ID de la empresa a editar.
+     *
+     * @return Application|Factory|object|View con el formulario de edición de empresa.
+     */
     public function edit($id)
     {
         $cacheKey = "empresa_{$id}_edit";
@@ -173,15 +226,24 @@ class EmpresaController extends Controller
         return view('empresas.edit')->with('empresa', $empresa);
     }
 
+    /**
+     * Actualiza una empresa en la base de datos.
+     *
+     * @param Request $request
+     * @param int $id ID de la empresa a actualizar.
+     *
+     * @return RedirectResponse a la vista de listado de empresas.
+     */
     public function update(Request $request, $id)
     {
         $request->validate([
             'cif' => ['required', 'regex:/^[A-HJNP-SUVW][0-9]{7}[0-9A-J]$/'],
-            'name' => 'required|max:255',
-            'direccion' => 'required|max:255',
+            'name' => 'required|min:5|max:255',
+            'direccion' => 'required|min:7|max:255',
             'cuentaBancaria' => ['required', 'regex:/^ES\d{2}\d{20}$/'],
             'telefono' => ['required', 'regex:/^(\+34|0034)?[679]\d{8}$/'],
-            'email' => 'required|email|max:255'
+            'email' => 'required|email|min:3|max:255',
+            'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
 
         try {
@@ -194,10 +256,15 @@ class EmpresaController extends Controller
             $empresa->fill($request->all());
 
             if ($request->hasFile('imagen')) {
-                if (Storage::exists($empresa->imagen)) {
-                    Storage::delete($empresa->imagen);
+                $image = $request->file('imagen');
+                $customName = 'empresaPerfil_' . $empresa->name . '.' . $image->getClientOriginalExtension();
+                if ($empresa->imagen) {
+                    Storage::disk('public')->delete('empresas/' .$empresa->imagen);
                 }
-                $empresa->imagen = $request->file('imagen')->store('storage');
+                $image->storeAs('empresas', $customName, 'public');
+
+                $empresa->imagen = $customName;
+
             }
 
             $empresa->save();
@@ -214,6 +281,14 @@ class EmpresaController extends Controller
             return redirect()->back()->withErrors($e->getMessage())->withInput();
         }
     }
+
+    /**
+     * Elimina una empresa de la base de datos.
+     *
+     * @param int $id ID de la empresa a eliminar.
+     *
+     * @return RedirectResponse a la vista de listado de empresas.
+     */
     public function destroy($id)
     {
         $cacheKey = "empresa_{$id}";

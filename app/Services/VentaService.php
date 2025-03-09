@@ -11,6 +11,14 @@ use Illuminate\Support\Str;
 
 class VentaService
 {
+
+    /**
+     * Metodo que genera una venta a partir de una lista de tickets
+     *
+     * @param $ticketList
+     * @param User $user Usuario que realiza la compra
+     * @return Venta|null Venta generada
+     */
     public function generarVenta($ticketList, User $user){
         $guidVenta = (string) Str::uuid();
         $lineasVenta = [];
@@ -41,6 +49,13 @@ class VentaService
         return $venta;
 
     }
+    /**
+     * Metodo que genera una lista de tickets a partir de un carrito de compra
+     *
+     * @param $cart
+     * @param User $user Usuario que realiza la compra
+     * @return array|null Lista de tickets generada
+     */
     public function generarTickets($cart, $user){
         $ticketList=[];
 
@@ -67,6 +82,14 @@ class VentaService
         return $ticketList;
 
     }
+
+    /**
+     * Metodo que genera un ticket a partir de un evento y un cliente
+     *
+     * @param $idEvent
+     * @param User $user Usuario que realiza la compra
+     * @return Ticket|null Ticket generado
+     */
     public function generarTicket($idEvent,User $user){
 
         //Validar que el evento exista
