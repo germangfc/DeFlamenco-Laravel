@@ -5,8 +5,8 @@
 @extends('main')
 
 @section('content')
-        <div class="details-container relative z-10 p-8 md:p-16 text-white max-w-6xl mx-auto">
-            <div class="glass-card bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/20 shadow-2xl">
+        <div class="details-container relative z-10 p-8 md:p-16   max-w-6xl mx-auto">
+            <div class="glass-card bg-white/5 backdrop-blur-xl rounded-2xl p-8 flamenco-light:bg-base-200 border border-white/20 shadow-2xl">
                 <div class="flex flex-col md:flex-row gap-8 items-center">
                     <!-- Avatar -->
                     <div class="w-full md:w-1/3 text-center">
@@ -24,7 +24,7 @@
                         </h1>
 
                         <div class="space-y-4">
-                            <div class="detail-item flex items-center gap-4 p-4 bg-white/5 rounded-xl hover:bg-white/10 transition">
+                            <div class="detail-item flex items-center gap-4 p-4 bg-base-100/20 border border-base-content/20 rounded-xl hover:bg-white/20 transition">
                                 <div class="text-amber-500 text-2xl">📧</div>
                                 <div>
                                     <p class="text-sm text-gray-400">Email</p>

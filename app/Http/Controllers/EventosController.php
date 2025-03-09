@@ -284,7 +284,7 @@ class EventosController extends Controller
             $evento = Evento::find($id);
 
             if (!$evento) {
-                return redirect()->route('eventos.index')->with('error', 'Evento no encontrado');
+                return redirect()->route('eventos')->with('error', 'Evento no encontrado');
             }
 
             $evento->delete();
@@ -292,9 +292,9 @@ class EventosController extends Controller
             $cacheKey = "evento_{$id}";
             Cache::forget($cacheKey);
 
-            return redirect()->route('eventos.index');
+            return redirect()->route('eventos')->with('success', '¡Evento eliminado exitosamente!');
         } catch (Exception $e) {
-            return redirect()->route('eventos.index')->with('error', 'No se puede eliminar el evento');
+            return redirect()->route('eventos')->with('error', 'No se puede eliminar el evento');
         }
     }
 
