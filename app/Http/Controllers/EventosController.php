@@ -5,12 +5,25 @@ namespace App\Http\Controllers;
 use App\Models\Empresa;
 use App\Models\Evento;
 use Exception;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Foundation\Application;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
 
 class EventosController extends Controller
 {
+
+    /**
+     *  Devuelve la vista con el listado de eventos y paginado.
+     *
+     * @param Request $request para la peticion de busqueda.
+     *
+     * @return View
+     */
     public function getAll(Request $request)
     {
         $eventos = Evento::search($request->only([
@@ -24,6 +37,14 @@ class EventosController extends Controller
     }
 
 
+    /**
+     *  Devuelve la vista con el detalle de un evento solo para admins.
+     *
+     * @param Request $request para la peticion de busqueda.
+     *
+     * @return View con el detalle del evento.
+     */
+
     public function index(Request $request)
     {
         $eventos = Evento::search($request->only([
@@ -36,6 +57,11 @@ class EventosController extends Controller
     }
 
 
+    /**
+     *  Devuelve la vista con el detalle de un evento solo para empresas.
+     *
+     * @return View con el detalle del evento.
+     */
     public function showMeEvents()
     {
         $empresa = Empresa::where('usuario_id', auth()->id())->firstOrFail();
@@ -46,6 +72,11 @@ class EventosController extends Controller
     }
 
 
+    /**
+     *  Devuelve la vista con el detalle de un evento.
+     *
+     * @return View con el detalle del evento.
+     */
     public function create()
     {
         return view('eventos.create');
@@ -105,6 +136,14 @@ class EventosController extends Controller
         }
     }
 
+    /**
+     *  Devuelve la vista con el detalle de un evento.
+     *
+     * @param int $id del evento a mostrar.
+     *
+     * @return Factory|\Illuminate\Contracts\View\View|Application|object con el detalle del evento.
+     */
+
     public function show($id)
     {
         // Se obtiene el evento solicitado directamente de la base de datos
@@ -134,6 +173,13 @@ class EventosController extends Controller
 
 
 
+    /**
+     *  Devuelve la vista con el detalle de un evento.
+     *
+     * @param int $id del evento a mostrar.
+     *
+     * @return Factory|View|Application|object con el detalle del evento.
+     */
     public function edit($id)
     {
         $cacheKey = "evento_{$id}";
@@ -155,6 +201,15 @@ class EventosController extends Controller
 
 
 
+    /**
+     *  Actualiza un evento.
+     *
+     * @param Request $request con los datos del evento a actualizar.
+     *
+     * @param int $id del evento a actualizar.
+     *
+     * @return RedirectResponse con el resultado de la actualización.
+     */
     public function update(Request $request, $id)
     {
         try {
@@ -216,6 +271,13 @@ class EventosController extends Controller
     }
 
 
+    /**
+     *  Elimina un evento.
+     *
+     * @param int $id del evento a eliminar.
+     *
+     * @return RedirectResponse con el resultado de la eliminación.
+     */
     public function destroy($id)
     {
         try {
