@@ -4,106 +4,104 @@
 
 @extends('main')
 
-@section("content")
-    <div class="w-full max-w-6xl flex flex-col items-center px-4 mb-6 mt-12">
-        <div class="flex w-full justify-between items-center">
-            @if ($eventoAnterior)
+@section('content')
+    <!-- Sección Hero del Evento con margen superior para evitar el header -->
+    <div id="heroParallax"
+         class="relative mt-16 min-h-[80vh] flex flex-col justify-center overflow-hidden mb-16"
+         style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('{{ Str::startsWith($evento->foto, 'http') ? $evento->foto : asset('storage/images/' . $evento->foto) }}'); background-size: cover; background-position: center;">
+
+        <!-- Flechas de Navegación -->
+        <div class="absolute top-1/2 transform -translate-y-1/2 w-full flex items-center justify-between px-5 gap-8 z-20">
+            @if($eventoAnterior)
                 <a href="{{ route('eventos.show', $eventoAnterior->id) }}"
-                   class="text-3xl transition duration-300">
-                    ⬅
+                   class="transition duration-300 ease-in-out backdrop-blur-sm bg-white/10 hover:bg-white/20 transform hover:scale-110 rounded-full w-12 h-12 flex items-center justify-center cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 text-white">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                    </svg>
                 </a>
-            @else
-                <div class="w-8"></div>
             @endif
 
-            <div class="flex-1 flex flex-col items-center">
-                <img class="object-cover w-72 h-72 rounded-xl"
-                     src='{{ Str::startsWith($evento->foto, "http") ? $evento->foto : asset("storage/images/" . $evento->foto) }}'
-                     alt="Evento" />
-                <div class="w-full text-center px-6 mt-4">
-                    <h2 class="text-4xl md:text-5xl font-bold leading-tight mb-4">
-                        {{ $evento->nombre }}
-                    </h2>
+            @if($eventoSiguiente)
+                <a href="{{ route('eventos.show', $eventoSiguiente->id) }}"
+                   class="transition duration-300 ease-in-out backdrop-blur-sm bg-white/10 hover:bg-white/20 transform hover:scale-110 rounded-full w-12 h-12 flex items-center justify-center cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 text-white">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                    </svg>
+                </a>
+            @endif
+        </div>
+
+        <!-- Contenedor de Detalles (incluye datos y formulario de compra) -->
+        <div class="relative z-20 px-4 md:px-10 py-8 bg-black/30 mx-auto max-w-4xl rounded-md">
+            <!-- Caja de Ciudad -->
+            <div class="mb-5">
+                <div class="w-8 h-1 bg-white mb-2"></div>
+                <div class="text-lg">{{ $evento->ciudad }}</div>
+            </div>
+
+            <!-- Título del Evento -->
+            <h1 class="font-oswald text-5xl md:text-6xl uppercase leading-tight tracking-tight mb-4"
+                style="text-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+                {{ $evento->nombre }}
+            </h1>
+
+            <!-- Detalles del Evento -->
+            <div class="max-w-xl my-8 text-lg space-y-4">
+                <div class="flex items-center gap-4 py-4 border-b border-white/10 transition-colors hover:bg-white/5">
+                    <strong class="font-semibold min-w-[90px] inline-flex items-center gap-2">📅 Fecha:</strong>
+                    <span>{{ $evento->fecha }} a las {{ $evento->hora }}</span>
+                </div>
+                <div class="flex items-center gap-4 py-4 border-b border-white/10 transition-colors hover:bg-white/5">
+                    <strong class="font-semibold min-w-[90px] inline-flex items-center gap-2">📍 Lugar:</strong>
+                    <span>{{ $evento->direccion }}, {{ $evento->ciudad }}</span>
+                </div>
+                <div class="flex items-center gap-4 py-4 border-b border-white/10 transition-colors hover:bg-white/5">
+                    <strong class="font-semibold min-w-[90px] inline-flex items-center gap-2">Precio:</strong>
+                    <span>{{ $evento->precio }}€</span>
                 </div>
             </div>
 
-            @if ($eventoSiguiente)
-                <a href="{{ route('eventos.show', $eventoSiguiente->id) }}"
-                   class="text-3xl transition duration-300">
-                    ➡
-                </a>
-            @else
-                <div class="w-8"></div>
+            <!-- Formulario de Compra -->
+            @if(!Auth::check() || (!Auth::user()->hasRole('admin') && !Auth::user()->hasRole('empresa')))
+                <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/10 shadow-lg mt-8">
+                    <h3 class="text-xl font-semibold mb-4">COMPRA TUS ENTRADAS</h3>
+                    <form action="{{ route('cart.add') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="idEvent" value="{{ $evento->id }}">
+                        <input type="hidden" name="price" value="{{ $evento->precio }}">
+                        <input type="hidden" name="name" value="{{ $evento->nombre }}">
+
+                        <div class="flex items-center gap-4 my-8">
+                            <button type="button" id="decrease"
+                                    class="w-10 h-10 rounded-full bg-[#ecad29] text-white text-xl transition duration-300">
+                                -
+                            </button>
+                            <input type="number" name="quantity" id="quantity" value="1" min="1" max="5"
+                                   class="w-16 text-center bg-transparent border border-white/20 text-white p-2 rounded-md text-xl">
+                            <button type="button" id="increase"
+                                    class="w-10 h-10 rounded-full bg-[#ecad29] text-white text-xl transition duration-300">
+                                +
+                            </button>
+                        </div>
+
+                        <button type="submit"
+                                class="w-full py-5 bg-[#ecad29] rounded-lg text-white font-semibold uppercase tracking-wide transition duration-300 hover:-translate-y-1 hover:shadow-lg">
+                            COMPRAR <span id="totalPrice">{{ $evento->precio }}€</span>
+                        </button>
+                    </form>
+                </div>
             @endif
         </div>
     </div>
-    <div class="p-6 mb-8 rounded-lg flex flex-col md:flex-row justify-between">
-        <div class="flex-1 p-6 text-left">
-            <h3 class="text-2xl font-semibold mb-6">Información del Evento</h3>
-            <p class="mb-4 text-lg leading-relaxed">
-                <span class="hidden-text">El mayor evento de música flamenca de 2025 en España 🔥</span><br>
-                <span class="hidden-text">Un line up inmejorable con los mejores artistas y DJs de la escena repartidos en 4 áreas musicales 🎵</span><br>
-                <span class="hidden-text">El ambientazo que solo encuentras en {{ $evento->nombre }} con una fiesta non-stop de más de 6 horas 🕺🏼</span><br>
-                <span class="hidden-text">Todas las fiestas de {{ $evento->nombre }} en exclusiva en De Flamenco 🎁</span>
-            </p>
 
-
-            <h3 class="text-2xl font-semibold mb-4 rounded-lg">Detalles del Evento</h3>
-            <div class="mb-4 bg-red-700">
-                <p class="text-lg font-bold bg-primary rounded-lg"><strong>📅 Fecha:</strong> {{ $evento->fecha }} a las {{ $evento->hora }}</p>
-            </div>
-            <div class="mb-4 bg-primary">
-                <p class="text-lg font-bold bg-primary rounded-lg"><strong>📍 Lugar:</strong> {{ $evento->direccion }}, {{ $evento->ciudad }}</p>
-            </div>
-            <div>
-                <p class="text-lg font-bold bg-primary rounded-lg"><strong>Precio:</strong> {{ $evento->precio }}€</p>
-            </div>
-
-
-                </div>
-                @if(!Auth::check() || (!Auth::user()->hasRole('admin') && !Auth::user()->hasRole('empresa')))                    <div class="flex-1 p-10 ml-auto w-full md:w-1/2">
-                        <div class="relative">
-                            <h3 class="text-lg font-semibold mt-6 text-center border-2 border-blue-600 bg-blue-600 text-white py-2 px-4 rounded-lg">
-                                {{ $evento->fecha }}
-                            </h3>
-
-                    <div class="p-10 w-full md:w-auto flex flex-col items-center text-white rounded-xl shadow-lg md:ml-6">
-                        <h3 class="text-sm font-bold text-center border-2 bg-primary border-primary  text-white py-1 px-4 rounded-lg w-full shadow-md">
-                            Compra aqui tus entradas
-                        </h3>
-
-                        <p class="mt-3 text-lg font-medium text-center">Entrada general para <strong>{{ $evento->nombre }}</strong></p>
-
-                        <form action="{{ route('cart.add') }}" method="POST" class="w-full mt-6">
-                            @csrf
-
-                            <input type="hidden" name="idEvent" value="{{ $evento->id }}">
-                            <input type="hidden" name="price" value="{{ $evento->precio }}">
-                            <input type="hidden" name="name" value="{{ $evento->nombre }}">
-
-
-                            <div class="flex items-center justify-center space-x-4 mb-6">
-                                <button type="button" id="decrease" class="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition shadow-md">-</button>
-                                <input type="number" name="quantity"  id="quantity" value="1" min="1" max="5" class="w-16 text-center border rounded-lg text-lg font-semibold bg-gray-800 text-white shadow-md">
-                                <button type="button" id="increase" class="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition shadow-md">+</button>
-                            </div>
-
-                            <x-primary-button class="ml-4 w-full bg-primary text-primary-content py-3 rounded-lg font-bold text-lg shadow-lg hover:bg-primary-focus transition transform hover:scale-105 text-center">
-                                {{ __('Comprar') }} <span id="totalPrice">{{ $evento->precio }}€</span>
-                            </x-primary-button>
-                        </form>
-                    </div>
-                </div>
-            @endif
-
-    <div class="mt-8">
-        <h3 class="text-xl font-semibold mb-3 text-center">Ubicación en el mapa</h3>
-        <div id="map" class="w-full h-64 rounded-lg shadow-md"></div>
+    <!-- Contenedor del Mapa con altura fija -->
+    <div class="my-16 mx-auto w-11/12 rounded-2xl overflow-hidden shadow-lg border border-white/10">
+        <div id="map" class="w-full h-[400px]"></div>
     </div>
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css " />
+    <!-- Leaflet Map Scripts -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             var address = '{{ $evento->ciudad . ' ' . $evento->direccion }}';
@@ -112,44 +110,30 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.length > 0) {
-                        var lat = data[0].lat;
-                        var lon = data[0].lon;
-
-                        var map = L.map('map').setView([lat, lon], 13);
-
-                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                            attribution: '&copy; OpenStreetMap contributors'
-                        }).addTo(map);
-
-                        var marker = L.marker([lat, lon]).addTo(map);
-                        marker.bindPopup('<b>{{ $evento->nombre }}</b><br>{{ $evento->direccion }}');
-                    } else {
-                        document.getElementById("map").innerHTML = "<p class='text-red-500 text-center'>No se pudo encontrar la ubicación.</p>";
+                        var map = L.map('map').setView([data[0].lat, data[0].lon], 15);
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+                        L.marker([data[0].lat, data[0].lon]).addTo(map)
+                            .bindPopup('{{ $evento->nombre }}');
                     }
                 });
-        });
 
-        document.addEventListener("DOMContentLoaded", function () {
-            const quantityInput = document.getElementById("quantity");
-            const totalPrice = document.getElementById("totalPrice");
+            // Controlador de Cantidad
+            const quantityInput = document.getElementById('quantity');
+            const totalPrice = document.getElementById('totalPrice');
             const price = {{ $evento->precio }};
-            const increaseBtn = document.getElementById("increase");
-            const decreaseBtn = document.getElementById("decrease");
 
-            increaseBtn.addEventListener("click", function () {
-                quantityInput.value = parseInt(quantityInput.value) + 1;
+            document.getElementById('increase').addEventListener('click', () => {
+                quantityInput.value = Math.min(5, ++quantityInput.value);
                 updateTotal();
             });
 
-            decreaseBtn.addEventListener("click", function () {
-                if (parseInt(quantityInput.value) > 1) {
-                    quantityInput.value = parseInt(quantityInput.value) - 1;
-                    updateTotal();
-                }
+            document.getElementById('decrease').addEventListener('click', () => {
+                quantityInput.value = Math.max(1, --quantityInput.value);
+                updateTotal();
             });
 
             function updateTotal() {
-                totalPrice.textContent = (quantityInput.value * price).toFixed(2);
+                totalPrice.textContent = (quantityInput.value * price).toFixed(2) + '€';
             }
         });
     </script>
