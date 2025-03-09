@@ -8,7 +8,7 @@ describe('Registro y redirección', () => {
     cy.get('#email').type('Alvarocorreo12@gmail.com');
     cy.get('#password').type('Alvaro1234');
     cy.get('#avatar').attachFile('foto.jpg');
-    cy.contains('Crear Cliente').click();
+    cy.get('#crearCliente').click();
     cy.get('#clickarevento').click();
     cy.get('#comprarBoton').click();
     cy.get('#carritoComprar').click();

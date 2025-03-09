@@ -76,6 +76,7 @@
                     <form action="{{ route('stripe.checkout') }}" method="POST">
                         @csrf
                         <button type="submit"
+                                id="pagar"
                                 class="btn btn-primary hover:btn-accent transform hover:scale-105 transition-all shadow-lg hover:shadow-primary/20">
                             Proceder al Pago
                         </button>
