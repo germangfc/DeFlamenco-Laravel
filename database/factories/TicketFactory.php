@@ -22,8 +22,8 @@ class TicketFactory extends Factory
         return [
             'idEvent'   => $evento ? $evento->id : null,
             'idClient'  => $cliente ? $cliente->id : null,
-            'price'     => $this->faker->randomFloat(2, 10, 1000),
-            'isReturned'=> $this->faker->boolean(20),
+            'price'     => $evento ? $evento->precio : $this->faker->randomFloat(2, 10, 1000),
+            'isReturned'=> false,
         ];
     }
 }
