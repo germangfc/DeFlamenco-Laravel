@@ -1,73 +1,70 @@
 <form id="form" action="{{ route('empresas.store') }}" method="POST" enctype="multipart/form-data" class="form-horizontal">
     @csrf
-    <div class="container">
+    <div class="container mt-5">
         <div class="row">
             <!-- Columna Izquierda -->
-            <div class="col-md-4 col-sm-6 col-xs-12">
-                <div>
-                    <!-- Usamos x-input-label para la etiqueta en lugar de h6 -->
-                    <x-input-label for="imagen" :value="__('Sube una foto de perfil')" class="text-left" />
-                    <div class="form-group"> <!-- Eliminamos clases centradoras como text-center -->
-                        <x-file-input-basico name="imagen" id="imagen" class="form-control well well-sm" accept="image/jpeg"/>
-                        <x-input-error class="mt-2" :messages="$errors->get('imagen')" />
-                    </div>
-                </div>
-            </div>
+            <div class="col-md-8 col-sm-12">
+                <h1 class="mb-4">Registrar Nueva Empresa</h1>
 
-            <!-- Columna Derecha -->
-            <div class="col-md-8 col-sm-6 col-xs-12 personal-info">
                 <!-- Nombre -->
-                <div class="form-group mb-3 text-left">
+                <div class="form-group mb-3">
                     <x-input-label for="name" :value="__('Nombre')" />
-                    <x-text-input type="text" name="name" id="name" class="form-control field-validate" value="{{ old('name') }}" required placeholder="Nombre de la Empresa" />
+                    <x-text-input type="text" name="name" id="name" class="form-control field-validate" value="{{ old('name') }}" required placeholder="Nombre de la Empresa" style="border: 2px solid #ccc; border-radius: 5px;" />
                     <x-input-error class="mt-2" :messages="$errors->get('name')" />
                 </div>
 
                 <!-- CIF -->
-                <div class="form-group mb-3 text-left">
+                <div class="form-group mb-3">
                     <x-input-label for="cif" :value="__('CIF')" />
-                    <x-text-input type="text" name="cif" id="cif" class="form-control field-validate" value="{{ old('cif') }}" required placeholder="CIF de la Empresa" />
+                    <x-text-input type="text" name="cif" id="cif" class="form-control field-validate" value="{{ old('cif') }}" required placeholder="CIF de la Empresa" style="border: 2px solid #ccc; border-radius: 5px;" />
                     <x-input-error class="mt-2" :messages="$errors->get('cif')" />
                 </div>
 
                 <!-- Dirección -->
-                <div class="form-group mb-3 text-left">
+                <div class="form-group mb-3">
                     <x-input-label for="direccion" :value="__('Dirección')" />
-                    <x-text-input type="text" name="direccion" id="direccion" class="form-control field-validate" value="{{ old('direccion') }}" required placeholder="Dirección de la Empresa" />
+                    <x-text-input type="text" name="direccion" id="direccion" class="form-control field-validate" value="{{ old('direccion') }}" required placeholder="Dirección de la Empresa" style="border: 2px solid #ccc; border-radius: 5px;" />
                     <x-input-error class="mt-2" :messages="$errors->get('direccion')" />
                 </div>
 
                 <!-- Teléfono -->
-                <div class="form-group mb-3 text-left">
+                <div class="form-group mb-3">
                     <x-input-label for="telefono" :value="__('Teléfono')" />
-                    <x-text-input type="text" name="telefono" id="telefono" class="form-control field-validate" value="{{ old('telefono') }}" required placeholder="Número de Teléfono" />
+                    <x-text-input type="text" name="telefono" id="telefono" class="form-control field-validate" value="{{ old('telefono') }}" required placeholder="Número de Teléfono" style="border: 2px solid #ccc; border-radius: 5px;" />
                     <x-input-error class="mt-2" :messages="$errors->get('telefono')" />
                 </div>
 
-                <!-- Email -->
-                <div class="form-group mb-3 text-left">
-                    <x-input-label for="email" :value="__('Email')" />
-                    <x-text-input type="email" name="email" id="email" class="form-control field-validate" value="{{ old('email') }}" required placeholder="Correo Electrónico" />
-                    <x-input-error class="mt-2" :messages="$errors->get('email')" />
-                </div>
-
                 <!-- Cuenta Bancaria -->
-                <div class="form-group mb-3 text-left">
+                <div class="form-group mb-3">
                     <x-input-label for="cuentaBancaria" :value="__('Cuenta Bancaria')" />
-                    <x-text-input type="text" name="cuentaBancaria" id="cuentaBancaria" class="form-control field-validate" value="{{ old('cuentaBancaria') }}" required placeholder="Cuenta Bancaria" />
+                    <x-text-input type="text" name="cuentaBancaria" id="cuentaBancaria" class="form-control field-validate" value="{{ old('cuentaBancaria') }}" required placeholder="Cuenta Bancaria" style="border: 2px solid #ccc; border-radius: 5px;" />
                     <x-input-error class="mt-2" :messages="$errors->get('cuentaBancaria')" />
                 </div>
 
+                <!-- Email -->
+                <div class="form-group mb-3">
+                    <x-input-label for="email" :value="__('Email')" />
+                    <x-text-input type="email" name="email" id="email" class="form-control field-validate" value="{{ old('email') }}" required placeholder="Correo Electrónico" style="border: 2px solid #ccc; border-radius: 5px;" />
+                    <x-input-error class="mt-2" :messages="$errors->get('email')" />
+                </div>
                 <!-- Contraseña -->
-                <div class="form-group mb-3 text-left">
+                <div class="form-group mb-3">
                     <x-input-label for="password" :value="__('Contraseña')" />
-                    <x-text-input type="password" name="password" id="password" class="form-control field-validate" required placeholder="Contraseña" />
+                    <x-text-input type="password" name="password" id="password" class="form-control field-validate" required placeholder="Contraseña" style="border: 2px solid #ccc; border-radius: 5px;" />
                     <x-input-error class="mt-2" :messages="$errors->get('password')" />
                 </div>
 
+
+                <!-- Foto de Perfil -->
+                <div class="form-group mb-3">
+                    <x-input-label for="imagen" :value="__('Sube una foto de perfil')" />
+                    <x-file-input-basico name="imagen" id="imagen" class="form-control well well-sm text-center center-block" accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml"/>
+                    <x-input-error class="mt-2" :messages="$errors->get('imagen')" />
+                </div>
+
                 <!-- Botones -->
-                <div class="form-group mb-3 text-left">
-                    <a href="{{ route('empresas.index') }}" class="btn btn-secondary">Volver</a>
+                <div class="form-group mb-3">
+                    <a href="{{ route('empresas.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">Cancelar</a>
                     <x-primary-button class="ml-4" id="registrarEmpresa">
                         {{ __('Registrar Empresa') }}
                     </x-primary-button>
@@ -76,9 +73,6 @@
         </div>
     </div>
 </form>
-
-
-
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {

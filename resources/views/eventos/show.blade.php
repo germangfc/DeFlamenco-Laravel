@@ -4,153 +4,181 @@
 
 @extends('main')
 
-@section("content")
-    <div class="w-full max-w-6xl flex flex-col items-center px-4 mb-6 mt-12">
-        <div class="flex w-full justify-between items-center">
-            @if ($eventoAnterior)
+@section('content')
+    <style>
+        /* Estilos personalizados esenciales */
+        .event-hero {
+            @apply relative h-[80vh] overflow-hidden mb-16 mt-20 rounded-xl;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+            url('{{ Str::startsWith($evento->foto, 'http') ? $evento->foto : asset('storage/images/' . $evento->foto) }}');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero-parallax {
+            @apply absolute top-0 left-0 w-full h-[120%] bg-cover bg-center;
+            transform: translateZ(0);
+            will-change: transform;
+        }
+
+        .event-title {
+            @apply font-bold text-6xl md:text-7xl leading-tight mb-6;
+            font-family: 'Oswald', sans-serif;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+
+    <div class="event-hero relative mt-16 min-h-[80vh] flex flex-col justify-center overflow-hidden mb-16 rounded-xl" id="heroParallax">
+        <div class="hero-parallax"></div>
+
+        <div class="navigation-arrows absolute top-1/2 transform w-full flex justify-between px-8 z-20">
+            @if($eventoAnterior)
                 <a href="{{ route('eventos.show', $eventoAnterior->id) }}"
-                   class="text-3xl transition duration-300">
-                    ⬅
+                   class="transition duration-300 ease-in-out backdrop-blur-sm bg-white/10 hover:bg-white/20 transform hover:scale-110 rounded-full w-12 h-12 flex items-center justify-center cursor-pointer border border-white/20">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                    </svg>
                 </a>
-            @else
-                <div class="w-8"></div>
             @endif
 
-            <div class="flex-1 flex flex-col items-center">
-                <img class="object-cover w-72 h-72 rounded-xl"
-                     src='{{ Str::startsWith($evento->foto, "http") ? $evento->foto : asset("storage/images/" . $evento->foto) }}'
-                     alt="Evento" />
-                <div class="w-full text-center px-6 mt-4">
-                    <h2 class="text-4xl md:text-5xl font-bold leading-tight mb-4">
-                        {{ $evento->nombre }}
-                    </h2>
-                </div>
-            </div>
-
-            @if ($eventoSiguiente)
+            @if($eventoSiguiente)
                 <a href="{{ route('eventos.show', $eventoSiguiente->id) }}"
-                   class="text-3xl transition duration-300">
-                    ➡
+                   class="transition duration-300 ease-in-out backdrop-blur-sm bg-white/10 hover:bg-white/20 transform hover:scale-110 rounded-full w-12 h-12 flex items-center justify-center cursor-pointer border border-white/20">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                    </svg>
                 </a>
-            @else
-                <div class="w-8"></div>
             @endif
         </div>
-    </div>
-    <div class="p-6 mb-8 rounded-lg flex flex-col md:flex-row justify-between">
-        <div class="flex-1 p-6 text-left">
-            <h3 class="text-2xl font-semibold mb-6">Información del Evento</h3>
-            <p class="mb-4 text-lg leading-relaxed">
-                <span class="hidden-text">El mayor evento de música flamenca de 2025 en España 🔥</span><br>
-                <span class="hidden-text">Un line up inmejorable con los mejores artistas y DJs de la escena repartidos en 4 áreas musicales 🎵</span><br>
-                <span class="hidden-text">El ambientazo que solo encuentras en {{ $evento->nombre }} con una fiesta non-stop de más de 6 horas 🕺🏼</span><br>
-                <span class="hidden-text">Todas las fiestas de {{ $evento->nombre }} en exclusiva en De Flamenco 🎁</span>
-            </p>
 
-
-            <h3 class="text-2xl font-semibold mb-4 rounded-lg">Detalles del Evento</h3>
-            <div class="mb-4 bg-red-700">
-                <p class="text-lg font-bold bg-primary rounded-lg"><strong>📅 Fecha:</strong> {{ $evento->fecha }} a las {{ $evento->hora }}</p>
-            </div>
-            <div class="mb-4 bg-primary">
-                <p class="text-lg font-bold bg-primary rounded-lg"><strong>📍 Lugar:</strong> {{ $evento->direccion }}, {{ $evento->ciudad }}</p>
-            </div>
-            <div>
-                <p class="text-lg font-bold bg-primary rounded-lg"><strong>Precio:</strong> {{ $evento->precio }}€</p>
-            </div>
-
-
+        <div class="details-container relative z-10 p-8 md:p-16 text-white">
+            <div class="mb-8 space-y-6">
+                <div class="text-xl mb-2 relative pl-12">
+                    <div class="absolute left-0 top-1/2 w-8 h-1 bg-white"></div>
+                    {{ $evento->ciudad }}
                 </div>
-                @if(!Auth::check() || (!Auth::user()->hasRole('admin') && !Auth::user()->hasRole('empresa')))                    <div class="flex-1 p-10 ml-auto w-full md:w-1/2">
-                        <div class="relative">
-                            <h3 class="text-lg font-semibold mt-6 text-center border-2 border-blue-600 bg-blue-600 text-white py-2 px-4 rounded-lg">
-                                {{ $evento->fecha }}
-                            </h3>
+                <h1 class="event-title text-2xl">{{ $evento->nombre }}</h1>
+            </div>
 
-                    <div class="p-10 w-full md:w-auto flex flex-col items-center text-white rounded-xl shadow-lg md:ml-6">
-                        <h3 class="text-sm font-bold text-center border-2 bg-primary border-primary  text-white py-1 px-4 rounded-lg w-full shadow-md">
-                            Compra aqui tus entradas
-                        </h3>
+            <div class="grid gap-4 mb-12">
+                <div class="flex items-center gap-4 py-3 border-b border-white/10 hover:bg-white/5 transition px-2">
+                    <span class="text-2xl">📅</span>
+                    <div class="space-y-1">
+                        <p class="font-semibold text-lg">{{ $evento->fecha }}</p>
+                        <p class="opacity-80">{{ $evento->hora }}</p>
+                    </div>
+                </div>
 
-                        <p class="mt-3 text-lg font-medium text-center">Entrada general para <strong>{{ $evento->nombre }}</strong></p>
+                <div class="flex items-center gap-4 py-3 border-b border-white/10 hover:bg-white/5 transition px-2">
+                    <span class="text-2xl">📍</span>
+                    <div class="space-y-1">
+                        <p class="font-semibold text-lg">{{ $evento->direccion }}</p>
+                        <p class="opacity-80">{{ $evento->ciudad }}</p>
+                    </div>
+                </div>
 
-                        <form action="{{ route('cart.add') }}" method="POST" class="w-full mt-6">
+                <div class="flex items-center gap-4 py-3 border-b border-white/10 hover:bg-white/5 transition px-2">
+                    <span class="text-2xl">💶</span>
+                    <div class="space-y-1">
+                        <p class="font-semibold text-lg">{{ $evento->precio }}€</p>
+                        <p class="opacity-80">Por persona</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-8">
+                @if(!Auth::check() || (!Auth::user()->hasRole('admin') && !Auth::user()->hasRole('empresa')))
+                    <div class="ticket-form max-w-md bg-white/10 backdrop-blur-xl rounded-xl p-8 border border-white/20 shadow-2xl">
+                        <form action="{{ route('cart.add') }}" method="POST" class="space-y-6">
                             @csrf
-
                             <input type="hidden" name="idEvent" value="{{ $evento->id }}">
                             <input type="hidden" name="price" value="{{ $evento->precio }}">
                             <input type="hidden" name="name" value="{{ $evento->nombre }}">
 
-
-                            <div class="flex items-center justify-center space-x-4 mb-6">
-                                <button type="button" id="decrease" class="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition shadow-md">-</button>
-                                <input type="number" name="quantity"  id="quantity" value="1" min="1" max="5" class="w-16 text-center border rounded-lg text-lg font-semibold bg-gray-800 text-white shadow-md">
-                                <button type="button" id="increase" class="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition shadow-md">+</button>
+                            <div class="quantity-selector flex items-center justify-center gap-4">
+                                <button type="button" id="decrease"
+                                        class="w-12 h-12 rounded-full bg-primary hover:bg-accent text-white text-2xl flex items-center justify-center transition-all">
+                                    -
+                                </button>
+                                <input type="number" name="quantity" id="quantity" value="1" min="1" max="5"
+                                       class="w-20 text-center bg-white/5 border border-white/20 rounded-xl py-3 text-xl font-bold">
+                                <button type="button" id="increase"
+                                        class="w-12 h-12 rounded-full bg-primary hover:bg-accent text-white text-2xl flex items-center justify-center transition-all">
+                                    +
+                                </button>
                             </div>
 
-                            <x-primary-button class="ml-4 w-full bg-primary text-primary-content py-3 rounded-lg font-bold text-lg shadow-lg hover:bg-primary-focus transition transform hover:scale-105 text-center">
-                                {{ __('Comprar') }} <span id="totalPrice">{{ $evento->precio }}€</span>
-                            </x-primary-button>
+                            <button type="submit"
+                                    class="w-full py-4 bg-primary hover:bg-accent text-white font-bold rounded-xl transition-all transform hover:scale-[1.02] shadow-lg hover:shadow-pink-700/20">
+                                COMPRAR - <span id="totalPrice">{{ $evento->precio }}</span>€
+                            </button>
                         </form>
                     </div>
-                </div>
-            @endif
+                @endif
 
-    <div class="mt-8">
-        <h3 class="text-xl font-semibold mb-3 text-center">Ubicación en el mapa</h3>
-        <div id="map" class="w-full h-64 rounded-lg shadow-md"></div>
+                <div class="event-description flex-1 bg-white/10 backdrop-blur-xl rounded-xl p-8 border border-white/20 shadow-2xl">
+                    <h3 class="text-xl font-bold mb-4">Descripción del Evento</h3>
+                    <p>{{ $evento->descripcion }}</p>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css " />
+    <div class="map-container w-full mx-auto mb-24 rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+        <div id="map" class="w-full h-96"></div>
+    </div>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var address = '{{ $evento->ciudad . ' ' . $evento->direccion }}';
+        document.addEventListener("DOMContentLoaded", () => {
+            // Parallax mejorado
+            const hero = document.querySelector('.hero-parallax');
+            window.addEventListener('scroll', () => {
+                const scrollPosition = window.scrollY;
+                hero.style.transform = `translate3d(0, ${scrollPosition * 0.2}px, 0)`;
+                hero.style.opacity = 1 - Math.min(scrollPosition / 300, 0.3);
+            });
 
+            // Mapa
+            const address = '{{ $evento->ciudad }} {{ $evento->direccion }}';
             fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.length > 0) {
-                        var lat = data[0].lat;
-                        var lon = data[0].lon;
+                        const map = L.map('map').setView([data[0].lat, data[0].lon], 15);
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-                        var map = L.map('map').setView([lat, lon], 13);
-
-                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                            attribution: '&copy; OpenStreetMap contributors'
-                        }).addTo(map);
-
-                        var marker = L.marker([lat, lon]).addTo(map);
-                        marker.bindPopup('<b>{{ $evento->nombre }}</b><br>{{ $evento->direccion }}');
-                    } else {
-                        document.getElementById("map").innerHTML = "<p class='text-red-500 text-center'>No se pudo encontrar la ubicación.</p>";
+                        L.marker([data[0].lat, data[0].lon]).addTo(map)
+                            .bindPopup(`
+                                <div class="space-y-2 p-2">
+                                    <h3 class="font-bold text-lg">{{ $evento->nombre }}</h3>
+                                    <p class="text-sm text-gray-600">{{ $evento->direccion }}</p>
+                                </div>
+                            `)
+                            .openPopup();
                     }
                 });
-        });
 
-        document.addEventListener("DOMContentLoaded", function () {
-            const quantityInput = document.getElementById("quantity");
-            const totalPrice = document.getElementById("totalPrice");
+            // Controlador de cantidad
+            const quantity = document.getElementById('quantity');
+            const totalPrice = document.getElementById('totalPrice');
             const price = {{ $evento->precio }};
-            const increaseBtn = document.getElementById("increase");
-            const decreaseBtn = document.getElementById("decrease");
 
-            increaseBtn.addEventListener("click", function () {
-                quantityInput.value = parseInt(quantityInput.value) + 1;
+            const updateTotal = () => {
+                totalPrice.textContent = (quantity.value * price).toFixed(2);
+                quantity.dispatchEvent(new Event('change'));
+            };
+
+            document.getElementById('increase').addEventListener('click', () => {
+                quantity.value = Math.min(5, ++quantity.value);
                 updateTotal();
             });
 
-            decreaseBtn.addEventListener("click", function () {
-                if (parseInt(quantityInput.value) > 1) {
-                    quantityInput.value = parseInt(quantityInput.value) - 1;
-                    updateTotal();
-                }
+            document.getElementById('decrease').addEventListener('click', () => {
+                quantity.value = Math.max(1, --quantity.value);
+                updateTotal();
             });
-
-            function updateTotal() {
-                totalPrice.textContent = (quantityInput.value * price).toFixed(2);
-            }
         });
     </script>
 @endsection
