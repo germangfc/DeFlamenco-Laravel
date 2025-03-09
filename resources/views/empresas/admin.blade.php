@@ -36,7 +36,7 @@
                                 <div class="flex gap-2">
                                     <a href="{{ route('empresas.show', $empresa->id) }}" class="btn btn-info btn-sm">Ver</a>
                                     <a href="{{ route('empresas.edit', $empresa->id) }}" class="btn btn-primary btn-sm">Editar</a>
-                                    <form action="{{ route('empresas.destroy', $empresa->id) }}" method="POST" style="display:inline;">
+                                    <form action="{{ route('empresas.destroy', $empresa->id) }}" method="POST" style="display:inline;" id="deleteForm">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm"
@@ -44,6 +44,7 @@
                                             Eliminar
                                         </button>
                                     </form>
+
                                 </div>
                             </td>
                         </tr>
@@ -73,3 +74,6 @@
         </div>
     </div>
 @endsection
+
+
+

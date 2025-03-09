@@ -90,6 +90,8 @@ return array(
     'Laravel\\Breeze\\' => array($vendorDir . '/laravel/breeze/src'),
     'Jane\\Component\\OpenApiRuntime\\' => array($vendorDir . '/jane-php/open-api-runtime'),
     'Jane\\Component\\JsonSchemaRuntime\\' => array($vendorDir . '/jane-php/json-schema-runtime'),
+    'Intervention\\Image\\' => array($vendorDir . '/intervention/image/src'),
+    'Intervention\\Gif\\' => array($vendorDir . '/intervention/gif/src'),
     'Illuminate\\Support\\' => array($vendorDir . '/laravel/framework/src/Illuminate/Macroable', $vendorDir . '/laravel/framework/src/Illuminate/Collections', $vendorDir . '/laravel/framework/src/Illuminate/Conditionable'),
     'Illuminate\\' => array($vendorDir . '/laravel/framework/src/Illuminate'),
     'Http\\Promise\\' => array($vendorDir . '/php-http/promise/src'),

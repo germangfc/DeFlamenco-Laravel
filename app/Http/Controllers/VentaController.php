@@ -8,11 +8,17 @@ use Illuminate\Support\Facades\Cache;
 
 class VentaController extends Controller
 {
-    public function index(Request $request){
-        $ventas = Venta::orderBy('created_at','DESC')->paginate(5);
-        //$ventas = Venta::search($request->created_at)->orderBy('created_at','DESC')->paginate(5);
-        return view('ventas.index')->with('ventas',$ventas);
+    public function index(Request $request)
+    {
+        // Consulta de ventas
+        $ventas = Venta::orderBy('_id', 'DESC')->paginate(5);
+
+        // Verifica la estructura de las ventas y las lineasVenta
+        //dd($ventas);  // Detener la ejecución y ver el contenido de $ventas
+
+        return view('ventas.index')->with('ventas', $ventas);
     }
+
 
     public function show($id){
         $cacheKey = "venta_{$id}";

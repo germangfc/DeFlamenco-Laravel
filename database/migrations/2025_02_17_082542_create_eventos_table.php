@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('foto')->nullable()->default('https://granadateguia.com/wp-content/uploads/2023/02/baile-flamenco-870x480.jpg');
             $table->text('descripcion')->nullable();
             $table->string('empresa_id');
-            $table->foreign('empresa_id')->references('id')->on('empresas');
+            $table->foreign('empresa_id')->references('id')->on('empresas')->onDelete('cascade');;
         });
     }
 
