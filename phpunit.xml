@@ -16,6 +16,27 @@
         <include>
             <directory>app</directory>
         </include>
+        <exclude>
+            <!-- Excluir archivos específicos -->
+            <file>app/Http/Controllers/Controller.php</file>
+            <file>app/Http/Controllers/TicketController.php</file>
+            <file>app/Http/Controllers/Auth/EmailVerificationNotificationController.php</file>
+            <file>app/Http/Controllers/Auth/VerifyEmailController.php</file>
+            <file>app/Http/Controllers/Auth/RegisteredUserController.php</file>
+            <file>app/Http/Controllers/Auth/VerifyEmailController.php</file>
+            <file>app/Http/Controllers/ProfileController.php</file>
+            <file>app/Http/Controllers/StripeController.php</file>
+            <file>app/Http/Controllers/CartController.php</file>
+            <file>app/Http/Requests/ProfileUpdateRequest.php</file>
+            <file>app/Models/ExcludedModel.php</file>
+            <file>View/Components/AppLayout.php</file>
+
+            <!-- Excluir directorios completos -->
+            <directory>app/Services</directory>
+            <directory>app/Traits</directory>
+            <directory>app/Mail</directory>
+            <directory>app/View</directory>
+        </exclude>
     </source>
     <php>
         <env name="APP_ENV" value="testing"/>
