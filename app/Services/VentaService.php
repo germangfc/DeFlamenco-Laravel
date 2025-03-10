@@ -46,6 +46,7 @@ class VentaService
         $venta->save();
 
         $evento->stock--;
+        $evento->save();
         return $venta;
 
     }

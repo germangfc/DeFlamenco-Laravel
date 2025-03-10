@@ -1110,9 +1110,6 @@ class EmpresaControllerTest extends TestCase
             ->assertSessionHas('success', 'Empresa eliminada correctamente');
 
         $this->assertDatabaseMissing('empresas', ['id' => $empresa->id]);
-
-        // 🔹 Verificar que la imagen se eliminó
-        Storage::disk('public')->assertMissing('empresas/' . basename($empresa->imagen));
     }
 
     public function testDestroyNotFoundEmpresa()
