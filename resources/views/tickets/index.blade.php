@@ -30,7 +30,7 @@
                                 <img src="{{ $imageSrc }}"
                                      alt="{{ $ticket->evento->nombre ?? 'Evento' }}"
                                      class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105
-                 {{ $isExpired ? 'grayscale brightness-75' : '' }}">
+                                    {{ $isExpired ? 'grayscale brightness-75' : '' }}">
 
                                 <!-- Badge de precio flotante -->
                                 <div class="absolute top-4 right-4 badge badge-lg bg-primary glass shadow-lg">
@@ -67,7 +67,7 @@
                                     <p class="text-sm font-bold text-gray-700">⚠️ Ticket Expirado</p>
                                 @else
                                     <p class="text-sm font-semibold {{ $ticket->isReturned ? 'text-red-500' : 'text-green-500' }}">
-                                        {{ $ticket->isReturned ? '❌ Entrada Devuelta' : '✅ Entrada Válida' }}
+                                        {{ $ticket->isReturned ? '❌ Entrada Ya Validada' : '✅ Entrada Válida' }}
                                     </p>
                                 @endif
                             </div>
