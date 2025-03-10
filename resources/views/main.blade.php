@@ -4,7 +4,7 @@
     <title>{{ config('app.name', 'Tablao Pass') }}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="{{ asset('resources/images/foto_login_flamenco.svg') }}" rel="icon" type="image/svg+xml">
+    <link href="{{ Vite::asset("resources/images/foto_login_flamenco.svg") }}" rel="icon" type="image/png">
     <script>
         // Cuando la página y todos los recursos hayan cargado
         window.addEventListener('load', function() {
