@@ -9,7 +9,7 @@ services:
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         ports:
-            - '${APP_PORT:-80}:80'
+           # - '${APP_PORT:-80}:80'
             - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
         environment:
             WWWUSER: '${WWWUSER}'
@@ -25,6 +25,7 @@ services:
             MONGO_DB_PASSWORD: '${MONGO_DB_PASSWORD}'
         volumes:
             - '.:/var/www/html'
+            - './docker/sail/supervisor/php-fpm.conf:/etc/supervisor/conf.d/php-fpm.conf'
         networks:
             - sail
         depends_on:
@@ -93,6 +94,33 @@ services:
                 - 'db.runCommand({ connectionStatus: 1 })'
             retries: 3
             timeout: 5s
+
+    proxy:
+        image: nginx:latest
+        container_name: proxy
+        restart: always
+        depends_on:
+            - laravel.test
+        ports:
+            - "80:80"
+        volumes:
+            - ./docker/sail/nginx/nginx.conf:/etc/nginx/nginx.conf
+        networks:
+            - sail
+
+
+    coverage:
+        image: nginx:latest
+        container_name: coverage
+        restart: always
+        depends_on:
+            - laravel.test
+        volumes:
+            - ./coverage-report:/var/www/html/
+            - ./coverage-report:/usr/share/nginx/html/coverage/
+            - ./docker/sail/sites-available:/etc/nginx/sites-available
+        networks:
+            - sail
 
 networks:
     sail:
