@@ -27,7 +27,7 @@ describe("template spec", () => {
     cy.get('#password').type('contraseñasegura1234');
     cy.get('#registrarEmpresa').click();
     cy.get('#buscadorEmpresas').type('companydevelopers@gmail.com');    
-    cy.get('.btn.btn-primary').click();
-
+    cy.get('.btn.btn-primary').first().click();
+    cy.get('#eliminarBoton').click();
   });
 });
