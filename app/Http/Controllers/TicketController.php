@@ -57,6 +57,8 @@ class TicketController extends Controller
         $evento = Evento::find($ticket->idEvent);
 
         if ($evento) {
+            $ticket->isReturned = true;
+            $ticket->save();
             return view('tickets.valido', ['ticket' => $evento]);
         } else {
             return redirect()->route('eventos')->with('error', 'Ticket no válido.');
