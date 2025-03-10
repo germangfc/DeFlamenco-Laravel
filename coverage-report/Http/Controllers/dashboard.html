@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /var/www/html/app/Http/Controllers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../../_css/bootstrap.min.css?v=11.0.8" rel="stylesheet" type="text/css">
+  <link href="../../_css/nv.d3.min.css?v=11.0.8" rel="stylesheet" type="text/css">
+  <link href="../../_css/style.css?v=11.0.8" rel="stylesheet" type="text/css">
+  <link href="../../_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="../../index.html">/var/www/html/app</a></li>
+         <li class="breadcrumb-item"><a href="../index.html">Http</a></li>
+         <li class="breadcrumb-item"><a href="index.html">Controllers</a></li>
+         <li class="breadcrumb-item active">(Dashboard)</li>
+
+       </ol>
+      </nav>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="TicketController.php.html#15">App\Http\Controllers\TicketController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EventosController.php.html#17">App\Http\Controllers\EventosController</a></td><td class="text-right">5%</td></tr>
+       <tr><td><a href="Auth/RegisteredUserController.php.html#15">App\Http\Controllers\Auth\RegisteredUserController</a></td><td class="text-right">7%</td></tr>
+       <tr><td><a href="Api/VentasApiController.php.html#16">App\Http\Controllers\Api\VentasApiController</a></td><td class="text-right">14%</td></tr>
+       <tr><td><a href="Auth/EmailVerificationPromptController.php.html#10">App\Http\Controllers\Auth\EmailVerificationPromptController</a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Auth/AuthenticatedSessionController.php.html#12">App\Http\Controllers\Auth\AuthenticatedSessionController</a></td><td class="text-right">75%</td></tr>
+       <tr><td><a href="EmpresaController.php.html#20">App\Http\Controllers\EmpresaController</a></td><td class="text-right">79%</td></tr>
+       <tr><td><a href="Auth/ConfirmablePasswordController.php.html#12">App\Http\Controllers\Auth\ConfirmablePasswordController</a></td><td class="text-right">80%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="EventosController.php.html#17">App\Http\Controllers\EventosController</a></td><td class="text-right">396</td></tr>
+       <tr><td><a href="Api/VentasApiController.php.html#16">App\Http\Controllers\Api\VentasApiController</a></td><td class="text-right">174</td></tr>
+       <tr><td><a href="EmpresaController.php.html#20">App\Http\Controllers\EmpresaController</a></td><td class="text-right">36</td></tr>
+       <tr><td><a href="TicketController.php.html#15">App\Http\Controllers\TicketController</a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Auth/ConfirmablePasswordController.php.html#12">App\Http\Controllers\Auth\ConfirmablePasswordController</a></td><td class="text-right">3</td></tr>
+       <tr><td><a href="Auth/EmailVerificationPromptController.php.html#10">App\Http\Controllers\Auth\EmailVerificationPromptController</a></td><td class="text-right">2</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Api/VentasApiController.php.html#71"><abbr title="App\Http\Controllers\Api\VentasApiController::store">store</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Api/VentasApiController.php.html#168"><abbr title="App\Http\Controllers\Api\VentasApiController::destroy">destroy</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Auth/RegisteredUserController.php.html#30"><abbr title="App\Http\Controllers\Auth\RegisteredUserController::store">store</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EmpresaController.php.html#116"><abbr title="App\Http\Controllers\EmpresaController::create">create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EmpresaController.php.html#212"><abbr title="App\Http\Controllers\EmpresaController::edit">edit</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EventosController.php.html#48"><abbr title="App\Http\Controllers\EventosController::index">index</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EventosController.php.html#65"><abbr title="App\Http\Controllers\EventosController::showMeEvents">showMeEvents</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EventosController.php.html#80"><abbr title="App\Http\Controllers\EventosController::create">create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EventosController.php.html#85"><abbr title="App\Http\Controllers\EventosController::store">store</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EventosController.php.html#147"><abbr title="App\Http\Controllers\EventosController::show">show</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EventosController.php.html#183"><abbr title="App\Http\Controllers\EventosController::edit">edit</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EventosController.php.html#213"><abbr title="App\Http\Controllers\EventosController::update">update</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EventosController.php.html#281"><abbr title="App\Http\Controllers\EventosController::destroy">destroy</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="TicketController.php.html#23"><abbr title="App\Http\Controllers\TicketController::index">index</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="TicketController.php.html#54"><abbr title="App\Http\Controllers\TicketController::validar">validar</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="TicketController.php.html#74"><abbr title="App\Http\Controllers\TicketController::download">download</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Auth/AuthenticatedSessionController.php.html#25"><abbr title="App\Http\Controllers\Auth\AuthenticatedSessionController::store">store</abbr></a></td><td class="text-right">33%</td></tr>
+       <tr><td><a href="EmpresaController.php.html#237"><abbr title="App\Http\Controllers\EmpresaController::update">update</abbr></a></td><td class="text-right">64%</td></tr>
+       <tr><td><a href="Auth/EmailVerificationPromptController.php.html#15"><abbr title="App\Http\Controllers\Auth\EmailVerificationPromptController::__invoke">__invoke</abbr></a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Api/ClienteApiController.php.html#229"><abbr title="App\Http\Controllers\Api\ClienteApiController::destroy">destroy</abbr></a></td><td class="text-right">73%</td></tr>
+       <tr><td><a href="Auth/ConfirmablePasswordController.php.html#25"><abbr title="App\Http\Controllers\Auth\ConfirmablePasswordController::store">store</abbr></a></td><td class="text-right">77%</td></tr>
+       <tr><td><a href="Api/EmpresaControllerApi.php.html#173"><abbr title="App\Http\Controllers\Api\EmpresaControllerApi::update">update</abbr></a></td><td class="text-right">85%</td></tr>
+       <tr><td><a href="EmpresaController.php.html#30"><abbr title="App\Http\Controllers\EmpresaController::index">index</abbr></a></td><td class="text-right">85%</td></tr>
+       <tr><td><a href="Api/EventosApiController.php.html#94"><abbr title="App\Http\Controllers\Api\EventosApiController::getByNombre">getByNombre</abbr></a></td><td class="text-right">87%</td></tr>
+       <tr><td><a href="ClienteController.php.html#214"><abbr title="App\Http\Controllers\ClienteController::destroy">destroy</abbr></a></td><td class="text-right">88%</td></tr>
+       <tr><td><a href="Api/EmpresaControllerApi.php.html#125"><abbr title="App\Http\Controllers\Api\EmpresaControllerApi::create">create</abbr></a></td><td class="text-right">89%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Api/VentasApiController.php.html#71"><abbr title="App\Http\Controllers\Api\VentasApiController::store">store</abbr></a></td><td class="text-right">90</td></tr>
+       <tr><td><a href="EventosController.php.html#213"><abbr title="App\Http\Controllers\EventosController::update">update</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="EventosController.php.html#85"><abbr title="App\Http\Controllers\EventosController::store">store</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Api/VentasApiController.php.html#168"><abbr title="App\Http\Controllers\Api\VentasApiController::destroy">destroy</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="EmpresaController.php.html#116"><abbr title="App\Http\Controllers\EmpresaController::create">create</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="EventosController.php.html#183"><abbr title="App\Http\Controllers\EventosController::edit">edit</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="EventosController.php.html#281"><abbr title="App\Http\Controllers\EventosController::destroy">destroy</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Api/EmpresaControllerApi.php.html#173"><abbr title="App\Http\Controllers\Api\EmpresaControllerApi::update">update</abbr></a></td><td class="text-right">9</td></tr>
+       <tr><td><a href="EmpresaController.php.html#237"><abbr title="App\Http\Controllers\EmpresaController::update">update</abbr></a></td><td class="text-right">7</td></tr>
+       <tr><td><a href="Api/ClienteApiController.php.html#229"><abbr title="App\Http\Controllers\Api\ClienteApiController::destroy">destroy</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="EmpresaController.php.html#212"><abbr title="App\Http\Controllers\EmpresaController::edit">edit</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="EventosController.php.html#147"><abbr title="App\Http\Controllers\EventosController::show">show</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="TicketController.php.html#54"><abbr title="App\Http\Controllers\TicketController::validar">validar</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="TicketController.php.html#74"><abbr title="App\Http\Controllers\TicketController::download">download</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="ClienteController.php.html#214"><abbr title="App\Http\Controllers\ClienteController::destroy">destroy</abbr></a></td><td class="text-right">5</td></tr>
+       <tr><td><a href="EmpresaController.php.html#30"><abbr title="App\Http\Controllers\EmpresaController::index">index</abbr></a></td><td class="text-right">3</td></tr>
+       <tr><td><a href="Api/EventosApiController.php.html#94"><abbr title="App\Http\Controllers\Api\EventosApiController::getByNombre">getByNombre</abbr></a></td><td class="text-right">3</td></tr>
+       <tr><td><a href="Api/EmpresaControllerApi.php.html#125"><abbr title="App\Http\Controllers\Api\EmpresaControllerApi::create">create</abbr></a></td><td class="text-right">3</td></tr>
+       <tr><td><a href="Auth/EmailVerificationPromptController.php.html#15"><abbr title="App\Http\Controllers\Auth\EmailVerificationPromptController::__invoke">__invoke</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Auth/ConfirmablePasswordController.php.html#25"><abbr title="App\Http\Controllers\Auth\ConfirmablePasswordController::store">store</abbr></a></td><td class="text-right">2</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 11.0.8</a> using <a href="https://www.php.net/" target="_top">PHP 8.4.3</a> and <a href="https://phpunit.de/">PHPUnit 11.5.7</a> at Mon Mar 10 10:21:09 UTC 2025.</small>
+    </p>
+   </footer>
+  </div>
+  <script src="../../_js/jquery.min.js?v=11.0.8" type="text/javascript"></script>
+  <script src="../../_js/d3.min.js?v=11.0.8" type="text/javascript"></script>
+  <script src="../../_js/nv.d3.min.js?v=11.0.8" type="text/javascript"></script>
+  <script type="text/javascript">
+$(document).ready(function() {
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#classCoverageDistribution svg')
+      .datum(getCoverageDistributionData([1,2,1,0,0,0,0,1,2,1,5,5], "Class Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#methodCoverageDistribution svg')
+      .datum(getCoverageDistributionData([16,0,0,0,1,0,0,2,2,5,5,40], "Method Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getCoverageDistributionData(data, label) {
+    var labels = [
+      '0%',
+      '0-10%',
+      '10-20%',
+      '20-30%',
+      '30-40%',
+      '40-50%',
+      '50-60%',
+      '60-70%',
+      '70-80%',
+      '80-90%',
+      '90-100%',
+      '100%'
+    ];
+    var values = [];
+    $.each(labels, function(key) {
+      values.push({x: labels[key], y: data[key]});
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Cyclomatic Complexity');
+
+    d3.select('#classComplexity svg')
+      .datum(getComplexityData([[93.26923076923077,26,"<a href=\"Api\/ClienteApiController.php.html#22\">App\\Http\\Controllers\\Api\\ClienteApiController<\/a>"],[91.37931034482759,30,"<a href=\"Api\/EmpresaControllerApi.php.html#16\">App\\Http\\Controllers\\Api\\EmpresaControllerApi<\/a>"],[96.72131147540983,15,"<a href=\"Api\/EventosApiController.php.html#13\">App\\Http\\Controllers\\Api\\EventosApiController<\/a>"],[100,4,"<a href=\"Api\/LoginControllerApi.php.html#10\">App\\Http\\Controllers\\Api\\LoginControllerApi<\/a>"],[96.42857142857143,9,"<a href=\"Api\/TicketApiController.php.html#13\">App\\Http\\Controllers\\Api\\TicketApiController<\/a>"],[14.736842105263156,16,"<a href=\"Api\/VentasApiController.php.html#16\">App\\Http\\Controllers\\Api\\VentasApiController<\/a>"],[75,3,"<a href=\"Auth\/AuthenticatedSessionController.php.html#12\">App\\Http\\Controllers\\Auth\\AuthenticatedSessionController<\/a>"],[80,3,"<a href=\"Auth\/ConfirmablePasswordController.php.html#12\">App\\Http\\Controllers\\Auth\\ConfirmablePasswordController<\/a>"],[66.66666666666666,2,"<a href=\"Auth\/EmailVerificationPromptController.php.html#10\">App\\Http\\Controllers\\Auth\\EmailVerificationPromptController<\/a>"],[100,3,"<a href=\"Auth\/NewPasswordController.php.html#16\">App\\Http\\Controllers\\Auth\\NewPasswordController<\/a>"],[100,1,"<a href=\"Auth\/PasswordController.php.html#11\">App\\Http\\Controllers\\Auth\\PasswordController<\/a>"],[100,3,"<a href=\"Auth\/PasswordResetLinkController.php.html#11\">App\\Http\\Controllers\\Auth\\PasswordResetLinkController<\/a>"],[7.142857142857142,2,"<a href=\"Auth\/RegisteredUserController.php.html#15\">App\\Http\\Controllers\\Auth\\RegisteredUserController<\/a>"],[97.95918367346938,24,"<a href=\"ClienteController.php.html#21\">App\\Http\\Controllers\\ClienteController<\/a>"],[79.66101694915254,29,"<a href=\"EmpresaController.php.html#20\">App\\Http\\Controllers\\EmpresaController<\/a>"],[5.223880597014925,21,"<a href=\"EventosController.php.html#17\">App\\Http\\Controllers\\EventosController<\/a>"],[0,5,"<a href=\"TicketController.php.html#15\">App\\Http\\Controllers\\TicketController<\/a>"],[100,4,"<a href=\"VentaController.php.html#12\">App\\Http\\Controllers\\VentaController<\/a>"]], 'Class Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Method Complexity');
+
+    d3.select('#methodComplexity svg')
+      .datum(getComplexityData([[100,1,"<a href=\"Api\/ClienteApiController.php.html#33\">App\\Http\\Controllers\\Api\\ClienteApiController::index<\/a>"],[100,3,"<a href=\"Api\/ClienteApiController.php.html#47\">App\\Http\\Controllers\\Api\\ClienteApiController::show<\/a>"],[100,5,"<a href=\"Api\/ClienteApiController.php.html#74\">App\\Http\\Controllers\\Api\\ClienteApiController::searchByEmail<\/a>"],[100,2,"<a href=\"Api\/ClienteApiController.php.html#115\">App\\Http\\Controllers\\Api\\ClienteApiController::store<\/a>"],[97.05882352941177,9,"<a href=\"Api\/ClienteApiController.php.html#161\">App\\Http\\Controllers\\Api\\ClienteApiController::update<\/a>"],[73.91304347826086,6,"<a href=\"Api\/ClienteApiController.php.html#229\">App\\Http\\Controllers\\Api\\ClienteApiController::destroy<\/a>"],[100,1,"<a href=\"Api\/EmpresaControllerApi.php.html#27\">App\\Http\\Controllers\\Api\\EmpresaControllerApi::getAll<\/a>"],[100,4,"<a href=\"Api\/EmpresaControllerApi.php.html#41\">App\\Http\\Controllers\\Api\\EmpresaControllerApi::getById<\/a>"],[100,4,"<a href=\"Api\/EmpresaControllerApi.php.html#69\">App\\Http\\Controllers\\Api\\EmpresaControllerApi::getByNombre<\/a>"],[100,4,"<a href=\"Api\/EmpresaControllerApi.php.html#97\">App\\Http\\Controllers\\Api\\EmpresaControllerApi::getByCif<\/a>"],[89.65517241379311,3,"<a href=\"Api\/EmpresaControllerApi.php.html#125\">App\\Http\\Controllers\\Api\\EmpresaControllerApi::create<\/a>"],[85.36585365853658,9,"<a href=\"Api\/EmpresaControllerApi.php.html#173\">App\\Http\\Controllers\\Api\\EmpresaControllerApi::update<\/a>"],[94.11764705882352,5,"<a href=\"Api\/EmpresaControllerApi.php.html#245\">App\\Http\\Controllers\\Api\\EmpresaControllerApi::destroy<\/a>"],[100,1,"<a href=\"Api\/EventosApiController.php.html#21\">App\\Http\\Controllers\\Api\\EventosApiController::index<\/a>"],[94.11764705882352,3,"<a href=\"Api\/EventosApiController.php.html#34\">App\\Http\\Controllers\\Api\\EventosApiController::store<\/a>"],[100,3,"<a href=\"Api\/EventosApiController.php.html#67\">App\\Http\\Controllers\\Api\\EventosApiController::show<\/a>"],[87.5,3,"<a href=\"Api\/EventosApiController.php.html#94\">App\\Http\\Controllers\\Api\\EventosApiController::getByNombre<\/a>"],[100,3,"<a href=\"Api\/EventosApiController.php.html#122\">App\\Http\\Controllers\\Api\\EventosApiController::update<\/a>"],[100,2,"<a href=\"Api\/EventosApiController.php.html#161\">App\\Http\\Controllers\\Api\\EventosApiController::destroy<\/a>"],[100,4,"<a href=\"Api\/LoginControllerApi.php.html#18\">App\\Http\\Controllers\\Api\\LoginControllerApi::__invoke<\/a>"],[100,1,"<a href=\"Api\/TicketApiController.php.html#20\">App\\Http\\Controllers\\Api\\TicketApiController::index<\/a>"],[100,3,"<a href=\"Api\/TicketApiController.php.html#34\">App\\Http\\Controllers\\Api\\TicketApiController::show<\/a>"],[100,1,"<a href=\"Api\/TicketApiController.php.html#62\">App\\Http\\Controllers\\Api\\TicketApiController::store<\/a>"],[90.9090909090909,4,"<a href=\"Api\/TicketApiController.php.html#84\">App\\Http\\Controllers\\Api\\TicketApiController::destroy<\/a>"],[100,1,"<a href=\"Api\/VentasApiController.php.html#23\">App\\Http\\Controllers\\Api\\VentasApiController::index<\/a>"],[100,3,"<a href=\"Api\/VentasApiController.php.html#36\">App\\Http\\Controllers\\Api\\VentasApiController::show<\/a>"],[0,9,"<a href=\"Api\/VentasApiController.php.html#71\">App\\Http\\Controllers\\Api\\VentasApiController::store<\/a>"],[0,3,"<a href=\"Api\/VentasApiController.php.html#168\">App\\Http\\Controllers\\Api\\VentasApiController::destroy<\/a>"],[100,1,"<a href=\"Auth\/AuthenticatedSessionController.php.html#17\">App\\Http\\Controllers\\Auth\\AuthenticatedSessionController::create<\/a>"],[33.33333333333333,1,"<a href=\"Auth\/AuthenticatedSessionController.php.html#25\">App\\Http\\Controllers\\Auth\\AuthenticatedSessionController::store<\/a>"],[100,1,"<a href=\"Auth\/AuthenticatedSessionController.php.html#37\">App\\Http\\Controllers\\Auth\\AuthenticatedSessionController::destroy<\/a>"],[100,1,"<a href=\"Auth\/ConfirmablePasswordController.php.html#17\">App\\Http\\Controllers\\Auth\\ConfirmablePasswordController::show<\/a>"],[77.77777777777779,2,"<a href=\"Auth\/ConfirmablePasswordController.php.html#25\">App\\Http\\Controllers\\Auth\\ConfirmablePasswordController::store<\/a>"],[66.66666666666666,2,"<a href=\"Auth\/EmailVerificationPromptController.php.html#15\">App\\Http\\Controllers\\Auth\\EmailVerificationPromptController::__invoke<\/a>"],[100,1,"<a href=\"Auth\/NewPasswordController.php.html#21\">App\\Http\\Controllers\\Auth\\NewPasswordController::create<\/a>"],[100,2,"<a href=\"Auth\/NewPasswordController.php.html#31\">App\\Http\\Controllers\\Auth\\NewPasswordController::store<\/a>"],[100,1,"<a href=\"Auth\/PasswordController.php.html#16\">App\\Http\\Controllers\\Auth\\PasswordController::update<\/a>"],[100,1,"<a href=\"Auth\/PasswordResetLinkController.php.html#16\">App\\Http\\Controllers\\Auth\\PasswordResetLinkController::create<\/a>"],[100,2,"<a href=\"Auth\/PasswordResetLinkController.php.html#26\">App\\Http\\Controllers\\Auth\\PasswordResetLinkController::store<\/a>"],[100,1,"<a href=\"Auth\/RegisteredUserController.php.html#20\">App\\Http\\Controllers\\Auth\\RegisteredUserController::create<\/a>"],[0,1,"<a href=\"Auth\/RegisteredUserController.php.html#30\">App\\Http\\Controllers\\Auth\\RegisteredUserController::store<\/a>"],[100,1,"<a href=\"ClienteController.php.html#30\">App\\Http\\Controllers\\ClienteController::index<\/a>"],[100,3,"<a href=\"ClienteController.php.html#47\">App\\Http\\Controllers\\ClienteController::show<\/a>"],[100,1,"<a href=\"ClienteController.php.html#72\">App\\Http\\Controllers\\ClienteController::create<\/a>"],[100,3,"<a href=\"ClienteController.php.html#77\">App\\Http\\Controllers\\ClienteController::store<\/a>"],[100,3,"<a href=\"ClienteController.php.html#133\">App\\Http\\Controllers\\ClienteController::edit<\/a>"],[100,8,"<a href=\"ClienteController.php.html#162\">App\\Http\\Controllers\\ClienteController::update<\/a>"],[88.23529411764706,5,"<a href=\"ClienteController.php.html#214\">App\\Http\\Controllers\\ClienteController::destroy<\/a>"],[85.71428571428571,3,"<a href=\"EmpresaController.php.html#30\">App\\Http\\Controllers\\EmpresaController::index<\/a>"],[100,2,"<a href=\"EmpresaController.php.html#56\">App\\Http\\Controllers\\EmpresaController::show<\/a>"],[100,2,"<a href=\"EmpresaController.php.html#79\">App\\Http\\Controllers\\EmpresaController::showByNombre<\/a>"],[100,2,"<a href=\"EmpresaController.php.html#99\">App\\Http\\Controllers\\EmpresaController::showByCif<\/a>"],[0,3,"<a href=\"EmpresaController.php.html#116\">App\\Http\\Controllers\\EmpresaController::create<\/a>"],[93.47826086956522,6,"<a href=\"EmpresaController.php.html#133\">App\\Http\\Controllers\\EmpresaController::store<\/a>"],[0,2,"<a href=\"EmpresaController.php.html#212\">App\\Http\\Controllers\\EmpresaController::edit<\/a>"],[64.28571428571429,6,"<a href=\"EmpresaController.php.html#237\">App\\Http\\Controllers\\EmpresaController::update<\/a>"],[100,3,"<a href=\"EmpresaController.php.html#292\">App\\Http\\Controllers\\EmpresaController::destroy<\/a>"],[100,1,"<a href=\"EventosController.php.html#27\">App\\Http\\Controllers\\EventosController::getAll<\/a>"],[0,1,"<a href=\"EventosController.php.html#48\">App\\Http\\Controllers\\EventosController::index<\/a>"],[0,1,"<a href=\"EventosController.php.html#65\">App\\Http\\Controllers\\EventosController::showMeEvents<\/a>"],[0,1,"<a href=\"EventosController.php.html#80\">App\\Http\\Controllers\\EventosController::create<\/a>"],[0,4,"<a href=\"EventosController.php.html#85\">App\\Http\\Controllers\\EventosController::store<\/a>"],[0,2,"<a href=\"EventosController.php.html#147\">App\\Http\\Controllers\\EventosController::show<\/a>"],[0,3,"<a href=\"EventosController.php.html#183\">App\\Http\\Controllers\\EventosController::edit<\/a>"],[0,5,"<a href=\"EventosController.php.html#213\">App\\Http\\Controllers\\EventosController::update<\/a>"],[0,3,"<a href=\"EventosController.php.html#281\">App\\Http\\Controllers\\EventosController::destroy<\/a>"],[0,1,"<a href=\"TicketController.php.html#23\">App\\Http\\Controllers\\TicketController::index<\/a>"],[0,2,"<a href=\"TicketController.php.html#54\">App\\Http\\Controllers\\TicketController::validar<\/a>"],[0,2,"<a href=\"TicketController.php.html#74\">App\\Http\\Controllers\\TicketController::download<\/a>"],[100,1,"<a href=\"VentaController.php.html#22\">App\\Http\\Controllers\\VentaController::index<\/a>"],[100,3,"<a href=\"VentaController.php.html#41\">App\\Http\\Controllers\\VentaController::show<\/a>"]], 'Method Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getComplexityData(data, label) {
+    var values = [];
+    $.each(data, function(key) {
+      var value = Math.round(data[key][0]*100) / 100;
+      values.push({
+        x: value,
+        y: data[key][1],
+        class: data[key][2],
+        size: 0.05,
+        shape: 'diamond'
+      });
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+});
+  </script>
+ </body>
+</html>
