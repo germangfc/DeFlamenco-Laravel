@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             UsuariosClientesSeeder::class,
             EmpresasEventosSeeder::class,
+            VentaPasadaSeeder::class,
         ]);
 
         Ticket::truncate();  // Vacía la colección de Ticket
