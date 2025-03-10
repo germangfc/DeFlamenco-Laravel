@@ -19,8 +19,10 @@
         <exclude>
             <!-- Excluir archivos específicos -->
             <file>app/Http/Controllers/Controller.php</file>
+            <file>app/Http/Controllers/TicketController.php</file>
             <file>app/Http/Controllers/Auth/EmailVerificationNotificationController.php</file>
             <file>app/Http/Controllers/Auth/VerifyEmailController.php</file>
+            <file>app/Http/Controllers/Auth/RegisteredUserController.php</file>
             <file>app/Http/Controllers/Auth/VerifyEmailController.php</file>
             <file>app/Http/Controllers/ProfileController.php</file>
             <file>app/Http/Controllers/StripeController.php</file>
@@ -32,6 +34,8 @@
             <!-- Excluir directorios completos -->
             <directory>app/Services</directory>
             <directory>app/Traits</directory>
+            <directory>app/Mail</directory>
+            <directory>app/View</directory>
         </exclude>
     </source>
     <php>
