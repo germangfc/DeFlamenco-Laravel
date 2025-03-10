@@ -3,13 +3,8 @@
 namespace App\Mail;
 
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
-use Illuminate\Queue\SerializesModels;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
+
 
 class PagoConfirmado extends Mailable
 {
@@ -22,7 +17,6 @@ class PagoConfirmado extends Mailable
 
     public function build()
     {
-        // Generar el PDF con los tickets
         $pdf = $this->generarPDF($this->venta);
 
         return $this->subject('Pago confirmado')
