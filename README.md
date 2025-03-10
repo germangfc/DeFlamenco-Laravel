@@ -53,10 +53,17 @@ El proyecto implementa diversas prácticas y herramientas para asegurar la calid
 - **PHPUnit**
 - **Cobertura de Código**
 
+## Enlace a la documentación
+
+[Documentación](https://docs.google.com/document/d/1ihgTdCqCzXSnAIydk6nsO7NsSZ2QzYIO_efmpkBkhao/edit?tab=t.0)
+
 ## Enlace al video
 
-[Explicación del proyecto](https://www.youtube.com/watch?v=fG5jdisKxM8)
+[Explicación del proyecto](https://youtu.be/b0TpZU0uX5c)
 
+## Enlace a la presentación
+
+[Presentación](https://www.canva.com/design/DAGgqmJS1pM/YuMRqgc6wexvV9yjehEamw/edit)
 ## Autores del programa
 
 <table align="center">
