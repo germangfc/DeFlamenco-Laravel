@@ -53,7 +53,7 @@ class EventosController extends Controller
             ->orderBy('id', 'ASC')
             ->paginate(12);
 
-        return view('eventos.index-admin', compact('eventos'));
+            return view('eventos.index-admin', compact('eventos'));
     }
 
 
